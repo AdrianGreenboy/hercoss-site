@@ -1,0 +1,57 @@
+# IP core catalogue. estado: "validado" (validated on FPGA) or "desarrollo" (in development).
+- nombre: "RV64IMAC"
+  cat: "Processors"
+  estado: desarrollo
+  que: "64-bit RISC-V processor intended for production."
+- nombre: "RV128IMAC"
+  cat: "Processors"
+  estado: validado
+  que: "Experimental 128-bit processor with a dual RV128/RV64 mode."
+- nombre: "SERDES_256G"
+  cat: "Links"
+  estado: validado
+  que: "Multi-lane serial link with its own 64B/66B line coding."
+- nombre: "PCS_40G"
+  cat: "Links"
+  estado: validado
+  que: "Physical coding sublayer for 40GBASE-R Ethernet."
+- nombre: "MAC_40G"
+  cat: "Links"
+  estado: validado
+  que: "40G Ethernet controller with FCS, PAUSE flow control and a UDP generator."
+- nombre: "PCS_25G + MAC_25G"
+  cat: "Links"
+  estado: validado
+  que: "25G Ethernet with a 64B/66B encoder."
+- nombre: "PTP / IEEE 802.1AS"
+  cat: "Links"
+  estado: validado
+  que: "Network clock synchronization with hardware precision."
+- nombre: "PCIe"
+  cat: "Links"
+  estado: desarrollo
+  que: "PCI Express interface for high-bandwidth expansion."
+- nombre: "MIPI"
+  cat: "Links"
+  estado: desarrollo
+  que: "Interface for cameras and image sensors."
+- nombre: "SpaceWire"
+  cat: "Space"
+  estado: validado
+  que: "ESA's standard link for instrument data."
+- nombre: "MIL-STD-1553"
+  cat: "Space"
+  estado: validado
+  que: "Command and control bus with long flight heritage."
+- nombre: "CAN"
+  cat: "Space"
+  estado: validado
+  que: "Robust bus for subsystems."
+- nombre: "USART"
+  cat: "Space"
+  estado: validado
+  que: "Serial port for console, telemetry and maintenance."
+- nombre: "ML-KEM / ML-DSA"
+  cat: "Security"
+  estado: validado
+  que: "Post-quantum cryptography accelerators: key exchange and signatures."

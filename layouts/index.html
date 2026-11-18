@@ -1,0 +1,37 @@
+{{ define "main" }}
+<section class="hero">
+  <p class="eyebrow">Hercoss</p>
+  <h1>{{ site.Params.tagline }}</h1>
+  <p class="lead">{{ site.Params.description }}</p>
+</section>
+
+{{ with site.GetPage "/projects/hercoss-exxo-a1" }}
+{{ $a1 := .RelPermalink }}
+<section class="destacado">
+  <div>
+    <p class="eyebrow">Flagship</p>
+    <h2 class="grande">{{ .Title }}</h2>
+    <p class="lead">{{ .Params.summary }}</p>
+    {{ with .Params.datos }}<ul class="datos">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
+    <p><a class="button" href="{{ .RelPermalink }}#explore">Explore the chip →</a></p>
+  </div>
+  {{ with .Resources.GetMatch "cover.*" }}{{ with .Fill "900x700 Center" }}
+  <a href="{{ $a1 }}"><img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Concept illustration of the HERCOSS Exxo A1 chip"></a>
+  {{ end }}{{ end }}
+</section>
+{{ end }}
+
+<section>
+  <h2>Projects</h2>
+  {{ partial "cards.html" (where site.RegularPages "Section" "projects").ByWeight }}
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p class="lead">For collaboration, investment or technical questions.</p>
+  <p>
+    <a class="button" href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a>
+    <a class="button secundario" href="{{ site.Params.github }}">GitHub · AdrianGreenboy</a>
+  </p>
+</section>
+{{ end }}

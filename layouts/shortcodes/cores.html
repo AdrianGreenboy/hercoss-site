@@ -1,0 +1,17 @@
+{{ $cores := hugo.Data.cores }}
+{{ $cats := slice }}
+{{ range $cores }}{{ $cats = $cats | append .cat }}{{ end }}
+<div class="filtro" role="group" aria-label="Filter by category">
+  <button data-filtro="*" aria-pressed="true">All</button>
+  {{ range uniq $cats }}<button data-filtro="{{ . }}" aria-pressed="false">{{ . }}</button>{{ end }}
+</div>
+<div class="cores">
+  {{ range $cores }}
+  <div class="core" data-cat="{{ .cat }}">
+    <span class="estado {{ if eq .estado "validado" }}hecho{{ else }}curso{{ end }}">{{ if eq .estado "validado" }}Validated on FPGA{{ else }}In development{{ end }}</span>
+    <h3>{{ .nombre }}</h3>
+    <p>{{ .que }}</p>
+    <span class="core-cat">{{ .cat }}</span>
+  </div>
+  {{ end }}
+</div>

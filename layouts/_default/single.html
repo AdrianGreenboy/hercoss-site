@@ -1,0 +1,32 @@
+{{ define "main" }}
+<article>
+  {{ with .Params.estado }}<p class="eyebrow">{{ . }}</p>{{ end }}
+  <h1>{{ .Title }}</h1>
+  {{ with .Params.summary }}<p class="lead">{{ . }}</p>{{ end }}
+  {{ with .Params.datos }}
+  <ul class="datos">
+    {{ range . }}<li>{{ . }}</li>{{ end }}
+  </ul>
+  {{ end }}
+
+  {{ with .Resources.GetMatch "cover.*" }}{{ with .Fit "1600x1000" }}
+  <img class="hero-img" src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="">
+  {{ end }}{{ end }}
+
+  <div class="prose">{{ .Content }}</div>
+
+  {{ $imgs := where (.Resources.ByType "image") "Name" "not in" (slice "cover.jpg" "cover.png" "cover.webp") }}
+  {{ with $imgs }}
+  <h2>Gallery</h2>
+  <div class="gallery">
+    {{ range . }}
+      {{ $full := .Fit "1600x1600" }}
+      {{ $thumb := .Fill "800x500 Center" }}
+      <a href="{{ $full.RelPermalink }}">
+        <img src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" alt="{{ .Title }}" loading="lazy">
+      </a>
+    {{ end }}
+  </div>
+  {{ end }}
+</article>
+{{ end }}
