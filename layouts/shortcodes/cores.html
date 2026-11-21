@@ -1,6 +1,11 @@
 {{ $cores := hugo.Data.cores }}
-{{ $cats := slice }}
-{{ range $cores }}{{ $cats = $cats | append .cat }}{{ end }}
+{{ $cats := slice }}{{ $val := 0 }}{{ $ina1 := 0 }}
+{{ range $cores }}{{ $cats = $cats | append .cat }}{{ if eq .estado "validado" }}{{ $val = add $val 1 }}{{ end }}{{ if .a1 }}{{ $ina1 = add $ina1 1 }}{{ end }}{{ end }}
+<div class="io-total">
+  <div><span class="io-num">{{ len $cores }}</span><span class="io-lbl">IP cores in the catalogue</span></div>
+  <div><span class="io-num">{{ $val }}</span><span class="io-lbl">validated on FPGA hardware</span></div>
+  <div><span class="io-num">{{ $ina1 }}</span><span class="io-lbl">go into the HERCOSS Exxo A1</span></div>
+</div>
 <div class="filtro" role="group" aria-label="Filter by category">
   <button data-filtro="*" aria-pressed="true">All</button>
   {{ range uniq $cats }}<button data-filtro="{{ . }}" aria-pressed="false">{{ . }}</button>{{ end }}
@@ -11,6 +16,7 @@
     <span class="estado {{ if eq .estado "validado" }}hecho{{ else }}curso{{ end }}">{{ if eq .estado "validado" }}Validated on FPGA{{ else }}In development{{ end }}</span>
     <h3>{{ .nombre }}</h3>
     <p>{{ .que }}</p>
+    {{ with .a1 }}<p class="core-a1"><span>In the A1</span> {{ . }}</p>{{ end }}
     <span class="core-cat">{{ .cat }}</span>
   </div>
   {{ end }}

@@ -287,3 +287,9 @@ h2.grande { font: 700 clamp(30px, 4.5vw, 46px)/1.1 var(--sans); letter-spacing: 
   .spec-grupo tr { display: block; border-top: 1px solid var(--line); padding: 6px 0; }
   .spec-estado { text-align: left; }
 }
+
+/* ---------- v5: catalogue A1 role ---------- */
+.core-a1 { font-size: 14px !important; color: var(--text) !important; border-top: 1px solid var(--line); padding-top: 8px; }
+.core-a1 span { font: 11px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-right: 6px; }
+.prose:has(.io-total) { max-width: none; }
+.prose:has(.io-total) > p, .prose:has(.io-total) > h2, .prose:has(.io-total) > ul, .prose:has(.io-total) > .detalle { max-width: 46em; }

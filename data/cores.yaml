@@ -1,69 +1,88 @@
-# IP core catalogue. estado: "validado" (validated on FPGA) or "desarrollo" (in development).
-- nombre: "RV64IMAC"
-  cat: "Processors"
-  estado: desarrollo
-  que: "64-bit RISC-V processor intended for production."
+# IP core catalogue.
+# estado: "validado" (validated on FPGA) or "desarrollo" (in development)
+# a1: the core's role in the HERCOSS Exxo A1 (empty if none yet)
 - nombre: "RV128IMAC"
   cat: "Processors"
   estado: validado
-  que: "128-bit processor of the Exxo A1: Linux SMP, fast core-to-core calls."
-- nombre: "SERDES_256G"
+  que: "128-bit RISC-V processor: runs as RV128, RV64 or two RV64 CPUs; Linux 6.6 SMP; direct core-to-core calls."
+  a1: "The A1's 16 processors"
+- nombre: "RV64IMAC"
+  cat: "Processors"
+  estado: desarrollo
+  que: "64-bit RISC-V processor; its features are being carried over into the RV128IMAC."
+  a1: ""
+- nombre: "SERDES_256G v1.0"
   cat: "Links"
   estado: validado
-  que: "Multi-lane serial link with its own 64B/66B line coding."
+  que: "Multi-lane serial link with Hercoss's own 64B/66B coding: 103 Gb/s on 4 lanes, 1-hour soak with zero errors."
+  a1: "Basis of the 72-lane transceiver pool"
 - nombre: "PCS_40G"
   cat: "Links"
   estado: validado
-  que: "Physical coding sublayer for 40GBASE-R Ethernet."
-- nombre: "MAC_40G"
+  que: "40GBASE-R physical coding: links up with a commercial 40G network card on all four lanes."
+  a1: "Ethernet PCS family"
+- nombre: "MAC_40G v0.3"
   cat: "Links"
   estado: validado
-  que: "40G Ethernet controller with FCS, PAUSE flow control and a UDP generator."
+  que: "40G Ethernet MAC: FCS, PAUSE, address filter, hardware UDP generator; ping and 1-hour soak against a commercial NIC. v0.4 in progress."
+  a1: "Ethernet MAC family"
 - nombre: "PCS_25G + MAC_25G"
   cat: "Links"
   estado: validado
-  que: "25G Ethernet with a 64B/66B encoder."
+  que: "25G Ethernet with a 64B/66B Clause 49 encoder."
+  a1: "Ethernet up to 16 × 25G"
 - nombre: "PTP / IEEE 802.1AS"
   cat: "Links"
   estado: validado
-  que: "Network clock synchronization with hardware precision."
+  que: "Network clock synchronisation with hardware time-stamping."
+  a1: "Common time base for every Ethernet port"
 - nombre: "PCIe"
   cat: "Links"
   estado: desarrollo
-  que: "PCI Express interface for high-bandwidth expansion."
-- nombre: "MIPI"
+  que: "PCI Express controller for high-bandwidth expansion."
+  a1: "3 × Gen5 x16"
+- nombre: "MIPI CSI-2"
   cat: "Links"
   estado: desarrollo
-  que: "Interface for cameras and image sensors."
+  que: "Camera and image-sensor interface; PHY layer in scope."
+  a1: "2 ×"
 - nombre: "SpaceWire"
   cat: "Space"
   estado: validado
   que: "ESA's standard link for instrument data."
+  a1: "10 ×"
 - nombre: "MIL-STD-1553"
   cat: "Space"
   estado: validado
   que: "Command and control bus with long flight heritage."
+  a1: "5 ×"
 - nombre: "CAN"
   cat: "Space"
   estado: validado
-  que: "Robust bus for subsystems."
+  que: "Robust bus for spacecraft subsystems."
+  a1: "10 ×"
 - nombre: "USART"
-  cat: "Space"
+  cat: "General"
   estado: validado
   que: "Serial port for console, telemetry and maintenance."
+  a1: "5 ×"
 - nombre: "I²C / I³C"
-  cat: "Space"
+  cat: "General"
   estado: validado
   que: "Sensor and housekeeping buses, including the newer I³C."
+  a1: "5 × I²C + 5 × I³C"
 - nombre: "SPI"
-  cat: "Space"
+  cat: "General"
   estado: validado
   que: "Serial bus for flash memory and peripherals."
+  a1: "5 ×"
 - nombre: "SD"
-  cat: "Space"
+  cat: "General"
   estado: validado
   que: "SD card controller for storage and boot."
+  a1: "2 ×"
 - nombre: "ML-KEM / ML-DSA"
   cat: "Security"
   estado: validado
-  que: "Post-quantum cryptography accelerators: key exchange and signatures."
+  que: "Post-quantum key exchange and signature accelerators, with key zeroisation for flight."
+  a1: "Post-quantum engine; signed FPGA bitstreams"
