@@ -1,0 +1,40 @@
+{{- $title := "" -}}
+{{- if .IsHome }}{{ $title = site.Params.seotitle }}{{ else }}{{ $title = .Params.seotitle | default (printf "%s — Hercoss" .Title) }}{{ end -}}
+{{- $desc := .Params.description | default .Params.summary | default site.Params.description -}}
+{{- $img := "" -}}
+{{- with .Resources.GetMatch "cover.*" }}{{ with .Fill "1200x630 Center" }}{{ $img = .Permalink }}{{ end }}{{ end -}}
+{{- if not $img }}{{ $img = site.Params.ogimage | absURL }}{{ end -}}
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $desc }}">
+<link rel="canonical" href="{{ .Permalink }}">
+<meta property="og:site_name" content="Hercoss">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:type" content="{{ if .IsHome }}website{{ else }}article{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:image" content="{{ $img }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $desc }}">
+<meta name="twitter:image" content="{{ $img }}">
+<link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | absURL }}">
+{{- $org := dict
+  "@type" "Organization"
+  "@id" (printf "%s#organization" site.BaseURL)
+  "name" "Hercoss"
+  "url" site.BaseURL
+  "logo" ("img/logo.png" | absURL)
+  "email" site.Params.email
+  "description" site.Params.description
+  "address" (dict "@type" "PostalAddress" "addressLocality" site.Params.city "addressCountry" site.Params.country)
+  "founder" (dict "@type" "Person" "name" "Adrian Irineo Hernandez Cossio")
+  "sameAs" (slice site.Params.github)
+  "knowsAbout" (slice "Radiation-hardened electronics" "Space-grade processors" "RISC-V" "FPGA SoC" "Embedded FPGA" "SpaceWire" "MIL-STD-1553" "Ethernet IP cores" "Post-quantum cryptography")
+-}}
+{{- $graph := slice $org (dict "@type" "WebSite" "@id" (printf "%s#website" site.BaseURL) "url" site.BaseURL "name" "Hercoss" "publisher" (dict "@id" (printf "%s#organization" site.BaseURL))) -}}
+{{- with .Params.product }}
+{{- $graph = $graph | append (dict "@type" "Product" "name" $.Title "description" $desc "image" $img "category" . "brand" (dict "@type" "Brand" "name" "Hercoss") "manufacturer" (dict "@id" (printf "%s#organization" site.BaseURL)) "url" $.Permalink) }}
+{{- end }}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" $graph | jsonify | safeJS }}</script>

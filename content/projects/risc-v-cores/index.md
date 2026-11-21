@@ -8,6 +8,7 @@ datos:
   - "RV128IMAC (dual mode)"
   - "Linux on FPGA"
   - "VHDL-2008"
+seotitle: "RISC-V processor cores in VHDL for space — Hercoss"
 ---
 
 ## What they are

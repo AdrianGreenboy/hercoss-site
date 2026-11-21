@@ -10,6 +10,8 @@ datos:
   - "1.6TbE · ~2 Tbps Ethernet"
   - "67 peripheral controllers"
   - "300 krad target"
+seotitle: "HERCOSS Exxo A1 — Radiation-hardened RISC-V FPGA SoC for space"
+product: "Space-grade FPGA SoC"
 ---
 
 {{< aviso "Patent analysis in progress" >}}

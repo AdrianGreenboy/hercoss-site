@@ -9,6 +9,7 @@ datos:
   - "40GbE vs commercial NIC"
   - "Ping 5 / 5 from a PC"
   - "Full AXI4 register banks"
+seotitle: "Ethernet MAC, PCS and SerDes IP cores, path to 1.6TbE — Hercoss"
 ---
 
 ## What they are

@@ -8,6 +8,7 @@ datos:
   - "IHP SG13G2"
   - "IHP precheck: clean"
   - "Open-source flow"
+seotitle: "Embedded FPGA (eFPGA) fabric on IHP SG13G2 130 nm — Hercoss"
 ---
 
 ## What it is

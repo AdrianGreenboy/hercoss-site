@@ -9,6 +9,7 @@ datos:
   - "Simulation + real hardware"
   - "Full AXI4 interfaces"
   - "47 of the A1's 67 controllers"
+seotitle: "Space IP cores: SpaceWire, MIL-STD-1553, CAN, Ethernet, PQC — Hercoss"
 ---
 
 ## What an IP core is

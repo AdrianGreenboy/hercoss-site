@@ -9,6 +9,7 @@ datos:
   - "1.36 µs CPU-to-CPU call"
   - "Linux 6.6 SMP"
   - "214 / 214 tests on FPGA"
+seotitle: "RV128IMAC — 128-bit RISC-V processor core for space computing — Hercoss"
 ---
 
 {{< aviso "Patent analysis in progress" >}}

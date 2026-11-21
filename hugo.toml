@@ -1,9 +1,14 @@
 baseURL = "https://www.hercoss.com/"
 locale = "en"
 title = "Hercoss"
+enableRobotsTXT = true
 disableKinds = ["taxonomy", "term"]
 
 [params]
+  seotitle = "Hercoss — Radiation-hardened RISC-V chips and FPGA SoCs for space"
+  ogimage = "img/og-default.jpg"
+  city = "Bremen"
+  country = "DE"
   tagline = "The New Way of Doing Engineering"
   description = "Hercoss designs chips and IP cores for space and high-performance systems: RISC-V processors, its own FPGA fabric and high-speed links. Its flagship is the HERCOSS Exxo A1, a 128-bit RISC-V FPGA SoC for space, open to investors and partners."
   email = "adrian@hercoss.com"
