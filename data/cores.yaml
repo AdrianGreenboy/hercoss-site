@@ -11,6 +11,11 @@
   estado: desarrollo
   que: "64-bit RISC-V processor; its features are being carried over into the RV128IMAC."
   a1: ""
+- nombre: "NOC_512"
+  cat: "Interconnect"
+  estado: validado
+  que: "512-bit network-on-chip with a packet plane for AXI4 traffic and a circuit plane for bulk data; zero errors on FPGA silicon."
+  a1: "Joins every block of the chip"
 - nombre: "SERDES_256G v1.0"
   cat: "Links"
   estado: validado

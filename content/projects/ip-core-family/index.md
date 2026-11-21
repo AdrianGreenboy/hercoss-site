@@ -1,7 +1,7 @@
 ---
 title: "IP core family"
 layout: article
-weight: 6
+weight: 7
 estado: "Validated on FPGA · Becoming the Exxo A1"
 summary: "A library of reusable hardware blocks written in VHDL-2008: processors, high-speed links, space buses, general peripherals and post-quantum cryptography. Most are already validated on FPGA hardware, and together they become the peripherals of the HERCOSS Exxo A1."
 datos:
@@ -33,8 +33,9 @@ In the [HERCOSS Exxo A1](/projects/hercoss-exxo-a1/), these cores become
 **47 of the chip's 67 hard peripheral controllers**: 10 SpaceWire, 5
 MIL-STD-1553, 10 CAN, 5 UART, 5 I²C, 5 I³C, 5 SPI and 2 SD, all built from
 IP already validated on FPGA. The RV128IMAC becomes the chip's sixteen
-processors, and the SerDes, PCS, MAC and PTP cores are the basis of its
-Ethernet.
+processors, the SerDes, PCS, MAC and PTP cores are the basis of its
+Ethernet, and [NOC_512](/projects/noc-512/) is the network that connects
+them all.
 
 Every core is now being reviewed for chip readiness, with a common register
 convention and full AXI4 interfaces, and with flight features such as

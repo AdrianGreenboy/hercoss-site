@@ -1,6 +1,6 @@
 ---
 title: "RISC-V processor cores"
-weight: 4
+weight: 5
 estado: "Validated on FPGA · In development"
 summary: "Processor cores written from scratch in VHDL: a 64-bit core and the 128-bit RV128IMAC, the processor of the Exxo A1, already running Linux on real hardware."
 datos:

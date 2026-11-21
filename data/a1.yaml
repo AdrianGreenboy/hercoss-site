@@ -63,17 +63,20 @@ bloques:
       - "Secure key zeroisation in the flight version."
 
   - id: axi
-    nombre: "512-bit NoC · full AXI4"
+    nombre: "NOC_512 · two planes"
     corto: "Interconnect"
-    titulo: "A 512-bit network-on-chip joins everything"
+    titulo: "A 512-bit network-on-chip with two planes"
     texto: >-
-      A 2D-mesh network-on-chip, 512 bits wide at about 1.5 GHz, links the
-      processors, FPGA fabric, AI array, memory and all I/O. Every element
-      speaks full AXI4, with no reduced protocol variants, so third-party IP
-      plugs in without adapters.
+      NOC_512, Hercoss's own network-on-chip, joins the processors, FPGA
+      fabric, AI array, memory and all I/O on a 4 × 4 mesh. A packet plane
+      carries ordinary AXI4 traffic: registers, DMA, memory. A circuit plane
+      carries bulk data such as 1.6 Tb/s Ethernet, PCIe Gen5 and fast
+      converters on fixed-latency 512-bit lanes that run in parallel and
+      arrive aligned.
     puntos:
-      - "16 × 512-bit AXI4 ports between the processors and the fabric."
-      - "One cache-coherent port per fabric quadrant."
+      - "Validated on FPGA silicon: both planes at once at 250 MHz, zero errors."
+      - "Routes change while traffic flows, without cutting or losing a packet."
+      - "Full AXI4 everywhere; 16 × 512-bit AXI4 ports to the FPGA fabric."
       - "Hardware isolation: a PMP per core and an IOPMP in front of every DMA master."
 
   - id: pcie
@@ -180,6 +183,9 @@ fases:
       - estado: hecho
         titulo: "Space and network IP validated on FPGA"
         texto: "SpaceWire, MIL-STD-1553, CAN, UART, I²C, I³C, SPI, SD, PTP, post-quantum crypto, 25G and 40G Ethernet against a commercial network card, 103 Gb/s SerDes link."
+      - estado: hecho
+        titulo: "NOC_512 network-on-chip validated on FPGA"
+        texto: "Both planes running at once at 250 MHz on a 2 × 2 mesh: four runs with zero errors, up to 96 million AXI4 bursts per run; the full 4 × 4 mesh passes in simulation."
       - estado: curso
         titulo: "A1 architecture and RTL"
         texto: "SoC RTL with the RV128IMAC cluster; regression in simulation; review of every IP core for the chip."
@@ -193,7 +199,7 @@ fases:
     gate: "CPU clock, SerDes performance and radiation behaviour measured on the target node before the production commitment."
     items:
       - estado: plan
-        titulo: "16-core cluster on a large FPGA"
+        titulo: "16-core cluster and 4 × 4 network on a large FPGA"
         texto: "The full design no longer fits the current board; emulation moves to a larger Versal platform."
       - estado: plan
         titulo: "Shuttle test chip at a European foundry"
