@@ -51,6 +51,18 @@
   cat: "Space"
   estado: validado
   que: "Serial port for console, telemetry and maintenance."
+- nombre: "I²C / I³C"
+  cat: "Space"
+  estado: validado
+  que: "Sensor and housekeeping buses, including the newer I³C."
+- nombre: "SPI"
+  cat: "Space"
+  estado: validado
+  que: "Serial bus for flash memory and peripherals."
+- nombre: "SD"
+  cat: "Space"
+  estado: validado
+  que: "SD card controller for storage and boot."
 - nombre: "ML-KEM / ML-DSA"
   cat: "Security"
   estado: validado

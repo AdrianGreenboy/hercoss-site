@@ -179,7 +179,7 @@ fases:
         texto: "24 of 24 injected faults corrected, 0 corrupted results, measured with the earlier 64-bit cores of the A1 SoC."
       - estado: hecho
         titulo: "Space and network IP validated on FPGA"
-        texto: "SpaceWire, MIL-STD-1553, CAN, PTP, post-quantum crypto, 25G and 40G Ethernet against a commercial network card, 103 Gb/s SerDes link."
+        texto: "SpaceWire, MIL-STD-1553, CAN, UART, I²C, I³C, SPI, SD, PTP, post-quantum crypto, 25G and 40G Ethernet against a commercial network card, 103 Gb/s SerDes link."
       - estado: curso
         titulo: "A1 architecture and RTL"
         texto: "SoC RTL with the RV128IMAC cluster; regression in simulation; review of every IP core for the chip."

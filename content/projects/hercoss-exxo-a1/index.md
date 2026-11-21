@@ -186,6 +186,7 @@ is in design, and what is still pending.
 | Fabric tile area | 56,222 µm² per tile of 8 LUT4, 616 configuration bits | Measured from layout |
 | DICE configuration cell | 31.2 µm², DRC and LVS clean; holds a 1 pC strike (a standard cell flips at 8.3 fC) | Layout signed off; SEU in simulation |
 | Space IP | SpaceWire, MIL-STD-1553, CAN, UART, PTP 802.1AS | Validated on FPGA |
+| General peripheral IP | I²C, I³C, SPI, SD | Validated on FPGA |
 | Network IP | 25G and 40G Ethernet MAC/PCS against a commercial NIC, 1-hour soak with zero errors; 103 Gb/s SerDes link | Validated on FPGA |
 | Post-quantum crypto | ML-KEM and ML-DSA accelerators | Validated on FPGA |
 
@@ -205,8 +206,7 @@ An honest list of what has to happen before the A1 is a chip:
 - **Ethernet above 40G:** 100G to 1.6T MACs and PCS; the 25G and 40G versions
   are proven.
 - **AI array and DSP cores:** architecture defined, RTL pending.
-- **Remaining peripherals:** PCIe and MIPI controllers in development; I²C,
-  I³C, SPI and SD pending.
+- **Remaining peripherals:** PCIe and MIPI controllers in development.
 - **Scale the FPGA fabric** from the 130 nm test-chip tile to 500,000 LUTs.
 - **Chip implementation flow:** memory macros, test logic (DFT), timing and
   area on the production node.

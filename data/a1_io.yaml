@@ -43,22 +43,22 @@
 - nombre: "I²C"
   n: 5
   cat: "General"
-  estado: pending
+  estado: proven
   detalle: "Sensors and housekeeping"
 - nombre: "I³C"
   n: 5
   cat: "General"
-  estado: pending
+  estado: proven
   detalle: "Next-generation sensor bus"
 - nombre: "SPI"
   n: 5
   cat: "General"
-  estado: pending
+  estado: proven
   detalle: "Flash and peripherals"
 - nombre: "SD"
   n: 2
   cat: "Storage and sensors"
-  estado: pending
+  estado: proven
   detalle: "Storage and boot"
 - nombre: "MIPI CSI-2"
   n: 2
