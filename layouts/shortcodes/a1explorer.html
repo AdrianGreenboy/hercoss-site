@@ -1,0 +1,20 @@
+{{ $d := hugo.Data.a1 }}
+<div class="soc-wrap">
+  <div class="soc" role="tablist" aria-label="Chip blocks">
+    {{ range $i, $b := $d.bloques }}
+    <button class="soc-block" style="grid-area: {{ $b.id }}" role="tab" data-block="{{ $b.id }}" aria-selected="{{ if eq $i 0 }}true{{ else }}false{{ end }}">
+      <span class="soc-corto">{{ $b.corto }}</span>
+      <span class="soc-nombre">{{ $b.nombre }}</span>
+    </button>
+    {{ end }}
+  </div>
+  <div class="soc-detail">
+    {{ range $d.bloques }}
+    <div class="soc-panel" data-panel="{{ .id }}" role="tabpanel">
+      <h3>{{ .titulo }}</h3>
+      <p>{{ .texto }}</p>
+      <ul>{{ range .puntos }}<li>{{ . }}</li>{{ end }}</ul>
+    </div>
+    {{ end }}
+  </div>
+</div>

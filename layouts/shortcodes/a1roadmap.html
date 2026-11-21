@@ -1,0 +1,23 @@
+{{ $d := hugo.Data.a1 }}
+<p class="leyenda">
+  <span class="estado hecho">Done</span>
+  <span class="estado curso">In progress</span>
+  <span class="estado plan">Planned</span>
+</p>
+<div class="fases">
+  {{ range $d.fases }}
+  <section class="fase {{ .estado }}">
+    <header>
+      <span class="fase-id">{{ .id }}</span>
+      <h3>{{ .titulo }}</h3>
+      <span class="estado {{ .estado }}">{{ if eq .estado "hecho" }}Done{{ else if eq .estado "curso" }}Current phase{{ else }}Planned{{ end }}</span>
+    </header>
+    <ol class="ruta">
+      {{ range .items }}
+      <li class="{{ .estado }}"><details><summary>{{ .titulo }}</summary><p>{{ .texto }}</p></details></li>
+      {{ end }}
+    </ol>
+    <p class="gate"><span>Go / no-go gate</span> {{ .gate }}</p>
+  </section>
+  {{ end }}
+</div>

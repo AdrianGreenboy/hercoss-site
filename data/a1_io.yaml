@@ -1,0 +1,77 @@
+# HERCOSS Exxo A1 — on-chip peripheral controllers.
+# n: number of controllers (counted in the total); estado: proven | design | pending
+- nombre: "PCIe Gen5 x16"
+  n: 3
+  cat: "High-speed"
+  estado: design
+  detalle: "48 lanes at 32 GT/s"
+- nombre: "Ethernet 1.6T (PAM4)"
+  n: 1
+  cat: "High-speed"
+  estado: pending
+  detalle: "or 2 × 800G, 4 × 400G, 8 × 200G"
+- nombre: "Ethernet 400G (NRZ)"
+  n: 1
+  cat: "High-speed"
+  estado: design
+  detalle: "or 4 × 100G, 8 × 50G, 16 × 25G / 10G"
+- nombre: "Ethernet 1G management"
+  n: 1
+  cat: "High-speed"
+  estado: pending
+  detalle: "Separate from the SerDes pool"
+- nombre: "SpaceWire"
+  n: 10
+  cat: "Space"
+  estado: proven
+  detalle: "ESA standard link"
+- nombre: "MIL-STD-1553"
+  n: 5
+  cat: "Space"
+  estado: proven
+  detalle: "Command and control bus"
+- nombre: "CAN"
+  n: 10
+  cat: "Space"
+  estado: proven
+  detalle: "Subsystem bus"
+- nombre: "UART"
+  n: 5
+  cat: "General"
+  estado: proven
+  detalle: "Console and telemetry"
+- nombre: "I²C"
+  n: 5
+  cat: "General"
+  estado: pending
+  detalle: "Sensors and housekeeping"
+- nombre: "I³C"
+  n: 5
+  cat: "General"
+  estado: pending
+  detalle: "Next-generation sensor bus"
+- nombre: "SPI"
+  n: 5
+  cat: "General"
+  estado: pending
+  detalle: "Flash and peripherals"
+- nombre: "SD"
+  n: 2
+  cat: "Storage and sensors"
+  estado: pending
+  detalle: "Storage and boot"
+- nombre: "MIPI CSI-2"
+  n: 2
+  cat: "Storage and sensors"
+  estado: design
+  detalle: "Camera inputs"
+- nombre: "24-bit ΣΔ ADC"
+  n: 10
+  cat: "Storage and sensors"
+  estado: pending
+  detalle: "1 differential channel each, up to 4 MS/s"
+- nombre: "DDR controller"
+  n: 2
+  cat: "Memory"
+  estado: pending
+  detalle: "64-bit + 8-bit ECC, up to 32 GiB"

@@ -1,0 +1,22 @@
+{{ $io := hugo.Data.a1_io }}
+{{ $total := 0 }}{{ $proven := 0 }}
+{{ range $io }}{{ $total = add $total .n }}{{ if eq .estado "proven" }}{{ $proven = add $proven .n }}{{ end }}{{ end }}
+{{ $labels := dict "proven" "IP validated on FPGA" "design" "In design" "pending" "Pending" }}
+{{ $classes := dict "proven" "hecho" "design" "curso" "pending" "plan" }}
+<div class="io-total">
+  <div><span class="io-num">{{ $total }}</span><span class="io-lbl">hard peripheral controllers on one die</span></div>
+  <div><span class="io-num">{{ $proven }}</span><span class="io-lbl">of them built from Hercoss IP already validated on FPGA</span></div>
+  <div><span class="io-num">72</span><span class="io-lbl">transceiver lanes, ~3.8 Tb/s raw per direction</span></div>
+</div>
+<div class="io-grid">
+  {{ range $io }}
+  <div class="io-item">
+    <span class="io-n">{{ .n }}×</span>
+    <div>
+      <h3>{{ .nombre }}</h3>
+      <p>{{ .detalle }}</p>
+      <span class="estado {{ index $classes .estado }}">{{ index $labels .estado }}</span>
+    </div>
+  </div>
+  {{ end }}
+</div>

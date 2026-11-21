@@ -1,0 +1,55 @@
+# HERCOSS Exxo A1 — detailed specification.
+# estado: proven (validated on FPGA / layout), design (in design / RTL), pending, target (design target)
+- grupo: "Processors"
+  filas:
+    - ["Application cores", "16 × RV128IMAC, Hercoss's own 128-bit RISC-V (based on the RV128I draft); 4 clusters × 4", "design", "Core proven on FPGA with 2 CPUs; 16-core cluster in design"]
+    - ["Core modes", "128-bit CPU, standard 64-bit CPU, or two 64-bit CPUs per core", "proven", ""]
+    - ["Privilege and memory", "M/S/U modes, Sv39 virtual memory (64-bit mode)", "proven", ""]
+    - ["Operating systems", "Linux (SMP and AMP), FreeRTOS, Zephyr, RTEMS, bare metal", "proven", "Linux 6.6 SMP on FPGA"]
+    - ["Core-to-core calls", "Direct function calls between cores from user programs: 1.36 µs round trip", "proven", "Measured with 2 CPUs; scaling to 16 pending"]
+    - ["L1 caches per core", "64 KiB instruction (16-way) + 32 KiB data (8-way)", "design", "Prototype has 16 + 16 KiB"]
+    - ["L2 cache", "1 MiB per cluster, 4 MiB total", "pending", ""]
+    - ["Fault tolerance", "8 self-healing lockstep pairs; SECDED register file; cache parity", "design", "Lockstep proven on the earlier 64-bit cores; port to RV128IMAC pending"]
+    - ["Isolation", "PMP per core, IOPMP before every DMA master (4 KiB granularity)", "proven", "On the A1 SoC emulation"]
+    - ["Platform controller", "Always-on RV32IM; triple modular redundancy in the RH version", "design", ""]
+- grupo: "Network-on-chip and memory"
+  filas:
+    - ["Network-on-chip", "2D mesh, 512-bit, ~1.5 GHz", "pending", ""]
+    - ["Processor ↔ fabric", "16 × 512-bit AXI4 ports (4 per quadrant, one ACE-Lite coherent)", "pending", ""]
+    - ["Bus standard", "Full AXI4 everywhere, no AXI4-Lite", "design", ""]
+    - ["On-chip memory", "2 MiB OCM, 64 KiB boot ROM", "design", ""]
+    - ["External memory", "2 × DDR controllers, 64-bit + 8-bit ECC each, up to 32 GiB", "pending", ""]
+- grupo: "FPGA fabric"
+  filas:
+    - ["Logic", "500,000 LUT6 in 4 quadrants, Hercoss's own architecture", "design", "Small version runs on FPGA; 130 nm test chip GDS ready"]
+    - ["DSP blocks", "~3,000 (27 × 24)", "pending", ""]
+    - ["Block / ultra RAM", "~36 Mb BRAM + ~36 Mb URAM, with ECC", "pending", ""]
+    - ["Configuration cells", "DICE radiation-hardened, both versions; 31.2 µm² in 130 nm", "proven", "Layout DRC/LVS clean; holds a 1 pC strike in simulation"]
+    - ["Clocking", "2 PLLs per quadrant, 5 external clock inputs, internal 100 MHz oscillator", "pending", ""]
+    - ["Bitstream loading", "JTAG, SD, QSPI/OSPI, from the processors or over PCIe", "design", ""]
+    - ["Bitstream security", "AES-GCM encryption, ML-DSA post-quantum signature", "design", ""]
+    - ["Fabric user I/O", "240 pins", "pending", ""]
+- grupo: "Transceivers and high-speed I/O"
+  filas:
+    - ["SerDes pool", "72 lanes: 8 × 224 Gb/s PAM4 (2 quads) + 64 × 32 Gb/s NRZ (16 quads); ~3.8 Tb/s raw per direction", "pending", "Analog PHYs to be designed or licensed"]
+    - ["Ethernet (TSN)", "Up to ~2 Tbps at once: 1 × 1.6TbE (or 2 × 800G, 4 × 400G, 8 × 200G) + 400G on NRZ (1 × 400G, 4 × 100G, 8 × 50G, 16 × 25G / 10G) + 1 × 1G management", "design", "25G and 40G MAC/PCS validated against a commercial NIC; higher rates in design"]
+    - ["Time base", "Common PTP / IEEE 802.1AS for every Ethernet port", "proven", ""]
+    - ["PCIe", "3 × Gen5 x16 (48 lanes)", "design", "Controller in development"]
+    - ["Fabric access", "The FPGA fabric can drive every transceiver lane", "pending", ""]
+- grupo: "AI, DSP and security"
+  filas:
+    - ["AI array", "8 tiles × 1,024 MACs, 512 KiB SRAM per tile, 1.5 GHz: 8,192 MACs/cycle, ~12 TMAC/s peak", "pending", ""]
+    - ["AI workloads", "CNN, SNN, transformers, FP32 GEMV, MPC for attitude control", "pending", ""]
+    - ["DSP cores", "5 cores for filters, FFTs and sensor fusion", "pending", ""]
+    - ["Post-quantum crypto", "ML-KEM, ML-DSA, AES-GCM; key zeroisation in the flight version", "proven", "IP cores validated on FPGA"]
+- grupo: "Physical, power and radiation"
+  filas:
+    - ["Test chips", "IHP SG13G2 130 nm (phase F1); advanced-node shuttle at a European foundry (phase F2)", "design", ""]
+    - ["Production process", "Advanced node at a European foundry", "pending", ""]
+    - ["Die area (estimate)", "230–320 mm² at a 5 nm-class node; to be re-estimated for the chosen node", "target", ""]
+    - ["Package", "1,752 columns, ≥ 35 % power and ground; flip-chip (COTS), ceramic CCGA (RH)", "pending", ""]
+    - ["Power islands", "33 independently switchable islands, one always-on", "design", ""]
+    - ["Total ionizing dose (RH)", "300 krad(Si), test target 600 krad", "target", ""]
+    - ["Single-event latch-up (RH)", "Immune to ≥ 75 MeV·cm²/mg", "target", ""]
+    - ["Temperature", "−55 to +125 °C junction operating; −150 to +100 °C survival (RH)", "target", ""]
+    - ["Mission life (RH)", "10 years, designed for 15; GEO and interplanetary", "target", ""]

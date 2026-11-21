@@ -1,0 +1,13 @@
+{{ $d := hugo.Data.a1 }}
+<div class="toggle" role="tablist" aria-label="Variants">
+  {{ range $i, $v := $d.variantes }}
+  <button role="tab" data-variante="{{ $v.id }}" aria-selected="{{ if eq $i 1 }}true{{ else }}false{{ end }}">{{ $v.nombre }}</button>
+  {{ end }}
+</div>
+{{ range $d.variantes }}
+<div class="variante" data-variante-panel="{{ .id }}">
+  <h3>{{ .titulo }}</h3>
+  <p>{{ .texto }}</p>
+  {{ with .filas }}<table>{{ range . }}<tr><th>{{ index . 0 }}</th><td>{{ index . 1 }}</td></tr>{{ end }}</table>{{ end }}
+</div>
+{{ end }}

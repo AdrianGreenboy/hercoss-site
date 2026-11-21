@@ -1,0 +1,22 @@
+{{ $labels := dict "proven" "Validated" "design" "In design" "pending" "Pending" "target" "Design target" }}
+{{ $classes := dict "proven" "hecho" "design" "curso" "pending" "plan" "target" "objetivo" }}
+<div class="filtro spec-filtro" role="group" aria-label="Filter by status">
+  <button data-specfiltro="*" aria-pressed="true">All</button>
+  {{ range $k := slice "proven" "design" "pending" "target" }}<button data-specfiltro="{{ $k }}" aria-pressed="false">{{ index $labels $k }}</button>{{ end }}
+</div>
+<div class="specs">
+  {{ range hugo.Data.a1_specs }}
+  <details class="spec-grupo" open>
+    <summary>{{ .grupo }} <span class="spec-n">{{ len .filas }}</span></summary>
+    <table>
+      {{ range .filas }}
+      <tr data-specestado="{{ index . 2 }}">
+        <th>{{ index . 0 }}</th>
+        <td>{{ index . 1 }}{{ with index . 3 }}<span class="spec-nota">{{ . }}</span>{{ end }}</td>
+        <td class="spec-estado"><span class="estado {{ index $classes (index . 2) }}">{{ index $labels (index . 2) }}</span></td>
+      </tr>
+      {{ end }}
+    </table>
+  </details>
+  {{ end }}
+</div>

@@ -13,7 +13,10 @@
     <h2 class="grande">{{ .Title }}</h2>
     <p class="lead">{{ .Params.summary }}</p>
     {{ with .Params.datos }}<ul class="datos">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
-    <p><a class="button" href="{{ .RelPermalink }}#explore">Explore the chip →</a></p>
+    <p>
+      <a class="button" href="{{ .RelPermalink }}#invest">Investment opportunity →</a>
+      <a class="button secundario" href="{{ .RelPermalink }}#explore">Explore the chip</a>
+    </p>
   </div>
   {{ with .Resources.GetMatch "cover.*" }}{{ with .Fill "900x700 Center" }}
   <a href="{{ $a1 }}"><img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Concept illustration of the HERCOSS Exxo A1 chip"></a>

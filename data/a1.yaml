@@ -1,172 +1,227 @@
-# Text for the interactive HERCOSS Exxo A1 diagram.
-# Edit here; no need to touch HTML.
+# HERCOSS Exxo A1 — interactive chip explorer, variants and roadmap.
+# Edit text here; no HTML needed. Figures are design targets unless marked as measured.
 
 bloques:
   - id: cpu
     nombre: "16 × RV128IMAC cluster"
     corto: "Processors"
-    titulo: "A cluster of sixteen 128-bit RISC-V processors"
+    titulo: "Sixteen 128-bit RISC-V processors"
     texto: >-
-      The A1's processors are sixteen RV128IMAC cores, Hercoss's own 128-bit
-      RISC-V design. Each core can run as a 128-bit CPU, as a standard 64-bit
-      CPU, or as two 64-bit CPUs, and any core can call a function on another
-      directly, without going through the operating system.
+      Sixteen RV128IMAC cores, Hercoss's own 128-bit RISC-V design, in four
+      clusters of four with 1 MiB of L2 cache per cluster. Each core runs as a
+      128-bit CPU, as a standard 64-bit CPU, or as two 64-bit CPUs, and any
+      core can call a function on another directly, without the operating
+      system in between.
     puntos:
       - "Runs standard 64-bit RISC-V software: Linux, FreeRTOS, Zephyr, RTEMS."
-      - "Up to 16 independent Linux instances; AMP and SMP can be mixed."
-      - "Core-to-core calls about 5× faster than an empty Linux system call, measured on the FPGA prototype."
-      - "128-bit words for big-number maths and cryptography: 1.63× faster than 64-bit on the prototype."
-      - "Already running Linux SMP on an FPGA prototype: see the RV128IMAC project."
+      - "Up to 16 isolated Linux domains, or SMP groups, mixed freely."
+      - "Core-to-core call: 1.36 µs round trip, about 5× faster than an empty Linux system call (2-CPU FPGA prototype)."
+      - "Self-healing lockstep: any two neighbouring cores pair up and correct transient faults automatically, with no reset."
+      - "64 KiB instruction and 32 KiB data cache per core (A1 target)."
 
   - id: fpga
     nombre: "~500K-LUT FPGA fabric"
     corto: "Reconfigurable logic"
-    titulo: "An FPGA inside the chip itself"
+    titulo: "A 500,000-LUT FPGA inside the chip"
     texto: >-
-      Next to the processors sits a programmable logic fabric with a target of
-      about 500,000 LUTs. It is hardware that can be redefined after the chip
-      is manufactured, even with the satellite already in orbit: bugs get
-      fixed and functions get added without new silicon.
+      Hercoss's own FPGA architecture: 500,000 six-input LUTs in four
+      quadrants, about 3,000 DSP blocks and about 72 Mb of block and ultra RAM
+      with ECC. Hardware that can be redefined after launch: bugs get fixed and
+      functions get added in orbit, without new silicon.
     puntos:
-      - "FPGA fabric of Hercoss's own design, not licensed from an FPGA vendor."
-      - "Hercoss IP cores are offered both as hard IP (fixed in silicon) and as soft IP (loadable into the fabric)."
-      - "A first, reduced version of the fabric already runs and has been taken to layout: see the eFPGA fabric project."
+      - "Radiation-hardened DICE configuration cells in both versions."
+      - "Bitstreams encrypted with AES-GCM and signed with ML-DSA, a post-quantum signature."
+      - "The fabric drives the same transceivers as the hard controllers: up to ~2 Tbps of Ethernet."
+      - "Four 512-bit AXI4 ports per quadrant into the network-on-chip, one of them cache-coherent."
+      - "First step done: a small version runs on an FPGA and its 130 nm layout passed IHP's tape-out precheck."
 
   - id: ia
     nombre: "AI and attitude control"
     corto: "Acceleration"
-    titulo: "Acceleration for AI and attitude control"
+    titulo: "One array for AI, neural networks and attitude control"
     texto: >-
-      A dedicated compute array brings together what other chips keep as
-      separate blocks: AI engines, neural processing units and the
-      satellite's attitude determination and control (ADCS) algorithms.
+      Eight tiles of 1,024 multiply-accumulate units, each with 512 KiB of
+      local SRAM, at 1.5 GHz: 8,192 MACs per cycle, about 12 TMAC/s peak.
+      What other chips split into three engines shares one array here, so a
+      mission can re-balance the work.
     puntos:
-      - "Convolutional networks (CNN) and spiking networks (SNN), among others."
-      - "Processes data on board instead of downlinking all of it to the ground."
+      - "Convolutional (CNN) and spiking (SNN) networks, transformers, FP32 matrix–vector."
+      - "Model-predictive control for attitude determination and control (ADCS)."
+      - "Every tile is its own power island and can be switched off."
 
   - id: seg
-    nombre: "Post-quantum cryptography"
+    nombre: "Post-quantum security"
     corto: "Security"
     titulo: "Security ready for the quantum era"
     texto: >-
-      A satellite can operate for ten years or more. Communications protected
-      today with classical cryptography could be decrypted by a future quantum
-      computer, so the A1 includes accelerators for the newly standardized
-      algorithms.
+      A satellite flies for ten years or more; a future quantum computer could
+      break today's classical cryptography during that time. The A1 carries a
+      post-quantum engine for the newly standardised algorithms.
     puntos:
-      - "ML-KEM for key exchange and ML-DSA for digital signatures."
-      - "Secure key zeroization in the flight variant."
+      - "ML-KEM key exchange and ML-DSA signatures, plus AES-GCM."
+      - "The same signatures protect FPGA bitstreams: a captured uplink cannot inject logic."
+      - "Secure key zeroisation in the flight version."
 
   - id: axi
-    nombre: "Full AXI4 interconnect"
-    corto: "Internal bus"
-    titulo: "One bus for the whole chip"
+    nombre: "512-bit NoC · full AXI4"
+    corto: "Interconnect"
+    titulo: "A 512-bit network-on-chip joins everything"
     texto: >-
-      Every element of the A1 connects through full AXI4, with no reduced
-      versions of the protocol. Processors, FPGA fabric and peripherals speak
-      the same language, which makes it simpler to integrate new blocks and
-      reuse existing IP.
+      A 2D-mesh network-on-chip, 512 bits wide at about 1.5 GHz, links the
+      processors, FPGA fabric, AI array, memory and all I/O. Every element
+      speaks full AXI4, with no reduced protocol variants, so third-party IP
+      plugs in without adapters.
     puntos:
-      - "Same interface for hard IP and soft IP."
-      - "An open standard with broad tool support."
+      - "16 × 512-bit AXI4 ports between the processors and the fabric."
+      - "One cache-coherent port per fabric quadrant."
+      - "Hardware isolation: a PMP per core and an IOPMP in front of every DMA master."
 
   - id: pcie
     nombre: "3 × PCIe Gen5 x16"
     corto: "Expansion"
     titulo: "Three 16-lane PCI Express Gen5 interfaces"
     texto: >-
-      PCI Express is the standard way to attach storage, accelerators or other
-      chips. Three Gen5 x16 interfaces give the A1 the bandwidth for payloads
-      that move large volumes of data.
+      Three PCIe Gen5 x16 controllers, 48 lanes at 32 GT/s, for storage,
+      accelerators or a host computer: about 1.5 Tb/s in each direction.
     puntos:
-      - "Gen5: 32 Gbit/s per lane."
+      - "Gen5: 32 GT/s per lane."
       - "Compatible with existing commercial hardware."
+      - "Bitstreams can also be loaded over PCIe."
 
   - id: enlaces
-    nombre: "Ethernet and SerDes"
+    nombre: "1.6TbE · ~2 Tbps Ethernet"
     corto: "Fast links"
-    titulo: "High-speed serial links"
+    titulo: "Up to ~2 Tbps of Ethernet"
     texto: >-
-      Hercoss's Ethernet and SerDes cores provide the chip's network
-      connectivity. They are already tested on FPGA against commercial
-      hardware.
+      A pool of 72 serial transceivers: eight 224 Gb/s PAM4 lanes for a
+      1.6 Tb/s Ethernet port and 64 lanes at 32 Gb/s for 400G Ethernet and
+      PCIe. All Ethernet ports are time-sensitive (TSN) on one precise
+      time base.
     puntos:
-      - "25G and 40G Ethernet with Hercoss's own MAC and PCS."
-      - "Multi-lane SerDes with its own 64B/66B line coding."
-      - "PTP / IEEE 802.1AS time synchronization."
+      - "1 × 1.6TbE, or 2 × 800G, 4 × 400G, 8 × 200G on the PAM4 lanes."
+      - "400G more on NRZ lanes: 1 × 400G, 4 × 100G, 8 × 50G or 16 × 25G / 10G."
+      - "Common PTP / IEEE 802.1AS time base for every port."
+      - "Hercoss's own Ethernet and SerDes IP already runs on FPGA against commercial network cards."
 
   - id: espacio
     nombre: "SpaceWire · 1553 · CAN"
     corto: "Space buses"
     titulo: "The buses the space industry uses"
     texto: >-
-      A satellite is built around buses with decades of flight heritage. The
-      A1 integrates them so it connects directly to existing instruments and
-      equipment, with no additional chips.
+      Spacecraft are built around buses with decades of flight heritage. The
+      A1 integrates them, so it connects straight to existing instruments and
+      equipment with no extra chips.
     puntos:
-      - "SpaceWire, ESA's standard link for instrument data."
-      - "MIL-STD-1553, a high-reliability command and control bus."
-      - "CAN and USART for subsystems and maintenance."
+      - "10 × SpaceWire, ESA's standard link for instrument data."
+      - "5 × MIL-STD-1553 command and control buses."
+      - "10 × CAN for subsystems."
+      - "All three already validated on FPGA as Hercoss IP cores."
 
   - id: adc
     nombre: "10 × 24-bit ΣΔ ADC"
     corto: "Analog inputs"
     titulo: "Ten 24-bit analog-to-digital converters"
     texto: >-
-      Real-world sensors deliver analog signals. Ten 24-bit sigma-delta
-      converters read them at high resolution without external components.
+      Ten sigma-delta converters, one differential channel each, at up to
+      4 MS/s, read sensors at high resolution without external converter
+      chips.
     puntos:
-      - "Sigma-delta architecture: high resolution from little analog circuitry."
-      - "Intended for attitude sensors, telemetry and instruments."
+      - "For attitude sensors, telemetry and instruments."
+      - "Sigma-delta: high resolution from little analog circuitry."
 
 variantes:
   - id: cots
     nombre: "COTS"
-    titulo: "Commercial variant"
+    titulo: "Commercial version"
     texto: >-
-      The commercial version of the chip: the same architecture and the same
-      software, without the radiation hardening.
-    filas: []
+      The same die in a flip-chip package for edge AI, industrial systems and
+      NewSpace constellations in low Earth orbit.
+    filas:
+      - ["Markets", "Edge AI, industrial, NewSpace LEO"]
+      - ["Package", "Flip-chip"]
+      - ["Junction temperature", "−55 °C to +125 °C"]
+      - ["FPGA configuration", "DICE radiation-hardened cells"]
+      - ["Platform controller", "RV32IM"]
   - id: rad
     nombre: "Rad-hard"
-    titulo: "Hardened variant for deep space"
+    titulo: "Radiation-hardened version for GEO and deep space"
     texto: >-
-      The same design with radiation protection on the configuration, the
-      memories and the registers. The figures are design targets.
+      The same mask in a ceramic column-grid package, with radiation
+      hardening for long missions. The figures are design targets; the
+      radiation tests come in phase F4.
     filas:
-      - ["Total ionizing dose (TID)", "300 krad"]
-      - ["Mission", "GEO and interplanetary"]
-      - ["Lifetime", "10 years"]
-      - ["Operating temperature", "−55 °C to +125 °C"]
+      - ["Markets", "GEO, interplanetary, long-life missions"]
+      - ["Package", "Ceramic column-grid array (CCGA)"]
+      - ["Total ionizing dose", "300 krad(Si) target; test target 600 krad (2× margin)"]
+      - ["Single-event latch-up", "Immune to ≥ 75 MeV·cm²/mg (target)"]
+      - ["Junction temperature", "−55 °C to +125 °C operating; −150 °C to +100 °C survival"]
+      - ["Mission life", "10 years, designed for 15"]
+      - ["Platform controller", "RV32IM with triple modular redundancy"]
 
-hoja_de_ruta:
-  - estado: hecho
-    titulo: "Own eFPGA fabric running on FPGA"
-    texto: "The first version of the fabric runs inside a commercial FPGA and passes the runtime reconfiguration self-test."
-  - estado: hecho
-    titulo: "eFPGA fabric taken to layout (GDS)"
-    texto: "Implemented in the European IHP SG13G2 process with an open-source flow. It passes the official IHP precheck with no LVS, antenna or timing errors."
-  - estado: hecho
-    titulo: "RV128IMAC core running Linux on FPGA"
-    texto: "The A1's 128-bit processor core runs Linux SMP and core-to-core calls on an FPGA prototype, with 214 of 214 board tests passing."
-  - estado: curso
-    titulo: "IP core family validated on FPGA"
-    texto: "The cores are tested in simulation and on real hardware. In progress: a full review to make them ready for the chip."
-  - estado: curso
-    titulo: "A1 architecture and RTL"
-    texto: "Design of the complete SoC and verification in simulation."
-  - estado: plan
-    titulo: "Sixteen-core cluster"
-    texto: "Scaling the core-to-core connection from the two-CPU prototype to the A1's sixteen cores, and adding the radiation-hardening features."
-  - estado: plan
-    titulo: "Emulation on a larger FPGA"
-    texto: "The full design no longer fits the current development board; the next step is a larger platform."
-  - estado: plan
-    titulo: "Test chip"
-    texto: "Fabrication of a first test chip in SG13G2."
-  - estado: plan
-    titulo: "HERCOSS Exxo A1: COTS variant and rad-hard variant"
-    texto: "Fabrication of the complete chip, with the goal of doing it in Europe."
-  - estado: plan
-    titulo: "Hercoss design tools"
-    texto: "The user environment for programming the chip: a graphical interface and a command-line flow."
+# Roadmap: each phase ends at a go/no-go gate. Dates per phase are still open.
+fases:
+  - id: F1
+    titulo: "Proof of concept and first silicon"
+    estado: curso
+    gate: "Test-chip silicon measured: fabric tile area, timing and configuration on real 130 nm silicon."
+    items:
+      - estado: hecho
+        titulo: "Own eFPGA fabric running on an FPGA"
+        texto: "The first version of the fabric runs inside an AMD Versal device and passes the runtime reconfiguration self-test."
+      - estado: hecho
+        titulo: "Fabric test chip passes IHP's tape-out precheck"
+        texto: "130 nm layout (IHP SG13G2, Frankfurt (Oder)), open-source flow; LVS, antenna and timing clean. GDS ready."
+      - estado: hecho
+        titulo: "RV128IMAC core runs Linux on FPGA"
+        texto: "Linux 6.6 SMP, core-to-core calls in 1.36 µs, 214 of 214 board tests passing."
+      - estado: hecho
+        titulo: "Self-healing lockstep corrects faults on FPGA"
+        texto: "24 of 24 injected faults corrected, 0 corrupted results, measured with the earlier 64-bit cores of the A1 SoC."
+      - estado: hecho
+        titulo: "Space and network IP validated on FPGA"
+        texto: "SpaceWire, MIL-STD-1553, CAN, PTP, post-quantum crypto, 25G and 40G Ethernet against a commercial network card, 103 Gb/s SerDes link."
+      - estado: curso
+        titulo: "A1 architecture and RTL"
+        texto: "SoC RTL with the RV128IMAC cluster; regression in simulation; review of every IP core for the chip."
+      - estado: plan
+        titulo: "Fabricate and measure the fabric test chip"
+        texto: "Tape-out at IHP and first measurements on real silicon."
+
+  - id: F2
+    titulo: "Full-system emulation and advanced-node shuttle"
+    estado: plan
+    gate: "CPU clock, SerDes performance and radiation behaviour measured on the target node before the production commitment."
+    items:
+      - estado: plan
+        titulo: "16-core cluster on a large FPGA"
+        texto: "The full design no longer fits the current board; emulation moves to a larger Versal platform."
+      - estado: plan
+        titulo: "Shuttle test chip at a European foundry"
+        texto: "Cores, a fabric slice and transceivers on the advanced node, to measure frequency, area and single-event effects."
+      - estado: plan
+        titulo: "Analog and mixed-signal IP selected"
+        texto: "SerDes, PCIe, DDR and ADC physical layers: designed in-house or licensed."
+
+  - id: F3
+    titulo: "Production die (COTS)"
+    estado: plan
+    gate: "Working COTS samples with the full feature set."
+    items:
+      - estado: plan
+        titulo: "HERCOSS Exxo A1 production mask"
+        texto: "Full die, flip-chip package, bring-up board."
+      - estado: plan
+        titulo: "Hercoss design tools"
+        texto: "GUI and TCL/bash flow to partition the chip, generate device trees and build FPGA bitstreams."
+
+  - id: F4
+    titulo: "Radiation-hardened version and flight qualification"
+    estado: plan
+    gate: "Space qualification: a chip European missions can fly."
+    items:
+      - estado: plan
+        titulo: "Ceramic CCGA package and radiation testing"
+        texto: "Total dose, single-event and latch-up testing to the 300 / 600 krad targets."
+      - estado: plan
+        titulo: "Flight qualification"
+        texto: "Qualification with space agencies, including ESA."

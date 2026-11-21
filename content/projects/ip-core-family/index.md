@@ -40,5 +40,5 @@ finished.
 
 ## Source code
 
-The cores are hosted on GitHub:
+Source code is available to partners on request. Hercoss on GitHub:
 [github.com/AdrianGreenboy](https://github.com/AdrianGreenboy).

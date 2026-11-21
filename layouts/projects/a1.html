@@ -1,78 +1,16 @@
 {{ define "main" }}
-{{ $d := hugo.Data.a1 }}
 <article class="a1">
   <p class="eyebrow">Flagship · {{ .Params.estado }}</p>
   <h1>{{ .Title }}</h1>
   <p class="lead">{{ .Params.summary }}</p>
-  {{ with .Params.datos }}
-  <ul class="datos">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>
-  {{ end }}
-
+  {{ with .Params.datos }}<ul class="datos">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
+  <p>
+    <a class="button" href="#invest">Investment opportunity</a>
+    <a class="button secundario" href="#specs">Full specification</a>
+  </p>
   {{ with .Resources.GetMatch "cover.*" }}{{ with .Fit "1600x1000" }}
   <img class="hero-img" src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Concept illustration of the HERCOSS Exxo A1 chip">
   {{ end }}{{ end }}
-
   <div class="prose">{{ .Content }}</div>
-
-  <h2 id="explore">Explore the chip</h2>
-  <p class="hint">Click any block to see what it does and why it is there.</p>
-  <div class="soc-wrap">
-    <div class="soc" role="tablist" aria-label="Chip blocks">
-      {{ range $i, $b := $d.bloques }}
-      <button class="soc-block" style="grid-area: {{ $b.id }}" role="tab" data-block="{{ $b.id }}" aria-selected="{{ if eq $i 0 }}true{{ else }}false{{ end }}">
-        <span class="soc-corto">{{ $b.corto }}</span>
-        <span class="soc-nombre">{{ $b.nombre }}</span>
-      </button>
-      {{ end }}
-    </div>
-    <div class="soc-detail">
-      {{ range $i, $b := $d.bloques }}
-      <div class="soc-panel" data-panel="{{ $b.id }}" role="tabpanel">
-        <h3>{{ $b.titulo }}</h3>
-        <p>{{ $b.texto }}</p>
-        <ul>{{ range $b.puntos }}<li>{{ . }}</li>{{ end }}</ul>
-      </div>
-      {{ end }}
-    </div>
-  </div>
-
-  <h2 id="variants">One design, two variants</h2>
-  <div class="toggle" role="tablist" aria-label="Variants">
-    {{ range $i, $v := $d.variantes }}
-    <button role="tab" data-variante="{{ $v.id }}" aria-selected="{{ if eq $i 1 }}true{{ else }}false{{ end }}">{{ $v.nombre }}</button>
-    {{ end }}
-  </div>
-  {{ range $d.variantes }}
-  <div class="variante" data-variante-panel="{{ .id }}">
-    <h3>{{ .titulo }}</h3>
-    <p>{{ .texto }}</p>
-    {{ with .filas }}
-    <table>
-      {{ range . }}<tr><th>{{ index . 0 }}</th><td>{{ index . 1 }}</td></tr>{{ end }}
-    </table>
-    {{ end }}
-  </div>
-  {{ end }}
-
-  <h2 id="roadmap">Roadmap</h2>
-  <p class="leyenda">
-    <span class="estado hecho">Done</span>
-    <span class="estado curso">In progress</span>
-    <span class="estado plan">Planned</span>
-  </p>
-  <ol class="ruta">
-    {{ range $d.hoja_de_ruta }}
-    <li class="{{ .estado }}">
-      <details>
-        <summary>{{ .titulo }}</summary>
-        <p>{{ .texto }}</p>
-      </details>
-    </li>
-    {{ end }}
-  </ol>
-
-  <h2>Get in touch</h2>
-  <p class="lead">Hercoss is looking for European cooperation to take the A1 from design to a working chip.</p>
-  <p><a class="button" href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a></p>
 </article>
 {{ end }}

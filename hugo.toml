@@ -5,7 +5,7 @@ disableKinds = ["taxonomy", "term"]
 
 [params]
   tagline = "The New Way of Doing Engineering"
-  description = "Hercoss designs chips and IP cores for space and high-performance systems: RISC-V processors, its own FPGA fabric and high-speed links. Its flagship is the HERCOSS Exxo A1 FPGA SoC."
+  description = "Hercoss designs chips and IP cores for space and high-performance systems: RISC-V processors, its own FPGA fabric and high-speed links. Its flagship is the HERCOSS Exxo A1, a 128-bit RISC-V FPGA SoC for space, open to investors and partners."
   email = "adrian@hercoss.com"
   github = "https://github.com/AdrianGreenboy"
 
@@ -13,6 +13,11 @@ disableKinds = ["taxonomy", "term"]
   name = "Exxo A1"
   pageRef = "/projects/hercoss-exxo-a1"
   weight = 5
+
+[[menu.main]]
+  name = "Invest"
+  url = "/projects/hercoss-exxo-a1/#invest"
+  weight = 6
 
 [[menu.main]]
   name = "Projects"

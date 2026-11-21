@@ -45,6 +45,22 @@
     });
   });
 
+  // Specification filter by status.
+  var sbtns = document.querySelectorAll("[data-specfiltro]");
+  var srows = document.querySelectorAll("[data-specestado]");
+  sbtns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var f = b.dataset.specfiltro;
+      sbtns.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      srows.forEach(function (r) { r.hidden = f !== "*" && r.dataset.specestado !== f; });
+      document.querySelectorAll(".spec-grupo").forEach(function (g) {
+        var n = g.querySelectorAll("tr[data-specestado]:not([hidden])").length;
+        g.hidden = n === 0;
+        var c = g.querySelector(".spec-n"); if (c) c.textContent = n;
+      });
+    });
+  });
+
   // Filtro del catálogo de núcleos.
   var fbtns = document.querySelectorAll("[data-filtro]");
   var cores = document.querySelectorAll("[data-cat]");
