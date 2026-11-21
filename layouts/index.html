@@ -1,8 +1,18 @@
 {{ define "main" }}
-<section class="hero">
-  <p class="eyebrow">Hercoss</p>
-  <h1>{{ site.Params.tagline }}</h1>
-  <p class="lead">{{ site.Params.description }}</p>
+<section class="hero hero-earth">
+  <canvas class="earth" data-earth aria-hidden="true"
+          data-tex="{{ "img/earth/earth.jpg" | relURL }}" data-clouds="{{ "img/earth/clouds.jpg" | relURL }}"></canvas>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-content">
+    <p class="eyebrow">Hercoss</p>
+    <h1>{{ site.Params.tagline }}</h1>
+    <p class="lead">{{ site.Params.description }}</p>
+    <p>
+      <a class="button" href="{{ "projects/hercoss-exxo-a1/" | relURL }}#invest">Investment opportunity →</a>
+      <a class="button secundario" href="{{ "projects/" | relURL }}">Projects</a>
+    </p>
+  </div>
+  <p class="hud" aria-hidden="true">ORBITAL VIEW · RENDERED IN REAL TIME</p>
 </section>
 
 {{ with site.GetPage "/projects/hercoss-exxo-a1" }}
@@ -37,4 +47,5 @@
     <a class="button secundario" href="{{ site.Params.github }}">GitHub · AdrianGreenboy</a>
   </p>
 </section>
+<script src="{{ "js/earth.js" | relURL }}" defer></script>
 {{ end }}
