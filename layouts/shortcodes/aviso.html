@@ -1,0 +1,4 @@
+<aside class="aviso">
+  <p class="aviso-titulo">{{ .Get 0 }}</p>
+  <div>{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>
+</aside>

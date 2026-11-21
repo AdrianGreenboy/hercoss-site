@@ -223,3 +223,18 @@ h2.grande { font: 700 clamp(30px, 4.5vw, 46px)/1.1 var(--sans); letter-spacing: 
   .site-footer { flex-direction: column; gap: 10px; }
   .site-footer a { margin: 0 18px 0 0; }
 }
+
+/* ---------- v3: RV128IMAC page ---------- */
+.fig { margin: 28px 0; }
+.fig img { width: 100%; border: 1px solid var(--line); }
+.fig figcaption { color: var(--muted); font-size: 15px; margin-top: 10px; }
+.prose:has(.fig), .prose:has(.tabs) { max-width: 900px; }
+.tabs { margin: 8px 0 24px; }
+.tab-panel img { width: 100%; border: 1px solid var(--line); }
+.tab-panel p { color: var(--muted); }
+.aviso { border: 1px solid var(--accent); border-left-width: 4px; background: var(--panel); padding: 16px 20px; margin: 8px 0 32px; max-width: 46em; }
+.aviso-titulo { font: 13px var(--mono); letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+.aviso div p { margin: 0; color: var(--muted); }
+.prose table { border-collapse: collapse; width: 100%; margin: 16px 0 24px; font-size: 15px; }
+.prose th, .prose td { text-align: left; padding: 9px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+.prose th { font: 13px var(--mono); color: var(--muted); font-weight: 400; letter-spacing: 0.05em; }

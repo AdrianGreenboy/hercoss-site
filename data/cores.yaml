@@ -6,7 +6,7 @@
 - nombre: "RV128IMAC"
   cat: "Processors"
   estado: validado
-  que: "Experimental 128-bit processor with a dual RV128/RV64 mode."
+  que: "128-bit processor of the Exxo A1: Linux SMP, fast core-to-core calls."
 - nombre: "SERDES_256G"
   cat: "Links"
   estado: validado

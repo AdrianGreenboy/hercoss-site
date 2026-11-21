@@ -1,0 +1,11 @@
+{{ define "main" }}
+<article>
+  {{ with .Params.estado }}<p class="eyebrow">{{ . }}</p>{{ end }}
+  <h1>{{ .Title }}</h1>
+  {{ with .Params.summary }}<p class="lead">{{ . }}</p>{{ end }}
+  {{ with .Params.datos }}
+  <ul class="datos">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>
+  {{ end }}
+  <div class="prose">{{ .Content }}</div>
+</article>
+{{ end }}

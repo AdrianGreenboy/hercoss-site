@@ -1,12 +1,12 @@
 ---
 title: "RISC-V processor cores"
-weight: 3
+weight: 4
 estado: "Validated on FPGA · In development"
-summary: "Processor cores written from scratch in VHDL: a 64-bit core intended for production and an experimental 128-bit core that has already run on real hardware."
+summary: "Processor cores written from scratch in VHDL: a 64-bit core and the 128-bit RV128IMAC, the processor of the Exxo A1, already running Linux on real hardware."
 datos:
   - "RV64IMAC"
   - "RV128IMAC (dual mode)"
-  - "29/29 tests on hardware"
+  - "Linux on FPGA"
   - "VHDL-2008"
 ---
 
@@ -35,18 +35,16 @@ of the family: it talks directly to the rest of Hercoss's IP cores.
 
 ## RV128IMAC
 
-An experimental core that explores the 128-bit variant of RISC-V. It is a
-**dual-mode** core: at reset it starts either as RV128 or as RV64, so
-operating systems that exist today run in 64-bit mode on the same hardware.
-
-Its bare-metal version has been validated on an AMD Versal FPGA: all 29
-programs of its test suite produced the same results on the hardware as on
-the reference instruction-set simulator.
+The 128-bit core, and the processor chosen for the Exxo A1. It runs as a
+128-bit CPU, as a standard 64-bit CPU, or as two 64-bit CPUs, boots Linux on
+an FPGA prototype, and lets one CPU call functions on another at hardware
+speed. It has its own page: [RV128IMAC — the core of the Exxo A1](/projects/rv128imac/).
 
 {{< detalle "Why 128 bits?" >}}
-No application needs a 128-bit address space today. The core is a research
-vehicle: a way to try architectural ideas on a compact design before deciding
-whether they belong in a production processor.
+Not for memory size: no application needs a 128-bit address space. The gain
+is in the arithmetic. Cryptography and exact big-number maths process twice
+as many bits per step, and on the prototype that made a large computation
+1.63× faster than the same algorithm with 64-bit words.
 {{< /detalle >}}
 
 {{< detalle "How are the cores verified?" >}}

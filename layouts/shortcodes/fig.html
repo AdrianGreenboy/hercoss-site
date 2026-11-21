@@ -1,0 +1,10 @@
+{{- $src := .Get 0 -}}
+{{- $alt := .Get 1 | default "" -}}
+{{- with .Page.Resources.Get $src -}}
+<figure class="fig">
+  <img src="{{ .RelPermalink }}" alt="{{ $alt }}" loading="lazy">
+  {{- with $alt }}<figcaption>{{ . }}</figcaption>{{ end }}
+</figure>
+{{- else -}}
+{{- errorf "fig shortcode: resource %q not found in %s" $src $.Page.File.Path -}}
+{{- end -}}

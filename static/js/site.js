@@ -33,6 +33,18 @@
     selectVariante(inicial.dataset.variante);
   }
 
+  // Generic tab groups ([data-tabs]): one button selects one panel.
+  document.querySelectorAll("[data-tabs]").forEach(function (group) {
+    var tabs = group.querySelectorAll("[data-tab]");
+    var panels = group.querySelectorAll("[data-tab-panel]");
+    tabs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        tabs.forEach(function (x) { x.setAttribute("aria-selected", x === b ? "true" : "false"); });
+        panels.forEach(function (p) { p.hidden = p.dataset.tabPanel !== b.dataset.tab; });
+      });
+    });
+  });
+
   // Filtro del catálogo de núcleos.
   var fbtns = document.querySelectorAll("[data-filtro]");
   var cores = document.querySelectorAll("[data-cat]");

@@ -3,9 +3,9 @@ title: "HERCOSS Exxo A1"
 layout: a1
 weight: 1
 estado: "In development"
-summary: "A complete FPGA SoC for space: sixteen RISC-V processors, an FPGA fabric and a full set of space-grade peripherals on a single chip, designed in Europe."
+summary: "A complete FPGA SoC for space: a cluster of sixteen 128-bit RISC-V processors, an FPGA fabric and a full set of space-grade peripherals on a single chip, designed in Europe."
 datos:
-  - "16 × RV64IMAC"
+  - "16 × RV128IMAC"
   - "~500K-LUT FPGA fabric"
   - "3 × PCIe Gen5 x16"
   - "300 krad target"
@@ -30,9 +30,17 @@ come from a very small number of suppliers outside Europe. The Exxo A1 is
 Hercoss's answer: a chip built on open standards, designed with the smallest
 possible die area, and intended to be designed and manufactured in Europe.
 
+## The processor: RV128IMAC
+
+The A1's sixteen processors are **RV128IMAC** cores, a 128-bit RISC-V design
+by Hercoss that already runs Linux on an FPGA prototype. Its key novelty: one
+core can call a function on another directly, about five times faster than an
+empty Linux system call. [See the RV128IMAC project →](/projects/rv128imac/)
+
 {{< detalle "Where does the project stand today?" >}}
 The A1 is in development: its architecture and RTL are being designed and
 verified in simulation. It has not been fabricated. The figures on this page
 are design targets. What has already been proven on real hardware are its
-building blocks, the eFPGA fabric and the IP cores; see the roadmap below.
+building blocks: the RV128IMAC processor core, the eFPGA fabric and the IP
+cores; see the roadmap below.
 {{< /detalle >}}

@@ -3,18 +3,20 @@
 
 bloques:
   - id: cpu
-    nombre: "16 × RISC-V RV64IMAC"
+    nombre: "16 × RV128IMAC cluster"
     corto: "Processors"
-    titulo: "Sixteen 64-bit RISC-V processors"
+    titulo: "A cluster of sixteen 128-bit RISC-V processors"
     texto: >-
-      The A1 integrates sixteen RV64IMAC cores. RISC-V is an open instruction
-      set: it does not depend on licences from a single vendor, which matters
-      for a chip built around technological sovereignty.
+      The A1's processors are sixteen RV128IMAC cores, Hercoss's own 128-bit
+      RISC-V design. Each core can run as a 128-bit CPU, as a standard 64-bit
+      CPU, or as two 64-bit CPUs, and any core can call a function on another
+      directly, without going through the operating system.
     puntos:
-      - "Up to 16 independent Linux instances, one per core."
-      - "AMP and SMP can be mixed: some cores work together while others stay isolated."
-      - "Runs bare-metal software and real-time operating systems (RTOS) from several vendors."
-      - "Communication between domains through remoteproc/RPMsg."
+      - "Runs standard 64-bit RISC-V software: Linux, FreeRTOS, Zephyr, RTEMS."
+      - "Up to 16 independent Linux instances; AMP and SMP can be mixed."
+      - "Core-to-core calls about 5× faster than an empty Linux system call, measured on the FPGA prototype."
+      - "128-bit words for big-number maths and cryptography: 1.63× faster than 64-bit on the prototype."
+      - "Already running Linux SMP on an FPGA prototype: see the RV128IMAC project."
 
   - id: fpga
     nombre: "~500K-LUT FPGA fabric"
@@ -144,12 +146,18 @@ hoja_de_ruta:
   - estado: hecho
     titulo: "eFPGA fabric taken to layout (GDS)"
     texto: "Implemented in the European IHP SG13G2 process with an open-source flow. It passes the official IHP precheck with no LVS, antenna or timing errors."
+  - estado: hecho
+    titulo: "RV128IMAC core running Linux on FPGA"
+    texto: "The A1's 128-bit processor core runs Linux SMP and core-to-core calls on an FPGA prototype, with 214 of 214 board tests passing."
   - estado: curso
     titulo: "IP core family validated on FPGA"
     texto: "The cores are tested in simulation and on real hardware. In progress: a full review to make them ready for the chip."
   - estado: curso
     titulo: "A1 architecture and RTL"
     texto: "Design of the complete SoC and verification in simulation."
+  - estado: plan
+    titulo: "Sixteen-core cluster"
+    texto: "Scaling the core-to-core connection from the two-CPU prototype to the A1's sixteen cores, and adding the radiation-hardening features."
   - estado: plan
     titulo: "Emulation on a larger FPGA"
     texto: "The full design no longer fits the current development board; the next step is a larger platform."

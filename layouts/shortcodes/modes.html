@@ -1,0 +1,21 @@
+{{- /* Tabbed diagram: one core, three personalities. */ -}}
+{{- $p := .Page -}}
+{{- $modes := slice
+  (dict "id" "rv128" "label" "128-bit CPU" "img" "mode-rv128.svg" "text" "The full 128-bit machine: every register and every arithmetic operation is 128 bits wide. It shines on big-number maths and cryptography, where twice the word width means fewer steps.")
+  (dict "id" "rv64" "label" "64-bit CPU" "img" "mode-rv64.svg" "text" "A standard 64-bit RISC-V processor. Linux, FreeRTOS, Zephyr, RTEMS and the normal compilers run unchanged, so the whole existing RISC-V software world is available on day one.")
+  (dict "id" "dual" "label" "2 × 64-bit CPUs" "img" "mode-2xrv64.svg" "text" "The same silicon behaves as two independent 64-bit processors, each with its own program. Linux runs as a two-CPU SMP system on a single core: twice the CPUs without twice the area.")
+-}}
+<div class="tabs" data-tabs>
+  <div class="toggle" role="tablist" aria-label="Core modes">
+    {{- range $i, $m := $modes }}
+    <button role="tab" data-tab="{{ $m.id }}" aria-selected="{{ if eq $i 0 }}true{{ else }}false{{ end }}">{{ $m.label }}</button>
+    {{- end }}
+  </div>
+  {{- range $i, $m := $modes }}
+  <div class="tab-panel" data-tab-panel="{{ $m.id }}"{{ if ne $i 0 }} hidden{{ end }}>
+    {{- with $p.Resources.Get $m.img }}<img src="{{ .RelPermalink }}" alt="{{ $m.label }}">{{ end }}
+    <p>{{ $m.text }}</p>
+  </div>
+  {{- end }}
+</div>
+<noscript><p>Mode diagrams require JavaScript to switch; all three modes are described above.</p></noscript>

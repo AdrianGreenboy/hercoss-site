@@ -1,6 +1,6 @@
 ---
 title: "High-speed links"
-weight: 4
+weight: 5
 estado: "Validated on FPGA"
 summary: "Hercoss's own Ethernet and SerDes cores, tested on real hardware: 103 Gbit/s over four lanes and a 40G Ethernet link to a commercial network card."
 datos:
