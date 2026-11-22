@@ -1,7 +1,7 @@
 ---
 title: "High-speed links"
 layout: article
-weight: 6
+weight: 8
 estado: "Validated on FPGA · Path to 1.6TbE"
 summary: "Hercoss's own SerDes, Ethernet PCS and MAC cores, proven on real hardware: a 103 Gb/s link with a one-hour soak at zero errors, and a 40G Ethernet port that talks to a commercial network card. The same IP leads to the 1.6TbE and ~2 Tbps Ethernet of the Exxo A1."
 datos:

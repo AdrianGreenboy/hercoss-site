@@ -48,6 +48,7 @@ bloques:
       - "Convolutional (CNN) and spiking (SNN) networks, transformers, FP32 matrix–vector."
       - "Model-predictive control for attitude determination and control (ADCS)."
       - "Every tile is its own power island and can be switched off."
+      - "Proven building blocks on FPGA: an NPU at 0.333 ms per image and an attitude-control (MPC) accelerator. See Onboard intelligence."
 
   - id: seg
     nombre: "Post-quantum security"
@@ -132,6 +133,7 @@ bloques:
     puntos:
       - "For attitude sensors, telemetry and instruments."
       - "Sigma-delta: high resolution from little analog circuitry."
+      - "The digital decimation chain is already validated on FPGA: about 16.4 to 18.9 effective bits."
 
 variantes:
   - id: cots

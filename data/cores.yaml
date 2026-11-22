@@ -16,6 +16,26 @@
   estado: validado
   que: "512-bit network-on-chip, packet and circuit planes: 375 MHz on FPGA silicon, hardened variant at 300 MHz, zero errors in one-hour runs."
   a1: "Joins every block of the chip"
+- nombre: "NPU"
+  cat: "AI and control"
+  estado: validado
+  que: "INT8 CNN inference on an 8 × 8 systolic array: 0.333 ms per image, ~3,000 inferences/s on FPGA silicon."
+  a1: "Building block of the AI Engine"
+- nombre: "AOCS / ADCS MPC accelerator"
+  cat: "AI and control"
+  estado: validado
+  que: "Solves the attitude-control MPC problem (70 × 70, 32-bit float) in hardware; bit-identical from simulation to silicon."
+  a1: "Attitude and orbit control acceleration"
+- nombre: "RF digital front-end"
+  cat: "RF and signal"
+  estado: validado
+  que: "Software-defined radio DDC and DUC: NCO, mixer, CIC, 16-tap FIR, AGC/RSSI, own DMA to memory."
+  a1: "Basis of the A1-RF variant"
+- nombre: "Sigma-delta ADC chain"
+  cat: "RF and signal"
+  estado: validado
+  que: "Digital decimation chain of a sigma-delta ADC: ~16.4 to ~18.9 effective bits, DMA to memory."
+  a1: "10 × 24-bit ΣΔ ADC"
 - nombre: "SERDES_256G v1.0"
   cat: "Links"
   estado: validado

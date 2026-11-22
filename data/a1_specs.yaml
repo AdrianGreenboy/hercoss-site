@@ -39,9 +39,12 @@
     - ["Time base", "Common PTP / IEEE 802.1AS for every Ethernet port", "proven", ""]
     - ["PCIe", "3 × Gen5 x16 (48 lanes)", "design", "Controller in development"]
     - ["Fabric access", "The FPGA fabric can drive every transceiver lane", "pending", ""]
+    - ["RF digital front-end", "Software-defined radio DDC / DUC as IP; basis of the A1-RF variant", "proven", "Validated on FPGA silicon"]
 - grupo: "AI, DSP and security"
   filas:
-    - ["AI array", "8 tiles × 1,024 MACs, 512 KiB SRAM per tile, 1.5 GHz: 8,192 MACs/cycle, ~12 TMAC/s peak", "pending", ""]
+    - ["AI Engine", "8 tiles × 1,024 MACs, 512 KiB SRAM per tile, 1.5 GHz: 8,192 MACs/cycle, ~12 TMAC/s peak", "pending", "Building blocks validated: NPU and AOCS accelerator"]
+    - ["NPU", "INT8 CNN inference, 8 × 8 systolic array", "proven", "0.333 ms per image, ~3,000 inferences/s on FPGA silicon"]
+    - ["AOCS accelerator", "Model-predictive attitude control solved in hardware, 32-bit float", "proven", "Bit-identical from simulation to FPGA silicon"]
     - ["AI workloads", "CNN, SNN, transformers, FP32 GEMV, MPC for attitude control", "pending", ""]
     - ["DSP cores", "5 cores for filters, FFTs and sensor fusion", "pending", ""]
     - ["Post-quantum crypto", "ML-KEM, ML-DSA, AES-GCM; key zeroisation in the flight version", "proven", "IP cores validated on FPGA"]

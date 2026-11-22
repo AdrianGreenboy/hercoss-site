@@ -1,7 +1,7 @@
 ---
 title: "IP core family"
 layout: article
-weight: 7
+weight: 9
 estado: "Validated on FPGA · Becoming the Exxo A1"
 summary: "A library of reusable hardware blocks written in VHDL-2008: processors, high-speed links, space buses, general peripherals and post-quantum cryptography. Most are already validated on FPGA hardware, and together they become the peripherals of the HERCOSS Exxo A1."
 datos:
