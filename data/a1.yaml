@@ -59,6 +59,7 @@ bloques:
       post-quantum engine for the newly standardised algorithms.
     puntos:
       - "ML-KEM key exchange and ML-DSA signatures, plus AES-GCM."
+      - "Hardware SHA-3 / SHAKE, the base of these standards: 74.5 MB/s from a Linux program without a driver, 94× software (FPGA prototype)."
       - "The same signatures protect FPGA bitstreams: a captured uplink cannot inject logic."
       - "Secure key zeroisation in the flight version."
 

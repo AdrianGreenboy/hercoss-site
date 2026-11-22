@@ -3,11 +3,12 @@ title: "RV128IMAC — the core of the Exxo A1"
 layout: rv128
 weight: 2
 estado: "Running on FPGA · Core of the Exxo A1"
-summary: "A 128-bit RISC-V processor written from scratch by Hercoss. It runs Linux, calls functions on other CPUs in 1.36 µs, and is the processor at the heart of the HERCOSS Exxo A1."
+summary: "A 128-bit RISC-V processor written from scratch by Hercoss. It runs Linux, calls functions on other CPUs in 1.36 µs, hashes with SHA-3 in hardware at 94× the speed of software, and is the processor at the heart of the HERCOSS Exxo A1."
 datos:
   - "128-bit RISC-V"
   - "1.36 µs CPU-to-CPU call"
   - "Linux 6.6 SMP"
+  - "SHA-3 in hardware: ×94"
   - "214 / 214 tests on FPGA"
 seotitle: "RV128IMAC — 128-bit RISC-V processor core for space computing — Hercoss"
 ---
@@ -93,6 +94,54 @@ The second CPU also runs a native 128-bit programming environment. New
 services can be defined on it **while Linux keeps running**, and Linux can
 call them immediately, with no rebuild and no reboot.
 
+## Hardware SHA-3 from Linux, without a driver
+
+SHA-3 and SHAKE are the foundation of the new post-quantum cryptography
+standards, ML-KEM (FIPS 203) and ML-DSA (FIPS 204). For a spacecraft that
+must stay secure for ten years or more, having them in hardware matters.
+
+The RV128IMAC now has a hardware **Keccak engine**: SHA3-224, -256, -384,
+-512 and SHAKE128 / 256, one round per clock cycle. An ordinary Linux program
+uses it **directly, without a driver**.
+
+{{< fig "sha3-speed.svg" "SHA3-256 throughput on the same CPU, from software to the improved hardware path." >}}
+
+- **74.5 MB/s from a Linux process**, 94× the same algorithm in software on
+  the same CPU; 82 MB/s on bare metal.
+- **Small:** the engine takes about 8,000 LUTs.
+- **Correct:** checked against the official FIPS 202 test vectors. A 1 MiB
+  digest computed on the board is byte-for-byte identical to the one
+  computed on a PC by fully independent code.
+
+### Measured, not assumed
+
+The first guess was that the bottleneck sat between the core and the
+engine. The core's own hardware performance counters showed where every
+cycle went, and proved that guess wrong: almost nothing was lost there. The
+cost was inside the core itself. So the next step was an improvement to the
+core, which gave another 1.25×, instead of a bigger buffer that would not
+have helped.
+
+The checks caught problems before silicon:
+
+- A worst-case flood test showed that an internal queue would have
+  overflowed: it needed 47 entries and had 32. No ordinary functional test
+  came close to that case.
+- To prove that the tests really test something, they were broken on
+  purpose: flipping a single bit of one constant of the algorithm produces
+  570 errors.
+
+{{< detalle "What are the limits of these numbers?" >}}
+They come from one board (AMD Versal VE2302) at 60 MHz; in the Exxo A1, with
+another clock and memory system, the absolute values will change. The
+software reference varies by up to 22 % between boots depending on where its
+pages land in memory, so the speed-up is a range, 69× to 94×. The engine has
+one context, so under Linux the hashing process is pinned to a core. The
+hardware is validated on silicon; the full simulation regression of the
+latest step was still running when this page was written. Next: the data
+cache, where 40 % of the remaining time goes.
+{{< /detalle >}}
+
 ## Results on the FPGA prototype
 
 | What | Result |
@@ -105,6 +154,10 @@ call them immediately, with no rebuild and no reboot.
 | Empty Linux system call, for reference | ~6.8 µs |
 | Big-number maths, 128-bit vs 64-bit words | 1.63× faster |
 | Two computations in parallel via async call | 1.60× (ideal 1.61×) |
+| Hardware SHA3-256 from a Linux process | 74.5 MB/s, ×94 vs software on the same CPU (×69–×94 across boots) |
+| Hardware SHA3-256, bare metal | 82 MB/s |
+| Size of the SHA-3 engine | ~8,000 LUTs |
+| Full design (2 CPUs + SHA-3 engine) | 82 % of the VE2302, timing met at 60 MHz with 1 ns extra margin |
 | Operating systems running | Linux 6.6, FreeRTOS, Zephyr, RTEMS |
 
 {{< detalle "What are the limits of these numbers?" >}}
@@ -140,7 +193,7 @@ specification violation that made Linux hang only occasionally. Each one was
 fixed, and each one now has a test that would catch it again.
 {{< /detalle >}}
 
-## Three weeks of progress
+## Progress in November 2026
 
 | Date (Nov 2026) | Milestone |
 |---|---|
@@ -151,6 +204,7 @@ fixed, and each one now has a test that would catch it again.
 | 20 Nov | Two cores joined; first XCALL from a Linux program |
 | 20 Nov | Asynchronous calls and process isolation |
 | 21 Nov | Robust calls, live services, performance counters |
+| 21–22 Nov | Hardware SHA-3 engine used from Linux without a driver: 33 MB/s, then 74.5 MB/s (×94) after profiling |
 
 ## In the Exxo A1: a cluster of sixteen
 

@@ -86,6 +86,11 @@
   estado: validado
   que: "SD card controller for storage and boot."
   a1: "2 ×"
+- nombre: "SHA-3 / Keccak engine"
+  cat: "Security"
+  estado: validado
+  que: "SHA3-224/256/384/512 and SHAKE, one round per cycle; 74.5 MB/s from a Linux program without a driver, 94× software."
+  a1: "Hardware base for post-quantum crypto"
 - nombre: "ML-KEM / ML-DSA"
   cat: "Security"
   estado: validado

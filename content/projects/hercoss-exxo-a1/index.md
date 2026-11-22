@@ -194,6 +194,7 @@ is in design, and what is still pending.
 | General peripheral IP | I²C, I³C, SPI, SD | Validated on FPGA |
 | Network IP | 25G and 40G Ethernet MAC/PCS against a commercial NIC, 1-hour soak with zero errors; 103 Gb/s SerDes link | Validated on FPGA |
 | Post-quantum crypto | ML-KEM and ML-DSA accelerators | Validated on FPGA |
+| Hardware SHA-3 / SHAKE | 74.5 MB/s from a Linux process without a driver, 94× software on the same CPU | Validated on FPGA |
 
 ## Still pending
 
