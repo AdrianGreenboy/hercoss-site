@@ -1,7 +1,7 @@
 ---
 title: "High-speed links"
 layout: article
-weight: 8
+weight: 9
 estado: "Validated on FPGA · Path to 1.6TbE"
 summary: "Hercoss's own SerDes, Ethernet PCS and MAC cores, proven on real hardware: a 103 Gb/s link with a one-hour soak at zero errors, and a 40G Ethernet port that talks to a commercial network card. The same IP leads to the 1.6TbE and ~2 Tbps Ethernet of the Exxo A1."
 datos:
@@ -78,9 +78,11 @@ The same digital IP scales to the transceiver pool of the
 of Ethernet at once**, a **1.6TbE** port on eight 224 Gb/s PAM4 lanes,
 another 400G on 32 Gb/s lanes, and three PCIe Gen5 x16 links.
 
-Still pending on that path: MACs and PCS above 40G (100G to 1.6T) and the
-analog transceivers themselves, which on the FPGA are AMD's and for the A1
-have to be designed or licensed.
+The 1.6 Tb/s controller is already under way: [ETH_1T6](/projects/eth-1t6/)
+has its MAC verified in simulation at full width and timing-clean on the
+FPGA at reduced width; its PCS is in development. Still pending: the analog
+transceivers themselves, which on the FPGA are AMD's and for the A1 have to
+be designed or licensed.
 
 {{< detalle "What is 64B/66B coding?" >}}
 A receiver can only recover the clock from a signal that changes often

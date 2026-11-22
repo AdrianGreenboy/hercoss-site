@@ -46,6 +46,11 @@
   estado: validado
   que: "Digital decimation chain of a sigma-delta ADC: ~16.4 to ~18.9 effective bits, DMA to memory."
   a1: "10 × 24-bit ΣΔ ADC"
+- nombre: "ETH_1T6"
+  cat: "Links"
+  estado: desarrollo
+  que: "1.6 Tb/s Ethernet MAC, 4,096 bits per cycle; verified in simulation at full width, timing-clean on FPGA at reduced width; PCS in development."
+  a1: "The 1.6TbE port"
 - nombre: "SERDES_256G v1.0"
   cat: "Links"
   estado: validado
