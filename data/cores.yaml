@@ -14,7 +14,7 @@
 - nombre: "NOC_512"
   cat: "Interconnect"
   estado: validado
-  que: "512-bit network-on-chip with a packet plane for AXI4 traffic and a circuit plane for bulk data; zero errors on FPGA silicon."
+  que: "512-bit network-on-chip, packet and circuit planes: 375 MHz on FPGA silicon, hardened variant at 300 MHz, zero errors in one-hour runs."
   a1: "Joins every block of the chip"
 - nombre: "SERDES_256G v1.0"
   cat: "Links"

@@ -89,7 +89,8 @@ Click any block to see what it does and why it is there.
 
 Everything hangs off one 512-bit network-on-chip, Hercoss's own
 [NOC_512](/projects/noc-512/): the sixteen processors, the FPGA fabric, the
-AI array, memory and all I/O. It is already validated on FPGA silicon.
+AI array, memory and all I/O. It already runs on FPGA silicon at 375 MHz
+with zero errors, and in a hardened variant at 300 MHz.
 
 {{< fig "a1-architecture.svg" "Top-level architecture of the HERCOSS Exxo A1. Conceptual; not to scale." >}}
 
@@ -182,7 +183,8 @@ is in design, and what is still pending.
 | RV128IMAC processor core | Linux 6.6 SMP, 214 / 214 board tests, CoreMark 1.85 / MHz | Validated on FPGA |
 | Core-to-core calls | 1.36 µs round trip from a Linux program (an empty system call: ~6.8 µs) | Validated on FPGA |
 | Self-healing lockstep | 24 / 24 injected faults corrected, 0 corrupted results | Validated on FPGA (earlier 64-bit core) |
-| NOC_512 network-on-chip | 2 × 2 mesh with both planes at 250 MHz: 4 runs, 0 errors, up to 96 M AXI4 bursts and 80 M circuit packets per run; live route changes with no packet lost | Validated on FPGA |
+| NOC_512 network-on-chip | One-hour runs, both planes, live circuit changes: 491.6 billion AXI4 bursts at 375 MHz, 0 errors | Validated on FPGA |
+| NOC_512, hardened variant | ECC + triplicated control state at 300 MHz: 350.1 billion bursts, 0 errors; 10.5 M single-bit faults corrected live; 48 M bursts with no error under continuous state corruption | Validated on FPGA (fault injection, not beam-tested) |
 | NOC_512, full 4 × 4 mesh | 16 masters at once; random stress over 23 seeds, up to 3,200 transactions per pass | Simulation |
 | A1 SoC infrastructure | Cluster, crossbar, coherence, mailbox, interrupt controller, IOPMP; two isolated Linux domains | Validated on FPGA |
 | Cache and prefetch tuning | 64 KiB I-cache: −69 % misses in Linux; prefetcher: cold copy −32 %, cold read −39 % | Measured on FPGA (earlier 64-bit core) |
@@ -205,9 +207,9 @@ An honest list of what has to happen before the A1 is a chip:
 - **Space hardening of the RV128IMAC:** port the self-healing lockstep, the
   error-correcting register file and cache parity; grow the caches to the A1
   sizes.
-- **Network-on-chip:** a one-hour soak on silicon, the full 4 × 4 mesh on a
-  larger FPGA, radiation protection (end-to-end ECC, triplicated control
-  state) and integration with the RV128IMAC cores and real peripherals.
+- **Network-on-chip:** protection of the AXI4 bridges and of the circuit
+  plane (in development), meshes larger than 2 × 2 on a larger FPGA, and
+  integration with the RV128IMAC cores and real peripherals.
 - **L2 caches and DDR controllers:** RTL still to be written.
 - **Analog and mixed-signal blocks:** the 224G PAM4 and 32G NRZ SerDes, PCIe
   Gen5 and DDR physical layers, PLLs and the sigma-delta ADC front ends, to be
