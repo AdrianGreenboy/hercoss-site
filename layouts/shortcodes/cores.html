@@ -4,7 +4,7 @@
 <div class="io-total">
   <div><span class="io-num">{{ len $cores }}</span><span class="io-lbl">IP cores in the catalogue</span></div>
   <div><span class="io-num">{{ $val }}</span><span class="io-lbl">validated on FPGA hardware</span></div>
-  <div><span class="io-num">{{ $ina1 }}</span><span class="io-lbl">go into the HERCOSS Exxo A1</span></div>
+  <div><span class="io-num">{{ $ina1 }}</span><span class="io-lbl">will be used in the HERCOSS Exxo A1</span></div>
 </div>
 <div class="filtro" role="group" aria-label="Filter by category">
   <button data-filtro="*" aria-pressed="true">All</button>
@@ -13,7 +13,9 @@
 <div class="cores">
   {{ range $cores }}
   <div class="core" data-cat="{{ .cat }}">
-    <span class="estado {{ if eq .estado "validado" }}hecho{{ else }}curso{{ end }}">{{ if eq .estado "validado" }}Validated on FPGA{{ else }}In development{{ end }}</span>
+    {{- if eq .estado "validado" }}<span class="estado hecho">Validated on FPGA</span>
+    {{- else if eq .estado "familia" }}<span class="estado plan">In the IP family</span>
+    {{- else }}<span class="estado curso">In development</span>{{ end }}
     <h3>{{ .nombre }}</h3>
     <p>{{ .que }}</p>
     {{ with .a1 }}<p class="core-a1"><span>In the A1</span> {{ . }}</p>{{ end }}

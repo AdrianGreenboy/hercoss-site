@@ -23,7 +23,8 @@ and controls.
 ## The catalogue
 
 Filter by category. Each core shows its status and the role it plays in the
-Exxo A1.
+Exxo A1. "Validated on FPGA" means it has passed on real hardware; "In the IP
+family" means it is part of the library and planned for the chip.
 
 {{< cores >}}
 

@@ -1,11 +1,16 @@
 # IP core catalogue.
-# estado: "validado" (validated on FPGA) or "desarrollo" (in development)
+# estado: "validado" (validated on FPGA), "desarrollo" (in development) or "familia" (in the IP family, status not published)
 # a1: the core's role in the HERCOSS Exxo A1 (empty if none yet)
 - nombre: "RV128IMAC"
   cat: "Processors"
   estado: validado
   que: "128-bit RISC-V processor: runs as RV128, RV64 or two RV64 CPUs; Linux 6.6 SMP; direct core-to-core calls."
   a1: "The A1's 16 processors"
+- nombre: "RV32IM"
+  cat: "Processors"
+  estado: validado
+  que: "Compact 32-bit RISC-V core that runs the firmware of the IP family's test systems on silicon."
+  a1: "Always-on platform controller"
 - nombre: "RV64IMAC"
   cat: "Processors"
   estado: desarrollo
@@ -31,6 +36,11 @@
   estado: validado
   que: "Software-defined radio DDC and DUC: NCO, mixer, CIC, 16-tap FIR, AGC/RSSI, own DMA to memory."
   a1: "Basis of the A1-RF variant"
+- nombre: "DSP"
+  cat: "RF and signal"
+  estado: familia
+  que: "Digital signal-processing engine."
+  a1: "Basis of the A1's 5 DSP cores"
 - nombre: "Sigma-delta ADC chain"
   cat: "RF and signal"
   estado: validado
@@ -56,6 +66,26 @@
   estado: validado
   que: "25G Ethernet with a 64B/66B Clause 49 encoder."
   a1: "Ethernet up to 16 × 25G"
+- nombre: "MAC_10G"
+  cat: "Links"
+  estado: familia
+  que: "10 Gigabit Ethernet MAC."
+  a1: "10G Ethernet ports"
+- nombre: "Octal 25G Ethernet"
+  cat: "Links"
+  estado: familia
+  que: "Eight 25G Ethernet ports in one core, 200 Gb/s in total."
+  a1: "Multi-port 25G Ethernet"
+- nombre: "ETH"
+  cat: "Links"
+  estado: familia
+  que: "Ethernet controller for general networking."
+  a1: "Management Ethernet"
+- nombre: "TSN switch"
+  cat: "Links"
+  estado: familia
+  que: "Time-Sensitive Networking switch: deterministic, scheduled Ethernet for control traffic."
+  a1: "TSN on every Ethernet port"
 - nombre: "PTP / IEEE 802.1AS"
   cat: "Links"
   estado: validado
@@ -111,6 +141,11 @@
   estado: validado
   que: "SHA3-224/256/384/512 and SHAKE, one round per cycle; 74.5 MB/s from a Linux program without a driver, 94× software."
   a1: "Hardware base for post-quantum crypto"
+- nombre: "ECC scrubber"
+  cat: "Security"
+  estado: familia
+  que: "Background memory scrubber: finds and corrects bit errors in memory before they accumulate."
+  a1: "Memory protection against radiation"
 - nombre: "ML-KEM / ML-DSA"
   cat: "Security"
   estado: validado
