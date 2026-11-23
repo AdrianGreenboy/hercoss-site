@@ -14,10 +14,10 @@
     - ["Platform controller", "Always-on RV32IM; triple modular redundancy in the RH version", "design", ""]
 - grupo: "Network-on-chip and memory"
   filas:
-    - ["Network-on-chip", "NOC_512: 4 × 4 mesh, 512-bit, two planes; ~1.5 GHz target in the chip", "proven", "Validated on FPGA silicon: 2 × 2 mesh, one-hour runs, 375 MHz (commercial) and 300 MHz (hardened), zero errors; larger meshes in simulation"]
+    - ["Network-on-chip", "NOC_512: 4 × 4 mesh, 512-bit, two planes; ~1.5 GHz target in the chip", "proven", "Validated on FPGA silicon: 2 × 2 mesh, one-hour runs, 375 MHz (commercial) and 275 MHz (fully hardened), zero errors; 3 × 3 mesh in simulation"]
     - ["Packet plane", "AXI4 traffic (registers, DMA, memory); 5-port routers, XY routing, credit flow control, separate request and response meshes, 2 cycles per hop", "proven", ""]
     - ["Circuit plane", "Fixed-latency 512-bit lanes for bulk data (1.6TbE, PCIe Gen5, converters); parallel lanes arrive aligned; reconfigurable while traffic flows", "proven", "2 aligned lanes and live route changes validated on FPGA"]
-    - ["NoC radiation protection", "Hardened variant: end-to-end ECC and triplicated control state", "proven", "Validated on FPGA with fault injection; bridges and circuit plane in development; not yet beam-tested"]
+    - ["NoC radiation protection", "Fully hardened variant: end-to-end ECC, triplicated control state, circuit-plane protection against losing a complete route", "proven", "Validated on FPGA with fault injection; automatic route recovery in simulation; not yet beam-tested"]
     - ["Processor ↔ fabric", "16 × 512-bit AXI4 ports (4 per quadrant, one ACE-Lite coherent)", "pending", ""]
     - ["Bus standard", "Full AXI4 everywhere, no AXI4-Lite", "design", ""]
     - ["On-chip memory", "2 MiB OCM, 64 KiB boot ROM", "design", ""]
