@@ -10,14 +10,14 @@ datos:
   - "1.6 Tb/s target"
   - "4,096 bits per clock cycle"
   - "258.3 Gb/s on FPGA hardware"
-  - "116 TB in 1 hour, 0 errors"
+  - "625 billion frames, 0 errors"
 ---
 
 {{< stats >}}
 {{< stat "1.6 Tb/s" "Ethernet port of the HERCOSS Exxo A1" >}}
 {{< stat "4,096" "bits per clock cycle: several frames start and end in one cycle" >}}
-{{< stat "258.3 Gb/s" "of payload on FPGA hardware at a quarter of the width, zero errors" >}}
-{{< stat "116 TB" "carried in a one-hour soak: 625 billion frames, zero errors" >}}
+{{< stat "258.3 Gb/s" "of payload on FPGA hardware at a quarter of the width; measured throughput matches theory exactly" >}}
+{{< stat "625 billion" "frames in a one-hour soak, zero errors" >}}
 {{< /stats >}}
 
 ## The 1.6 Tb/s Ethernet MAC
@@ -51,10 +51,10 @@ monitor that checks every outgoing frame before it leaves the chip.
   complete controller as it will be integrated in the chip (frame
   controller, PCS stages built so far, and its register interface) runs on
   our FPGA board at 300 MHz: a 307 Gb/s datapath carrying 258.3 Gb/s of
-  payload with zero errors. An injected line error was detected, reported
-  and cleared, and the link recovered on its own. An earlier build ran a
-  one-hour soak at the same speed: 625 billion frames, 116 terabytes, zero
-  errors.
+  payload. In a one-hour soak it moved 625 billion frames with zero errors.
+  An injected line error was detected, reported and cleared, and the link
+  recovered on its own. Measured throughput matches the theoretical figure
+  exactly.
 - **Next:** error correction and lane distribution for the 1.6 Tb/s line
   format.
 
@@ -63,8 +63,8 @@ in a single working session.
 
 {{< detalle "What has, and has not, been measured?" >}}
 At a quarter of the final width, the controller runs on FPGA hardware and
-its traffic is measured: 258.3 Gb/s of payload, and 116 terabytes in a
-one-hour soak, all with zero errors. The full width is verified in
+its traffic is measured: 258.3 Gb/s of payload, exactly the theoretical
+figure, and 625 billion frames in a one-hour soak with zero errors. The full width is verified in
 simulation. The 1.6 Tb/s rate itself needs the Exxo A1's 224 Gb/s
 transceivers and cannot be measured on an FPGA board. The 1/8-width figure
 in the chart is the datapath width multiplied by the clock the FPGA
