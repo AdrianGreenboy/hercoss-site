@@ -49,7 +49,7 @@
 - nombre: "ETH_1T6"
   cat: "Links"
   estado: desarrollo
-  que: "1.6 Tb/s Ethernet MAC, 4,096 bits per cycle; verified in simulation at full width, timing-clean on FPGA at reduced width; PCS in development."
+  que: "1.6 Tb/s Ethernet controller, 4,096 bits per cycle; verified in simulation at full width; at a quarter width 258.3 Gb/s on FPGA hardware, 116 TB in a one-hour soak, zero errors."
   a1: "The 1.6TbE port"
 - nombre: "SERDES_256G v1.0"
   cat: "Links"

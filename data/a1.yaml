@@ -107,7 +107,7 @@ bloques:
       - "400G more on NRZ lanes: 1 × 400G, 4 × 100G, 8 × 50G or 16 × 25G / 10G."
       - "Common PTP / IEEE 802.1AS time base for every port."
       - "Hercoss's own Ethernet and SerDes IP already runs on FPGA against commercial network cards."
-      - "The 1.6TbE controller, ETH_1T6: MAC verified in simulation at full width, timing-clean on FPGA at reduced width."
+      - "The 1.6TbE controller, ETH_1T6: verified in simulation at full width; at a quarter width it runs on FPGA hardware at 258.3 Gb/s with zero errors."
 
   - id: espacio
     nombre: "SpaceWire · 1553 · CAN"

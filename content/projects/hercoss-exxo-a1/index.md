@@ -223,8 +223,9 @@ An honest list of what has to happen before the A1 is a chip:
   Gen5 and DDR physical layers, PLLs and the sigma-delta ADC front ends, to be
   designed in-house or licensed.
 - **1.6TbE controller ([ETH_1T6](/projects/eth-1t6/)):** MAC verified in
-  simulation at full width and timing-clean on FPGA at reduced width; PCS in
-  development.
+  simulation at full width; at a quarter width the complete controller runs
+  on FPGA hardware at 258.3 Gb/s of payload with zero errors; error
+  correction and lane distribution for the 1.6 Tb/s line format are next.
 - **AI Engine and DSP cores:** architecture defined, RTL pending; the NPU
   and the AOCS accelerator are already validated as building blocks.
 - **Remaining peripherals:** PCIe and MIPI controllers in development.

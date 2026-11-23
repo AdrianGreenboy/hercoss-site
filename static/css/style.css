@@ -331,6 +331,6 @@ nav a { white-space: nowrap; }
 
 /* ---------- v7: stat bands ---------- */
 .io-total.stats { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin: 8px 0 32px; }
-.io-total.stats .io-num { font-size: 38px; }
+.io-total.stats .io-num { font-size: 34px; white-space: nowrap; }
 .prose:has(.stats) { max-width: none; }
 .prose:has(.stats) > p, .prose:has(.stats) > ul, .prose:has(.stats) > h2, .prose:has(.stats) > h3, .prose:has(.stats) > .detalle, .prose:has(.stats) > blockquote { max-width: 46em; }
