@@ -104,6 +104,18 @@ and custom hardware exchange data at full speed instead of across slow
 board-level wiring.
 {{< /detalle >}}
 
+## From RTL to physical layout
+
+The Exxo A1 is no longer only a block diagram. Its design has started the
+chip flow: the same VHDL that runs on our FPGA boards has been synthesised
+to standard cells, placed and routed, producing the physical layout below.
+Click either image to open it at full resolution.
+
+{{< layoutshots "Physical layout of an Exxo A1 core block. The yellow blocks along both sides are on-chip memories; the centre is placed-and-routed logic." "Close-up of the same layout: individual standard cells and the metal wiring between them." >}}
+
+*Layout renders from the chip design flow. The chip has not been fabricated
+yet; area, clock and power on silicon are still to be measured.*
+
 ## What is on the die
 
 The A1 carries the interfaces a spacecraft or an edge system needs, so it

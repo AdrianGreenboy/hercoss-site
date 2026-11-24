@@ -345,3 +345,14 @@ nav a { white-space: nowrap; }
 .hl-src{font-family:"DejaVu Sans Mono",ui-monospace,monospace;font-size:11px;letter-spacing:2px;color:#9aa4b2;text-transform:uppercase;margin-top:auto}
 .hl-note{color:#9aa4b2;font-size:13px}
 @media (max-width:820px){.hl-grid{grid-template-columns:1fr 1fr}}@media (max-width:520px){.hl-grid{grid-template-columns:1fr}}
+
+/* v9 layout shots */
+.shots{display:grid;grid-template-columns:1.15fr 1fr;gap:18px;margin:26px 0 8px;align-items:start}
+.shot{margin:0}
+.shot a{position:relative;display:block;border:1px solid #262d38;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 10px 40px rgba(0,0,0,.45)}
+.shot img{display:block;width:100%;height:auto;transition:transform .6s ease}
+.shot a:hover img{transform:scale(1.04)}
+.shot a:hover{border-color:#f2a03d}
+.shot-tag{position:absolute;left:12px;top:12px;font:700 11px/1 "DejaVu Sans Mono",ui-monospace,monospace;letter-spacing:2px;color:#0d1014;background:#f2a03d;padding:6px 8px;border-radius:4px}
+.shot figcaption{color:#9aa4b2;font-size:14px;margin-top:10px;line-height:1.45}
+@media (max-width:820px){.shots{grid-template-columns:1fr}}
