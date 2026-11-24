@@ -89,8 +89,9 @@ Click any block to see what it does and why it is there.
 
 Everything hangs off one 512-bit network-on-chip, Hercoss's own
 [NOC_512](/projects/noc-512/): the sixteen processors, the FPGA fabric, the
-AI array, memory and all I/O. It already runs on FPGA silicon at 375 MHz
-with zero errors, and in a fully hardened variant at 275 MHz.
+AI array, memory and all I/O. On FPGA silicon it has carried 3.19 trillion
+AXI4 transfers in nine one-hour runs without a single error, and it repairs
+its own routing around a failed path in about 10 µs without losing a word.
 
 {{< fig "a1-architecture.svg" "Top-level architecture of the HERCOSS Exxo A1. Conceptual; not to scale." >}}
 
@@ -188,9 +189,9 @@ is in design, and what is still pending.
 | RV128IMAC processor core | Linux 6.6 SMP, 214 / 214 board tests, CoreMark 1.85 / MHz | Validated on FPGA |
 | Core-to-core calls | 1.4 µs round trip from a Linux program (an empty system call: 6.8 µs) | Validated on FPGA |
 | Self-healing lockstep | 24 / 24 injected faults corrected, 0 corrupted results | Validated on FPGA (earlier 64-bit core) |
-| NOC_512 network-on-chip | One-hour runs, both planes, live circuit changes: 491.6 billion AXI4 bursts at 375 MHz, 0 errors | Validated on FPGA |
-| NOC_512, fully hardened variant | 275 MHz, one hour: 320.9 billion bursts, 0 errors; 10.5 M single-bit faults corrected live; 48 M bursts with no error under continuous state corruption; a stream survives losing a complete route | Validated on FPGA (fault injection, not beam-tested) |
-| NOC_512, full 4 × 4 mesh | 16 masters at once; random stress over 23 seeds, up to 3,200 transactions per pass | Simulation |
+| NOC_512 network-on-chip | Nine one-hour runs at full load: 3.19 trillion AXI4 transfers, 0 errors; 375 MHz unprotected, 265 MHz with every protection layer | Validated on FPGA |
+| NOC_512 fault tolerance | 10.5 M errors corrected live; state corrupted every cycle for 159 M cycles with a result identical to a fault-free run; 199 M words/s rebuilt with none lost; 14 self-repairs in ~10 µs, 0 words lost | Validated on FPGA (fault injection, not beam-tested) |
+| NOC_512, 5 × 5 chip plan | 7.73 Tb/s on 19 protected circuits; 6 single-node failures under full traffic with 0 words lost | Simulation |
 | A1 SoC infrastructure | Cluster, crossbar, coherence, mailbox, interrupt controller, IOPMP; two isolated Linux domains | Validated on FPGA |
 | Cache and prefetch tuning | 64 KiB I-cache: −69 % misses in Linux; prefetcher: cold copy −32 %, cold read −39 % | Measured on FPGA (earlier 64-bit core) |
 | Own eFPGA fabric | Runs inside an AMD Versal; runtime reconfiguration self-test passed | Validated on FPGA |

@@ -19,7 +19,7 @@
 - nombre: "NOC_512"
   cat: "Interconnect"
   estado: validado
-  que: "512-bit network-on-chip, packet and circuit planes: 375 MHz on FPGA silicon, fully hardened variant at 275 MHz, zero errors in one-hour runs."
+  que: "Self-repairing 512-bit network-on-chip, packet and stream planes: 3.19 trillion AXI4 transfers on FPGA silicon with zero errors; re-routes itself in ~10 µs with no word lost."
   a1: "Joins every block of the chip"
 - nombre: "NPU"
   cat: "AI and control"
