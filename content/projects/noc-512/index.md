@@ -95,9 +95,9 @@ They are measured on an FPGA, not on the Exxo A1. The chip's clock depends
 on the production node; the A1 targets about 1.5 GHz for the network. On the
 FPGA, 1.6 Tb/s on a single 512-bit link would need 3.1 GHz, which is why bulk
 traffic is spread over several stream circuits in parallel.
+{{< /detalle >}}
 
 {{< fig "noc-why.svg" "Clock needed for 1.6 Tb/s on one 512-bit link, against the ceilings measured on the FPGA." >}}
-{{< /detalle >}}
 
 ## The plan for the chip: 7.7 Tb/s, all protected
 
