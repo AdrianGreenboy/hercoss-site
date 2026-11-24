@@ -49,7 +49,7 @@
 - nombre: "ETH_1T6"
   cat: "Links"
   estado: desarrollo
-  que: "1.6 Tb/s Ethernet controller, 4,096 bits per cycle; verified in simulation at full width; at a quarter width 258.3 Gb/s on FPGA hardware, 625 billion frames in a one-hour soak, zero errors."
+  que: "Complete 1.6 Tb/s Ethernet link layer: MAC, PCS, Reed-Solomon FEC, 16-lane alignment. On FPGA silicon: 312 billion frames in one hour, zero errors; full width verified in simulation."
   a1: "The 1.6TbE port"
 - nombre: "SERDES_256G v1.0"
   cat: "Links"

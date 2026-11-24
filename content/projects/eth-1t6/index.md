@@ -1,86 +1,154 @@
 ---
-title: "ETH_1T6 — 1.6 Tb/s Ethernet"
+title: "1.6 Tb/s Ethernet — from the standard to working silicon"
 layout: article
 weight: 6
-estado: "In development · Running on FPGA hardware at a quarter of the final width"
+estado: "Running on FPGA silicon · MAC, PCS, error correction and lane alignment"
 hidecover: true
-seotitle: "ETH_1T6 — 1.6 Tb/s Ethernet MAC for the HERCOSS Exxo A1 — Hercoss"
-summary: "The Exxo A1 carries a 1.6 Tb/s Ethernet port. ETH_1T6 is the Hercoss controller behind it: the block that turns data from the chip's internal network into Ethernet frames, and back, at 1.6 terabits per second."
+seotitle: "1.6 Tb/s Ethernet MAC, PCS and FEC IP core, European and in-house — Hercoss"
+summary: "Hercoss's own implementation of the fastest Ethernet rate being standardised today: a complete 1.6 Tb/s link layer (MAC, PCS, Reed-Solomon error correction and lane alignment) designed from a blank page for the HERCOSS Exxo A1. Running on FPGA silicon: 312 billion frames in one hour, zero errors."
 datos:
   - "1.6 Tb/s target"
-  - "4,096 bits per clock cycle"
-  - "258.3 Gb/s on FPGA hardware"
-  - "625 billion frames, 0 errors"
+  - "312 billion frames, 0 errors"
+  - "1–15 symbol errors: all corrected"
+  - "Bit-exact to IEEE 802.3 vectors"
 ---
 
 {{< stats >}}
-{{< stat "1.6 Tb/s" "Ethernet port of the HERCOSS Exxo A1" >}}
-{{< stat "4,096" "bits per clock cycle: several frames start and end in one cycle" >}}
-{{< stat "258.3 Gb/s" "of payload on FPGA hardware at a quarter of the width; measured throughput matches theory exactly" >}}
-{{< stat "625 billion" "frames in a one-hour soak, zero errors" >}}
+{{< stat "312 bn" "frames in a one-hour run on silicon, zero errors" >}}
+{{< stat "108 bn" "error-correction codewords checked in that hour, zero bad" >}}
+{{< stat "15 / 15" "symbol-error levels per codeword corrected in hardware, no frame lost" >}}
+{{< stat "0" "times corrupted data was passed on as valid" >}}
 {{< /stats >}}
 
-## The 1.6 Tb/s Ethernet MAC
+{{< aviso "Patent analysis in progress" >}}
+This page shows what the core achieves. Technology details are withheld
+while the architecture behind it is being prepared for patent protection.
+{{< /aviso >}}
 
-At this speed a controller can no longer handle one frame at a time. Every
+## What it is
+
+The HERCOSS 1.6T Ethernet core is our own implementation of the fastest
+Ethernet rate being standardised today: **1.6 terabits per second**. It is a
+complete link layer, designed in-house from a blank page for the
+[HERCOSS Exxo A1](/projects/hercoss-exxo-a1/) chip.
+
+{{< fig "eth-stack.svg" "Everything between the chip's internal network and the 16 line lanes is Hercoss's own design." >}}
+
+- **MAC:** frame generation and checking.
+- **PCS:** line coding, scrambling and lane distribution.
+- **FEC:** Reed-Solomon forward error correction, encoder and full decoder.
+- **Lane alignment:** automatic lock, deskew and reordering of 16 lanes.
+- **Software interface:** a register bank with counters, events and
+  interrupts.
+
+**It is not a wrapper around third-party IP. Every block is ours.**
+
+## Why it matters
+
+AI clusters and data centres are moving from 400G and 800G to 1.6T links.
+At that speed, the logic that frames, protects and aligns the data is one
+of the hardest digital blocks in a chip, and today it is available from only
+a handful of vendors. A European, independently developed 1.6T core gives
+the HERCOSS Exxo A1 its own high-speed networking, **with no licence
+dependency**.
+
+At 1.6 Tb/s a controller can no longer handle one frame at a time: every
 clock cycle carries 4,096 bits, enough for several complete frames to start
-and end inside the same cycle. ETH_1T6 is built for that from the start, and
-its width matches eight lanes of the [NOC_512](/projects/noc-512/) network,
-so data moves between the port and the rest of the chip without conversion.
+and end inside the same cycle. The core is built for that from the start,
+and its width matches eight lanes of the [NOC_512](/projects/noc-512/)
+network, so data moves between the port and the rest of the chip without
+conversion.
 
 {{< fig "eth-cycle.svg" "One clock cycle at 1.6 Tb/s: 4,096 bits, eight network lanes, several frames. Conceptual." >}}
 
-**One design, every speed.** The same controller scales by a single
-parameter from an eighth of the rate up to the full 1.6 Tb/s. That lets us
-prove on today's FPGA board exactly the logic that will go into the chip,
-instead of a simplified copy.
+## Measured, not promised
 
-{{< fig "eth-widths.svg" "The same design at four widths: the quarter width runs on FPGA hardware, all four are verified in simulation." >}}
+The core runs today on real silicon, an AMD Versal FPGA, in a scaled
+configuration that fits the device, at a 300 MHz system clock. The
+complete chain runs at once: MAC, PCS, FEC and lane alignment.
 
-**Built for space.** The radiation-hardened variant includes an integrity
-monitor that checks every outgoing frame before it leaves the chip.
+{{< fig "eth-hour.svg" "One hour at full load on the FPGA board, with independent counters at both ends of the link." >}}
 
-## Status, November 2026
+| Result | Measured in silicon |
+|---|---|
+| Sustained payload | **129 Gb/s** through MAC + PCS + FEC + lane alignment |
+| One-hour endurance run | **312 billion frames, zero errors** |
+| Codewords checked in that hour | **108 billion, zero bad** |
+| Error correction | **1 to 15 symbol errors per codeword: all corrected, no frame lost** |
+| Beyond the code's limit | 16 symbol errors: detected and flagged, never delivered as good data |
+| Lane handling | Lanes shuffled, shifted and skewed on purpose: locked and reordered automatically |
 
-- **Frame controller (MAC): complete and verified in simulation.** It passes
-  a 16-run regression at four datapath widths, including the full 1.6 Tb/s
-  width, with randomized traffic, an independent checksum reference and
-  deliberate error injection. Every corrupted frame was detected; every
-  clean frame arrived intact.
-- **Validated on FPGA hardware.** At a quarter of the final width, the
-  complete controller as it will be integrated in the chip (frame
-  controller, PCS stages built so far, and its register interface) runs on
-  our FPGA board at 300 MHz: a 307 Gb/s datapath carrying 258.3 Gb/s of
-  payload. In a one-hour soak it moved 625 billion frames with zero errors.
-  An injected line error was detected, reported and cleared, and the link
-  recovered on its own. Measured throughput matches the theoretical figure
-  exactly.
-- **Next:** error correction and lane distribution for the 1.6 Tb/s line
-  format.
+### It corrects errors, in hardware, at speed
 
-The frame controller went from first line to verified, timing-clean design
-in a single working session.
+We inject errors into the running link on purpose. With the decoder active,
+a burst that would destroy a frame is repaired on the fly: the receiver
+reports one corrected codeword and the application loses nothing.
+Throughput is unchanged.
 
-{{< detalle "What has, and has not, been measured?" >}}
-At a quarter of the final width, the controller runs on FPGA hardware and
-its traffic is measured: 258.3 Gb/s of payload, exactly the theoretical
-figure, and 625 billion frames in a one-hour soak with zero errors. The full width is verified in
-simulation. The 1.6 Tb/s rate itself needs the Exxo A1's 224 Gb/s
-transceivers and cannot be measured on an FPGA board. The 1/8-width figure
-in the chart is the datapath width multiplied by the clock the FPGA
-implementation reaches, not measured traffic.
+### It knows its own limit
+
+{{< fig "eth-fec.svg" "Symbol errors injected per codeword on the running link. 1 to 15: repaired. 16: declared uncorrectable, never passed on." >}}
+
+The code can repair up to 15 symbol errors per codeword. We tested 1, 2,
+3 … 15: all repaired. At 16 the core does exactly what it must: it declares
+the codeword uncorrectable and marks the data as invalid. **In every test,
+corrupted data was never passed on as valid.**
+
+### It follows the standard bit for bit
+
+{{< fig "eth-vectors.svg" "The transmit path reproduces the official reference test vectors exactly." >}}
+
+The transmit path reproduces the official IEEE 802.3 reference test vectors
+for 200G, 400G and 800G, and the published example vectors of the 1.6T
+draft standard, exactly.
+
+## How we got here
+
+| Step | Milestone |
+|---|---|
+| MAC | Frame controller complete and verified in simulation at four datapath widths, including the full 1.6 Tb/s width; from first line to timing-clean design in a single working session |
+| MAC + PCS on silicon | At a quarter of the final width: 258.3 Gb/s of payload, exactly the theoretical figure; 625 billion frames in one hour, zero errors |
+| Full link layer on silicon | Error correction and 16-lane alignment added: 129 Gb/s through the complete chain, 312 billion frames in one hour, zero errors |
+
+{{< detalle "Why is the latest throughput lower than the earlier one?" >}}
+The earlier 258.3 Gb/s run carried the frame controller and the first PCS
+stages. The latest run carries the complete link layer, including the
+Reed-Solomon decoder and 16-lane alignment, in a configuration scaled to fit
+the same FPGA. Both are measured at 300 MHz on the same board. The rate
+of the full 1.6 Tb/s datapath will be established on the A1 chip itself.
 {{< /detalle >}}
+
+## What is still ahead
+
+We believe in saying what is not done yet.
+
+- The silicon results come from a **scaled configuration** on an FPGA. The
+  full-width 1.6 Tb/s datapath is verified in simulation; its speed in
+  silicon will be established on the A1 chip itself, not on this FPGA.
+- The test link is an **internal channel** inside the device. Connection to
+  optical or electrical transceivers is the next integration step.
+- The error-correction capacity under heavy, continuous error rates is being
+  extended.
+
+## The method
+
+Every result on this page follows the same rule: **simulate it, synthesise
+it, then prove it on the board.** Nothing is reported as working until it
+has run in silicon with independent counters on both ends of the link.
 
 ## Built on proven Ethernet
 
-ETH_1T6 builds on the Hercoss Ethernet family that already runs on FPGA
-silicon: a 40G MAC and PCS that interoperate with a commercial network card
-through a one-hour soak with zero errors, 25G Ethernet, and a 103 Gb/s
+The 1.6T core builds on the Hercoss Ethernet family that already runs on
+FPGA silicon: a 40G MAC and PCS that interoperate with a commercial network
+card through a one-hour soak with zero errors, 25G Ethernet, and a 103 Gb/s
 SerDes link. See [High-speed links](/projects/high-speed-links/).
 
 ## In the Exxo A1
 
-In the [HERCOSS Exxo A1](/projects/hercoss-exxo-a1/), ETH_1T6 drives the
+In the [HERCOSS Exxo A1](/projects/hercoss-exxo-a1/), this core drives the
 1.6TbE port on eight 224 Gb/s PAM4 lanes, part of up to ~2 Tbps of Ethernet
 the chip can carry at once.
+
+For technical or investment enquiries:
+[adrian@hercoss.com](mailto:adrian@hercoss.com) ·
 [See the investment opportunity →](/projects/hercoss-exxo-a1/#invest)
