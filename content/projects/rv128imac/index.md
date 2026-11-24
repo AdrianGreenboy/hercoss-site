@@ -2,16 +2,23 @@
 title: "RV128IMAC — the core of the Exxo A1"
 layout: rv128
 weight: 2
-estado: "Running on FPGA · Core of the Exxo A1"
-summary: "A 128-bit RISC-V processor written from scratch by Hercoss. It runs Linux, calls functions on other CPUs in 1.36 µs, hashes with SHA-3 in hardware at 94× the speed of software, and is the processor at the heart of the HERCOSS Exxo A1."
+estado: "Running on FPGA silicon · Processor core of the HERCOSS Exxo A1"
+seotitle: "RV128IMAC — 128-bit RISC-V processor core for space computing — Hercoss"
+summary: "128-bit RISC-V, built from scratch in Europe. One core runs as a 128-bit CPU, a 64-bit CPU or two 64-bit CPUs; a Linux program calls a function on another CPU in 1.4 µs, and hashes with hardware SHA-3 at about 100 MB/s, 153× software, with no driver. It is the processor at the heart of the HERCOSS Exxo A1."
 datos:
   - "128-bit RISC-V"
-  - "1.36 µs CPU-to-CPU call"
+  - "SHA-3 ×153, no driver"
+  - "1.4 µs CPU-to-CPU call"
   - "Linux 6.6 SMP"
-  - "SHA-3 in hardware: ×94"
-  - "214 / 214 tests on FPGA"
-seotitle: "RV128IMAC — 128-bit RISC-V processor core for space computing — Hercoss"
+  - "214 / 214 on silicon"
 ---
+
+{{< stats >}}
+{{< stat "×153" "SHA-3 in hardware vs the same algorithm in software on the same CPU" >}}
+{{< stat "~100 MB/s" "SHA3-256 from an ordinary Linux process, no driver" >}}
+{{< stat "1.4 µs" "a Linux program calls a function on another CPU, ~5× faster than an empty system call" >}}
+{{< stat "214 / 214" "self-checking programs pass on silicon" >}}
+{{< /stats >}}
 
 {{< aviso "Patent analysis in progress" >}}
 The innovations described on this page are currently being analysed for
@@ -28,12 +35,21 @@ VHDL by Hercoss. It is a **128-bit** processor, twice the word width of the
 chosen for the **HERCOSS Exxo A1**: the chip's CPU cluster is sixteen of
 these cores.
 
-What makes it different is not only the width. It changes how processors
-inside one chip work together: a program on one CPU can call a function on
-another CPU almost as quickly as calling a function on its own.
+What makes it different is not only the width:
 
-Every result on this page was measured on a working FPGA prototype: two CPUs
-on an AMD Versal board, running Linux.
+- **Cores call each other directly.** An ordinary Linux program runs a
+  function on another processor and gets the answer in 1.4 µs, with no
+  driver and no operating-system round trip.
+- **Hardware accelerators without drivers.** The first one, a SHA-3 / SHAKE
+  engine, serves a Linux process at about 100 MB/s, 153× the same algorithm
+  in software on the same CPU.
+- **One core, three personalities:** 128-bit CPU, 64-bit CPU, or two 64-bit
+  CPUs.
+
+Everything on this page runs on a working FPGA prototype: two CPUs on an
+AMD Versal board at 60 MHz, running Linux. **From first Linux boot to a
+driverless hardware SHA-3 running 150× faster than software: two weeks, all
+on real silicon.**
 
 ## One core, three personalities
 
@@ -52,21 +68,22 @@ The RV128IMAC adds **XCALL**, a Hercoss extension to RISC-V. An ordinary Linux
 program asks another CPU to run a function and gets the answer back, with no
 driver in between. The operating system only decides which programs may do it.
 
-{{< fig "xcall-latency.svg" "A complete call to another CPU and back costs about a fifth of a system call that does nothing." >}}
+{{< fig "xcall-latency.svg" "A complete call to another CPU and back, 1,402 ns, against an empty system call that does nothing, 6,771 ns." >}}
 
 {{< detalle "What exactly is being compared?" >}}
 Both numbers come from the same Linux process on the same CPU of the FPGA
 prototype at 60 MHz. The system call is `getppid()`, one of the cheapest
 calls Linux has; the XCALL is a full round trip that runs a function on the
-second CPU and returns its result. The comparison is between the two
+second CPU and returns its result. In RTL simulation the hardware part of
+the call takes 26 clock cycles. The comparison is between the two
 mechanisms on this core, not a claim against other vendors' products.
 {{< /detalle >}}
 
 ## Work in parallel without waiting
 
-Calls can also be **asynchronous**: a program starts a call on another CPU,
-keeps working, and collects the answer later. Both CPUs compute at the same
-time, and the total time approaches the ideal.
+Calls can also be **asynchronous**: a program starts several calls, keeps
+working, and collects the answers later in any order. Both CPUs compute at
+the same time, and the total time approaches the ideal.
 
 {{< fig "xcall-async.svg" "Two large factorials, one on each CPU. Run together, they finish in the time of the longer one." >}}
 
@@ -82,6 +99,76 @@ are built to survive faults:
 - Programs can wait with a timeout, cancel a call, or sleep while they wait
   so their CPU is free for other work.
 
+## Accelerators without drivers: hardware SHA-3
+
+SHA-3 and SHAKE are the foundation of the new post-quantum cryptography
+standards, ML-KEM (FIPS 203) and ML-DSA (FIPS 204). For a space chip with a
+ten-year life, having them in hardware and reachable from ordinary software
+is a strong argument.
+
+On most chips, using an accelerator means a kernel driver, memory-mapped
+registers, DMA, interrupts and shared buffers: microseconds per request and
+a lot of software. On the RV128IMAC, an ordinary Linux process uses the
+SHA-3 engine **directly, with no driver**.
+
+{{< stats >}}
+{{< stat "99.8 MB/s" "SHA3-256 from a Linux process (1 MiB)" >}}
+{{< stat "107 MB/s" "on bare metal" >}}
+{{< stat "8.6 µs" "for a short 64-byte message, vs 199 µs in software (×23)" >}}
+{{< stat "~8,000" "LUTs for the whole engine" >}}
+{{< /stats >}}
+
+The engine covers SHA3-224, -256, -384, -512 and SHAKE128 / 256, one
+Keccak-f[1600] round per clock cycle.
+
+### ×54 to ×153 in four days
+
+Each step was validated on silicon before the next one started.
+
+{{< fig "sha3-journey.svg" "SHA3-256 from a Linux process on the same board at the same 60 MHz. P13 is a simulation projection, not a measurement." >}}
+
+| Step | Date | What changed | Linux SHA3-256, 1 MiB | vs software |
+|---|---|---|---|---|
+| P9 | 21 Nov | SHA-3 engine running on silicon, used from Linux without a driver | 33 MB/s | ×54 |
+| P9b | 22 Nov | Software only | 53–60 MB/s | – |
+| P10 | 22 Nov | A new instruction in the core | 74.5 MB/s | ×94 |
+| P11 | 23 Nov | The data cache learns to fetch the next line ahead | 97.7 MB/s | ×150 |
+| P12 | 24 Nov | Timing redesign in instruction fetch: same speed, far more margin, fewer gates | 99.8 MB/s | ×153 |
+| P13 | next | In verification: simulation shows −22 % cycles | silicon pending | – |
+
+## Measured, not assumed
+
+The core carries its own hardware performance counters, and every
+optimisation starts from a measurement of where the cycles go, not from a
+guess.
+
+{{< fig "sha3-cycles.svg" "Cost of each 8-byte step of the hash on bare metal: from 7.31 to 4.50 cycles on silicon." >}}
+
+- **The measurement redirected the work.** The counters showed that the path
+  between the core and the engine costs almost nothing. That turned "a
+  bigger queue", which would not have helped, into a new instruction
+  (+25 %) and a data-cache prefetch (+30 %).
+- **We correct ourselves in public.** An earlier measurement blamed about two
+  cycles per step on the pipeline waiting for older instructions. Removing
+  that wait gave less than predicted. Digging deeper showed most of those
+  cycles came from somewhere else: the instruction-fetch queue ran dry on
+  some code alignments. The very same loop took 5.15 or 3.28 cycles per step
+  depending only on where it sat in memory. The fix makes alignment
+  irrelevant and speeds up all compact code, not only SHA-3.
+- **Faster without spending timing margin.** The prefetch step left almost no
+  timing margin (+0.010 ns). The next step redesigned the critical path and
+  won +0.556 ns with 1,300 fewer LUTs at identical performance. Margin today
+  is what makes the next features possible.
+
+{{< detalle "What is in verification right now (P13)?" >}}
+The RTL is done and passes a subset of the instruction-by-instruction
+co-simulation; the full regression is running. In simulation the SHA-3
+stream needs 22 % fewer cycles (4.45 → 3.47 per step) and a whole test
+program 14 % fewer. If silicon follows simulation, that would mean about
+135 MB/s on bare metal and about 125 MB/s from Linux. **This is a
+projection, not yet measured.** The silicon build is next.
+{{< /detalle >}}
+
 ## A 128-bit coprocessor that pays off
 
 Some workloads need numbers far larger than 64 bits: cryptography, exact
@@ -94,135 +181,118 @@ The second CPU also runs a native 128-bit programming environment. New
 services can be defined on it **while Linux keeps running**, and Linux can
 call them immediately, with no rebuild and no reboot.
 
-## Hardware SHA-3 from Linux, without a driver
-
-SHA-3 and SHAKE are the foundation of the new post-quantum cryptography
-standards, ML-KEM (FIPS 203) and ML-DSA (FIPS 204). For a spacecraft that
-must stay secure for ten years or more, having them in hardware matters.
-
-The RV128IMAC now has a hardware **Keccak engine**: SHA3-224, -256, -384,
--512 and SHAKE128 / 256, one round per clock cycle. An ordinary Linux program
-uses it **directly, without a driver**.
-
-{{< fig "sha3-speed.svg" "SHA3-256 throughput on the same CPU, from software to the improved hardware path." >}}
-
-- **74.5 MB/s from a Linux process**, 94× the same algorithm in software on
-  the same CPU; 82 MB/s on bare metal.
-- **Small:** the engine takes about 8,000 LUTs.
-- **Correct:** checked against the official FIPS 202 test vectors. A 1 MiB
-  digest computed on the board is byte-for-byte identical to the one
-  computed on a PC by fully independent code.
-
-### Measured, not assumed
-
-The first guess was that the bottleneck sat between the core and the
-engine. The core's own hardware performance counters showed where every
-cycle went, and proved that guess wrong: almost nothing was lost there. The
-cost was inside the core itself. So the next step was an improvement to the
-core, which gave another 1.25×, instead of a bigger buffer that would not
-have helped.
-
-The checks caught problems before silicon:
-
-- A worst-case flood test showed that an internal queue would have
-  overflowed: it needed 47 entries and had 32. No ordinary functional test
-  came close to that case.
-- To prove that the tests really test something, they were broken on
-  purpose: flipping a single bit of one constant of the algorithm produces
-  570 errors.
-
-{{< detalle "What are the limits of these numbers?" >}}
-They come from one board (AMD Versal VE2302) at 60 MHz; in the Exxo A1, with
-another clock and memory system, the absolute values will change. The
-software reference varies by up to 22 % between boots depending on where its
-pages land in memory, so the speed-up is a range, 69× to 94×. The engine has
-one context, so under Linux the hashing process is pinned to a core. The
-hardware is validated on silicon; the full simulation regression of the
-latest step was still running when this page was written. Next: the data
-cache, where 40 % of the remaining time goes.
-{{< /detalle >}}
-
 ## Results on the FPGA prototype
 
 | What | Result |
 |---|---|
-| Board test suite | 214 / 214 programs pass, each self-checking |
-| Linux 6.6 SMP (two CPUs on one core) | 20 / 20 consecutive boots |
-| Both CPUs stressing the memory bus together | 20 / 20 |
-| CoreMark (64-bit mode) | 1.85 CoreMark/MHz |
-| Call to another CPU and back (XCALL) | 1.36 µs |
-| Empty Linux system call, for reference | ~6.8 µs |
-| Big-number maths, 128-bit vs 64-bit words | 1.63× faster |
-| Two computations in parallel via async call | 1.60× (ideal 1.61×) |
-| Hardware SHA3-256 from a Linux process | 74.5 MB/s, ×94 vs software on the same CPU (×69–×94 across boots) |
-| Hardware SHA3-256, bare metal | 82 MB/s |
-| Size of the SHA-3 engine | ~8,000 LUTs |
-| Full design (2 CPUs + SHA-3 engine) | 82 % of the VE2302, timing met at 60 MHz with 1 ns extra margin |
-| Operating systems running | Linux 6.6, FreeRTOS, Zephyr, RTEMS |
+| SHA3-256 from a Linux process, no driver (1 MiB) | **99.8 MB/s**, ×153 vs software on the same CPU (×123–×153 across boots) |
+| SHA3-256, bare metal | 107 MB/s |
+| Short message (64-byte hash) | 8.6 µs in hardware vs 199 µs in software (×23) |
+| Call to another CPU and back (XCALL) | **1.40 µs** (1,402 ns) |
+| Empty Linux system call, for reference | 6.77 µs (6,771 ns) |
+| 128-bit vs 64-bit big-number maths (1000!) | 1.63× faster |
+| Two computations in parallel via asynchronous calls | 1.60× (ideal 1.61×) |
+| Linux 6.6 SMP on two hardware threads of one core | 20 / 20 consecutive boots, plus 20 / 20 SMP stress runs on the latest bitstream |
+| Board test suite | 214 / 214 self-checking programs (RV128, RV64, FreeRTOS, Zephyr, RTEMS, CoreMark, Forth) |
+| CoreMark 1.0 (64-bit mode) | 1.85 CoreMark/MHz |
+| Latest design: 2 CPUs + SHA-3 engine | 125.3 k LUTs (83 % of the VE2302); timing met with a 1.0 ns safety guard plus +0.566 ns to spare |
 
 {{< detalle "What are the limits of these numbers?" >}}
 They come from an FPGA prototype running at 60 MHz on an AMD Versal AI Edge
-VE2302. A fabricated chip will run at a different clock and with a different
-area; those figures are not known yet.
+VE2302. A fabricated chip will have a different clock, power and area; those
+figures are not known yet, and absolute MB/s will change on the A1. The
+×153 compares against the software algorithm on the same 60 MHz in-order
+CPU, not against other vendors' products or desktop processors. The
+software reference varies by up to about 20 % between boots depending on
+memory placement, so the speed-up is a range and every gain is compared
+within one run.
 
 The 128-bit instruction set is based on the RV128I draft from the RISC-V
-specification, which is not a ratified standard. XCALL is a Hercoss
-extension, not part of RISC-V. No C compiler exists for 128-bit RISC-V
-anywhere, so 128-bit code is written with Hercoss's own tools; Linux and the
-real-time operating systems run in the standard 64-bit mode.
+specification, which is not a ratified standard. XCALL and the accelerator
+interface are Hercoss extensions, not part of RISC-V. No C compiler exists
+for 128-bit RISC-V anywhere, so 128-bit code is written with Hercoss's own
+tools; Linux and the real-time operating systems run in the standard
+64-bit mode. Under Linux the SHA-3 engine has one context, so the hashing
+process is pinned to a core. The full 214-program suite was last run on an
+earlier bitstream; later ones passed the SHA-3, call and SMP stress tests.
 {{< /detalle >}}
 
 ## Verified like a product
 
-Every change to the processor is checked **instruction by instruction**
-against independent software models of the instruction set. If the hardware
-and the model disagree on a single result, memory write or exception, the
-test stops. The same programs then run on the FPGA board, where each one
-reports its own pass or fail.
+Every hardware change is checked **instruction by instruction** against
+independent reference models (128-bit, 64-bit, multi-core and accelerator
+versions) across a regression of more than twenty layers. Any difference in a
+result, a memory write or an exception stops the test. On top of that:
 
-The regression covers more than twenty layers: every compressed instruction
-exhaustively, tens of thousands of multiply and divide cases, caches and
-memory under random delays, three real-time operating systems, and Linux
-booting from the first instruction to the first user program: 37.5 million
-instructions, identical between hardware and model.
+- **Linux 6.6 boots identically** in hardware and model, from the boot ROM
+  to the first user program.
+- **FreeRTOS, Zephyr and RTEMS** run in co-simulation.
+- **Random memory delays** are injected to shake out timing bugs.
+- **Three independent implementations agree:** the 1 MiB SHA-3 digest
+  computed on the board is byte-for-byte identical to the one computed on a
+  PC and to the official FIPS 202 vectors.
+- **The tests are tested:** flipping one bit of one constant of the
+  algorithm produces 570 errors.
 
-{{< detalle "Did it find real bugs?" >}}
-Yes. Among them: a reset during a memory transfer that could hang the board,
-an interrupt delivered to the wrong privilege level, and a subtle
-specification violation that made Linux hang only occasionally. Each one was
-fixed, and each one now has a test that would catch it again.
+Then the same programs run on the board, each with its own pass / fail
+verdict.
+
+{{< detalle "Did it find real bugs before silicon?" >}}
+Yes. A flood test that pushes the engine as hard as it can go showed that
+an internal input queue would have overflowed: it needed 47 entries and had
+32. Earlier, the process caught a reset during a memory transfer that could
+hang the board, an interrupt delivered to the wrong privilege level, and a
+subtle specification violation that made Linux hang only occasionally. Each
+one was fixed, and each one now has a test that would catch it again.
 {{< /detalle >}}
+
+## Architecture in short
+
+| | |
+|---|---|
+| Instruction set | 128-bit RISC-V (based on the RV128I draft) and RV64IMAC, chosen at reset; compressed instructions; Hercoss extensions for calls and accelerators; hardware performance counters |
+| System | M/S/U privilege, Sv39 virtual memory with hardware page-table walker; OpenSBI + Linux 6.6 SMP; FreeRTOS, Zephyr, RTEMS |
+| Pipeline | 5 stages, in order; branch prediction; fast multiplier; instruction and data caches with next-line data prefetch; 128-bit AXI4 |
+| Caches | Prototype: 16 KiB + 16 KiB; Exxo A1 plan: 64 KiB instruction, 32 KiB data |
+| Dual mode | Two 64-bit hardware threads on one 128-bit datapath |
+| SHA-3 engine | Keccak-f[1600], one round per clock; all SHA-3 and SHAKE variants; ~8,000 LUTs |
 
 ## Progress in November 2026
 
-| Date (Nov 2026) | Milestone |
+| Date | Milestone |
 |---|---|
 | Early November | 128-bit core from scratch, first programs on the FPGA |
 | 10 Nov | Linux boots on the core |
-| 11 Nov | Faster core: branch prediction, fast multiplier, 60 MHz |
-| 19 Nov | Linux SMP on two CPUs inside one core |
-| 20 Nov | Two cores joined; first XCALL from a Linux program |
-| 20 Nov | Asynchronous calls and process isolation |
-| 21 Nov | Robust calls, live services, performance counters |
-| 21–22 Nov | Hardware SHA-3 engine used from Linux without a driver: 33 MB/s, then 74.5 MB/s (×94) after profiling |
+| 11 Nov | Faster core: branch prediction, fast multiplier, 60 MHz, CoreMark 1.85 / MHz |
+| 19 Nov | Linux SMP on two hardware threads of one core |
+| 20 Nov | Two CPUs; first XCALL from a Linux program; asynchronous calls |
+| 21 Nov | Robust calls, live services, performance counters, safe bus reset |
+| 21 Nov | **Hardware SHA-3 from Linux without a driver: 33 MB/s** |
+| 22 Nov | New instruction: 74.5 MB/s |
+| 23 Nov | Data-cache prefetch: 97.7 MB/s, ×150 |
+| 24 Nov | Timing redesign: 99.8 MB/s, ×153, more margin with fewer gates; next step in verification |
 
-## In the Exxo A1: a cluster of sixteen
+## Next: sixteen cores
 
-The Exxo A1 places **sixteen RV128IMAC cores** in one processor cluster,
-connected so that any core can call any other directly. Around them sit the
-chip's FPGA fabric, the AI and attitude-control array, post-quantum
-cryptography and the I/O, all on one full AXI4 interconnect.
+The Exxo A1 places **sixteen RV128IMAC cores** in one processor cluster, with
+their accelerators, around the [NOC_512](/projects/noc-512/) network that
+carries memory and I/O. We are scaling the cores' call fabric to sixteen
+now, and **we will measure it on silicon at full length, with real cores,
+before the chip design is frozen.**
 
 {{< fig "a1-cluster.svg" "Planned processor cluster of the HERCOSS Exxo A1. Conceptual diagram; not to scale." >}}
 
 {{< detalle "What still has to happen before the A1 uses this core?" >}}
-The prototype has two CPUs; scaling the connection network to sixteen cores
-is the next architectural step. The radiation-hardening features planned for
-the A1 (error-correcting register files, cache parity, lockstep pairs) and
+The prototype has two CPUs; scaling the call fabric to sixteen cores is in
+the design phase. The radiation-hardening features planned for the A1 and
 the larger caches still have to be added. And the core has so far only been
 built for FPGA: the chip flow (memory macros, test logic, timing and area in
 silicon) comes next.
 {{< /detalle >}}
 
+*Prototype on AMD Versal at 60 MHz. Figures measured on silicon unless
+marked. Patents under analysis.*
+
 Questions, collaboration or investment:
-[adrian@hercoss.com](mailto:adrian@hercoss.com).
+[adrian@hercoss.com](mailto:adrian@hercoss.com) ·
+[See the investment opportunity →](/projects/hercoss-exxo-a1/#invest)

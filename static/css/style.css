@@ -334,3 +334,14 @@ nav a { white-space: nowrap; }
 .io-total.stats .io-num { font-size: 34px; white-space: nowrap; }
 .prose:has(.stats) { max-width: none; }
 .prose:has(.stats) > p, .prose:has(.stats) > ul, .prose:has(.stats) > h2, .prose:has(.stats) > h3, .prose:has(.stats) > .detalle, .prose:has(.stats) > blockquote { max-width: 46em; }
+
+/* v8 highlights band */
+.hl{border-top:1px solid #262d38;border-bottom:1px solid #262d38}
+.hl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0 10px}
+.hl-grid a{display:flex;flex-direction:column;gap:6px;padding:18px 18px 14px;background:#151a21;border:1px solid #262d38;border-radius:10px;text-decoration:none;color:inherit;transition:border-color .2s,transform .2s}
+.hl-grid a:hover{border-color:#f2a03d;transform:translateY(-2px)}
+.hl-grid .io-num{font-size:34px;white-space:nowrap;color:#f2a03d}
+.hl-grid .io-lbl{color:#e6e9ee;font-size:15px;line-height:1.35}
+.hl-src{font-family:"DejaVu Sans Mono",ui-monospace,monospace;font-size:11px;letter-spacing:2px;color:#9aa4b2;text-transform:uppercase;margin-top:auto}
+.hl-note{color:#9aa4b2;font-size:13px}
+@media (max-width:820px){.hl-grid{grid-template-columns:1fr 1fr}}@media (max-width:520px){.hl-grid{grid-template-columns:1fr}}

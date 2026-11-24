@@ -4,7 +4,7 @@
 - nombre: "RV128IMAC"
   cat: "Processors"
   estado: validado
-  que: "128-bit RISC-V processor: runs as RV128, RV64 or two RV64 CPUs; Linux 6.6 SMP; direct core-to-core calls."
+  que: "128-bit RISC-V processor: runs as RV128, RV64 or two RV64 CPUs; Linux 6.6 SMP; core-to-core calls in 1.4 µs; hardware SHA-3 at 153× software, no driver."
   a1: "The A1's 16 processors"
 - nombre: "RV32IM"
   cat: "Processors"
@@ -144,7 +144,7 @@
 - nombre: "SHA-3 / Keccak engine"
   cat: "Security"
   estado: validado
-  que: "SHA3-224/256/384/512 and SHAKE, one round per cycle; 74.5 MB/s from a Linux program without a driver, 94× software."
+  que: "SHA3-224/256/384/512 and SHAKE, one round per cycle; 99.8 MB/s from a Linux program without a driver, 153× software."
   a1: "Hardware base for post-quantum crypto"
 - nombre: "ECC scrubber"
   cat: "Security"
