@@ -207,6 +207,7 @@ is in design, and what is still pending.
 | NOC_512 network-on-chip | Nine one-hour runs at full load: 3.19 trillion AXI4 transfers, 0 errors; 375 MHz unprotected, 265 MHz with every protection layer | Validated on FPGA |
 | NOC_512 fault tolerance | 10.5 M errors corrected live; state corrupted every cycle for 159 M cycles with a result identical to a fault-free run; 199 M words/s rebuilt with none lost; 14 self-repairs in ~10 µs, 0 words lost | Validated on FPGA (fault injection, not beam-tested) |
 | NOC_512, 5 × 5 chip plan | 7.73 Tb/s on 19 protected circuits; 6 single-node failures under full traffic with 0 words lost | Simulation |
+| NOC_512 self-healing circuit plane | With a switch dead, 65 of 66 affected lanes back within tens of cycles, ~10× faster than prepared backup routes; 0 words lost or corrupted | RTL simulation |
 | A1 SoC infrastructure | Cluster, crossbar, coherence, mailbox, interrupt controller, IOPMP; two isolated Linux domains | Validated on FPGA |
 | Cache and prefetch tuning | 64 KiB I-cache: −69 % misses in Linux; prefetcher: cold copy −32 %, cold read −39 % | Measured on FPGA (earlier 64-bit core) |
 | Own eFPGA fabric | Runs inside an AMD Versal; runtime reconfiguration self-test passed | Validated on FPGA |

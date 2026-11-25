@@ -9,6 +9,7 @@ summary: "Hercoss's own 512-bit network-on-chip for the HERCOSS Exxo A1, built f
 datos:
   - "3.19 trillion transfers, 0 errors"
   - "Self-repairing in ~10 µs"
+  - "Self-healing circuit plane"
   - "7.7 Tb/s chip plan"
   - "375 MHz on FPGA silicon"
 ---
@@ -118,14 +119,64 @@ under load:
   one after the other. Up to 16 protected groups lost a path at the same
   moment. **Not one word was lost** on any of them. (A circuit cannot survive
   the loss of the block it starts or ends at; nothing can.)
-- **The network heals around it:** with the node still dead, circuits are
-  back to full protection on other routes within about 1,000 clock cycles,
-  around 4 µs at 265 MHz. Today that works for about two thirds of the paths;
-  the rest stay protected by their surviving paths until the node returns.
+- **The network heals around it:** with the switch still dead, the new
+  self-healing circuit plane brings 65 of 66 affected lanes back into
+  service, most within tens of clock cycles (see below).
 - **Two nodes die together:** 27 of 35 protected groups lose nothing. The
   other 8 lose data, but every lost word is counted, nothing is corrupted,
   and the whole network returns to its planned state by itself when the nodes
   come back.
+
+## New: a circuit plane that heals itself
+
+The high-bandwidth circuits of the A1 (1.6 Tb/s Ethernet, PCIe, RF and AI
+streams) run over fixed lanes through the mesh. Until now, a switch that
+stopped working cut every circuit passing through it until a prepared backup
+route was written in: 580 to 1,030 clock cycles, covering 94 % of the
+affected lanes.
+
+This month we built and verified, in RTL simulation of the full 5 × 5 chip
+plan, a circuit plane where **the mesh finds its own way around a dead
+switch**: without software, without a central controller, and without being
+told which switch failed.
+
+{{< fig "noc-heal-concept.svg" "Self-healing in three steps: normal route, detour found by the mesh itself, automatic return. Conceptual drawing." >}}
+
+{{< stats >}}
+{{< stat "65 / 66" "affected lanes back in service while the switch is still dead" >}}
+{{< stat "~10×" "faster than prepared backup routes: most lanes back within tens of cycles" >}}
+{{< stat "0" "words lost, 0 corrupted; circuits return home on their own" >}}
+{{< stat "25 / 25" "switches under constant internal corruption, results identical word for word" >}}
+{{< /stats >}}
+
+{{< fig "noc-heal-compare.svg" "One dead switch at a time, six different switches, each dead for 800 cycles, in RTL simulation of the full chip plan." >}}
+
+- **It repairs itself fast.** Most lanes are back within a few tens of clock
+  cycles, about ten times faster than the prepared backup routes. The one
+  lane that is not restored has no free path in the mesh at all.
+- **Nothing is lost.** The network's existing data protection covers the short
+  gap: zero words lost, zero corrupted.
+- **The repair logic is hardened too.** In simulation, its internal state was
+  deliberately corrupted on every single clock cycle in all 25 switches; the
+  results were identical, word for word, to a run without corruption.
+- **Two failures at once** is a much harder case. In the worst pair of the
+  chip, self-healing already loses far fewer words than no repair at all.
+  How much fewer still depends on the order in which repairs compete for the
+  few free lanes, so the next step is to make that deterministic.
+
+{{< detalle "What does self-healing cost?" >}}
+Out-of-context synthesis on the VE2302, for one switch of the 5 × 5 mesh:
+
+| | Logic | Clock |
+|---|---|---|
+| Stream switch (data path) | 68,000 LUTs | 356 MHz |
+| Self-healing logic | 16,000 LUTs | 333 MHz |
+| Self-healing logic, hardened | 26,000 LUTs | 256 MHz (target 265 MHz, closing) |
+
+These are synthesis figures, not a run on hardware. The self-healing circuit
+plane is verified in RTL simulation; the 5 × 5 mesh needs a larger FPGA than
+the one we own.
+{{< /detalle >}}
 
 ## Where it stands
 
@@ -135,6 +186,7 @@ under load:
 | Error correction, fault-tolerant control, protected circuits, self-repairing routing | **Running on silicon**, one-hour runs without error |
 | 5 × 5 mesh with the full A1 traffic plan | Verified in simulation |
 | Behaviour under one and two node failures at chip scale | Verified in simulation |
+| Self-healing circuit plane (5 × 5) | **New:** verified in RTL simulation; hardened version closing timing at 265 MHz |
 | 5 × 5 on hardware | Next step: needs a larger FPGA than the one we own |
 | Radiation testing | Not done yet. No radiation qualification is claimed |
 | ASIC implementation | Part of the HERCOSS Exxo A1 chip programme |
@@ -152,6 +204,7 @@ November 2026.
 | 4 · Circuits that survive | Stream circuits keep delivering through dead paths, flipped bits and damaged buffers |
 | 5 · Self-repair | The hardware re-routes around a failure and returns on its own: first in simulation, then on the board |
 | 6 · Chip scale | 5 × 5 mesh, the whole A1 traffic planned and routed automatically, node failures rehearsed with everything running |
+| 7 · Self-healing circuits | The mesh finds its own way around a dead switch: 65 of 66 lanes back within tens of cycles, nothing lost (RTL simulation) |
 
 Every step followed the same rule: **simulate it, put it on silicon, run it
 for an hour, publish the number.** What does not fit our board yet is
@@ -159,6 +212,8 @@ labelled as simulation, not as a result.
 
 ## What comes next
 
+- Close timing of the hardened self-healing logic at 265 MHz.
+- Deterministic repair order for two simultaneous switch failures.
 - The 5 × 5 network on a larger FPGA.
 - Higher clock rates for the fully protected network.
 - Integration with the [RV128IMAC](/projects/rv128imac/) cores and the
