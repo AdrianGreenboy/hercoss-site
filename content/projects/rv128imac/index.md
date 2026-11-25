@@ -11,6 +11,7 @@ datos:
   - "1.35 µs CPU-to-CPU call"
   - "Linux 6.6 SMP"
   - "214 / 214 on silicon"
+  - "Ring fabric: 64 threads"
 ---
 
 {{< stats >}}
@@ -20,11 +21,10 @@ datos:
 {{< stat "214 / 214" "self-checking programs pass on silicon" >}}
 {{< /stats >}}
 
-{{< aviso "Patent analysis in progress" >}}
-The innovations described on this page are currently being analysed for
-patent protection. This page shows what the core achieves; the technical
-details of how it achieves it will be published once that analysis is
-complete.
+{{< aviso "Patent process in progress" >}}
+The core fabric and the innovations on this page are in the patent process.
+This page shows what they achieve and why they matter; how they work
+internally will be published once that process allows it.
 {{< /aviso >}}
 
 ## What it is
@@ -40,6 +40,8 @@ What makes it different is not only the width:
 - **Cores call each other directly.** An ordinary Linux program runs a
   function on another processor and gets the answer in 1.35 µs, with no
   driver and no operating-system round trip.
+- **Its own core fabric.** Cores and accelerators share a ring of their
+  own, now scaled to address 64 hardware threads, and fair at full load.
 - **Hardware accelerators without drivers.** The first one, a SHA-3 / SHAKE
   engine, serves a Linux process at 129 MB/s, about 140× the same algorithm
   in software on the same CPU.
@@ -50,6 +52,85 @@ Everything on this page runs on a working FPGA prototype: two CPUs on an
 AMD Versal board at 60 MHz, running Linux. **From first Linux boot to a
 driverless hardware SHA-3 running 140× faster than software: two weeks, all
 on real silicon.**
+
+## The HERCOSS core fabric: a ring built for calls
+
+Most multicore chips connect their cores through shared memory: one core
+writes, the other polls or takes an interrupt, and the operating system sits
+in the middle. **The HERCOSS core fabric is different. Cores and hardware
+accelerators talk to each other directly, in hardware, at instruction
+speed**, over a ring of their own.
+
+{{< fig "ring-vs-memory.svg" "Asking another core for work: the usual path through memory and the operating system, against the HERCOSS core fabric." >}}
+
+{{< fig "ring-concept.svg" "The HERCOSS core fabric for the Exxo A1: sixteen cores and their accelerators on one ring; memory and I/O travel separately on NOC_512. Concept, not to scale." >}}
+
+### Why a ring
+
+Ring interconnects are simple, cheap in wires and easy to close at high clock
+rates, exactly what a 16-core radiation-tolerant chip needs. Keeping
+messages on their own ring, and memory traffic on the separate
+[NOC_512](/projects/noc-512/) network, means a call between cores never
+waits behind a memory transfer.
+
+### Why it is new
+
+What is new is not "a ring". **The novelty is what travels on it:**
+
+- **Function calls, accelerator requests and their answers, all treated
+  alike.** Software calls the SHA-3 engine the same way it calls another
+  processor. Tomorrow's accelerators plug into the same fabric, and the
+  software does not change.
+- **Reachable from ordinary software with single instructions:** no driver,
+  no mailbox in memory, no interrupt.
+- **Robust against crashing programs:** an answer can never reach the wrong
+  process.
+- **Fair by construction at full load.** Our stress tests showed that a
+  conventional ring can leave a station waiting indefinitely when its
+  neighbours are busy. The HERCOSS fabric **guarantees every core and every
+  accelerator its turn**, however busy the ring. Simulation confirms it, and
+  it is now part of the A1 architecture.
+
+{{< fig "ring-fair.svg" "Found in our own stress tests and fixed at the architecture level, before a single wafer." >}}
+
+### Scaling to the A1: 64 threads, 16 stations
+
+{{< stats >}}
+{{< stat "64" "hardware threads addressable: four times the A1's 16 cores" >}}
+{{< stat "16" "stations on a ring driven to saturation (simulation)" >}}
+{{< stat "0" "messages lost, duplicated or reordered" >}}
+{{< stat "5 / 5" "deliberately broken ring designs caught by our tests" >}}
+{{< /stats >}}
+
+- **Same silicon, more room.** The fabric was re-engineered to address up to
+  64 hardware threads, and the new build came out about **2,900 logic cells
+  smaller** than the one before, with timing still met with margin.
+- **Every existing program runs unchanged.** No recompilation was needed for
+  binaries that ran on the earlier 8-thread fabric.
+- **A full-length 16-station ring at maximum load.** Two real processor cores
+  run instruction by instruction against an independent reference model
+  while 14 traffic stations saturate the ring around them. They complete a
+  full SHA-3 test suite and a 64 KiB hashing benchmark with **zero
+  divergences**, and not one message is lost, duplicated or reordered.
+- **The checker is checked.** Five deliberately broken versions of the ring
+  hardware were built: a lost acknowledgement, a dropped message, a wrong
+  sender, a stale answer accepted, a single flipped bit. **The testbench
+  catches all five, each for the right reason.**
+
+{{< detalle "What does the ring cost under worst-case load?" >}}
+On a ring saturated by every traffic station transmitting as fast as the
+fabric allows, which no real workload does, the hashing loop is 2.1× slower
+than on an idle ring (7.4 against 3.5 cycles per 8 bytes). Guaranteeing every
+station its turn also costs some peak throughput at saturation. We publish
+these worst-case numbers because they are the data that sizes the A1's
+interconnect, and we will measure the trade-off on silicon before choosing
+the balance.
+
+The 64-thread build has passed synthesis and timing closure (125.1 k logic
+cells, 83 % of the device, +0.33 ns spare beyond a 1.0 ns safety guard) but
+has not run on the board yet. The 16-station results are verified in
+simulation.
+{{< /detalle >}}
 
 ## One core, three personalities
 
@@ -277,27 +358,35 @@ one was fixed, and each one now has a test that would catch it again.
 | 23 Nov | Data-cache prefetch: 97.7 MB/s, ×150 |
 | 24 Nov | Timing redesign: 99.8 MB/s, ×153, more margin with fewer gates |
 | 25 Nov | Pipeline and instruction-fetch improvements: **129 MB/s**; compiled C up to 1.39× faster |
+| 25 Nov | Core fabric re-engineered for 64 hardware threads: new build 2,900 logic cells smaller, timing met |
+| 26 Nov | **16-station ring at full load in simulation**: real cores, zero divergences, every station guaranteed its turn |
 
-## Next: sixteen cores
+## Next: the 16-station ring on real silicon
 
-The Exxo A1 places **sixteen RV128IMAC cores** in one processor cluster, with
-their accelerators, around the [NOC_512](/projects/noc-512/) network that
-carries memory and I/O. We are scaling the cores' call fabric to sixteen
-now, and **we will measure it on silicon at full length, with real cores,
-before the chip design is frozen.**
+The Exxo A1 places **sixteen RV128IMAC cores** with their accelerators on the
+core fabric, around the [NOC_512](/projects/noc-512/) network that carries
+memory and I/O. The next steps:
+
+1. **The full-length ring on the FPGA board:** a real CPU, the SHA-3
+   accelerator and 15 self-checking traffic stations, at hardware speed.
+   Call latency and accelerator bandwidth under load, plus hours-long soak
+   tests with every message checked.
+2. **Tuning fairness against raw throughput** with real measurements.
+3. **One ring or two for the A1**, decided from those silicon measurements
+   before the chip architecture is frozen.
 
 {{< fig "a1-cluster.svg" "Planned processor cluster of the HERCOSS Exxo A1. Conceptual diagram; not to scale." >}}
 
 {{< detalle "What still has to happen before the A1 uses this core?" >}}
-The prototype has two CPUs; scaling the call fabric to sixteen cores is in
-the design phase. The radiation-hardening features planned for the A1 and
+The prototype has two CPUs on silicon; the 16-station ring is verified in
+simulation and its silicon run is next. The radiation-hardening features planned for the A1 and
 the larger caches still have to be added. And the core has so far only been
 built for FPGA: the chip flow (memory macros, test logic, timing and area in
 silicon) comes next.
 {{< /detalle >}}
 
 *Prototype on AMD Versal at 60 MHz. Figures measured on silicon unless
-marked. Patents under analysis.*
+marked. Patent process in progress.*
 
 Questions, collaboration or investment:
 [adrian@hercoss.com](mailto:adrian@hercoss.com) ·

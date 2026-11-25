@@ -168,8 +168,10 @@ One Exxo A1 can replace up to sixteen separate flight computers.
 - **Domain control:** a manager domain can stop, reload and restart any other
   domain while the rest keep running, the basis for fault recovery and
   in-orbit software updates.
-- **Fast inter-core communication:** direct core-to-core calls in 1.35 µs,
-  alongside standard Linux remoteproc / RPMsg.
+- **Fast inter-core communication:** the Hercoss [core fabric](/projects/rv128imac/#the-hercoss-core-fabric-a-ring-built-for-calls),
+  a ring where cores and accelerators call each other directly: 1.35 µs from
+  a Linux program, fair at full load, alongside standard Linux remoteproc /
+  RPMsg.
 - **Open toolchain:** standard RISC-V GCC, mainline Linux and OpenSBI in
   64-bit mode; real-time systems FreeRTOS, Zephyr and RTEMS.
 - **Planned tooling:** a GUI and TCL/bash flow to partition the chip, generate
@@ -200,6 +202,7 @@ is in design, and what is still pending.
 |---|---|---|
 | RV128IMAC processor core | Linux 6.6 SMP, 214 / 214 board tests, CoreMark 1.85 / MHz | Validated on FPGA |
 | Core-to-core calls | 1.35 µs round trip from a Linux program (an empty system call: 6.6 µs) | Validated on FPGA |
+| Core fabric for 16 cores | Ring addressing 64 hardware threads; 16 stations at full load with zero lost, duplicated or reordered messages; every station guaranteed its turn | Simulation |
 | Self-healing lockstep | 24 / 24 injected faults corrected, 0 corrupted results | Validated on FPGA (earlier 64-bit core) |
 | NOC_512 network-on-chip | Nine one-hour runs at full load: 3.19 trillion AXI4 transfers, 0 errors; 375 MHz unprotected, 265 MHz with every protection layer | Validated on FPGA |
 | NOC_512 fault tolerance | 10.5 M errors corrected live; state corrupted every cycle for 159 M cycles with a result identical to a fault-free run; 199 M words/s rebuilt with none lost; 14 self-repairs in ~10 µs, 0 words lost | Validated on FPGA (fault injection, not beam-tested) |
