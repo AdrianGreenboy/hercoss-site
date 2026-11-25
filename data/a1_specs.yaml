@@ -6,7 +6,7 @@
     - ["Core modes", "128-bit CPU, standard 64-bit CPU, or two 64-bit CPUs per core", "proven", ""]
     - ["Privilege and memory", "M/S/U modes, Sv39 virtual memory (64-bit mode)", "proven", ""]
     - ["Operating systems", "Linux (SMP and AMP), FreeRTOS, Zephyr, RTEMS, bare metal", "proven", "Linux 6.6 SMP on FPGA"]
-    - ["Core-to-core calls", "Direct function calls between cores from user programs: 1.4 µs round trip", "proven", "Measured with 2 CPUs; scaling to 16 pending"]
+    - ["Core-to-core calls", "Direct function calls between cores from user programs: 1.35 µs round trip", "proven", "Measured with 2 CPUs; scaling to 16 pending"]
     - ["L1 caches per core", "64 KiB instruction (16-way) + 32 KiB data (8-way)", "design", "Prototype has 16 + 16 KiB"]
     - ["L2 cache", "1 MiB per cluster, 4 MiB total", "pending", ""]
     - ["Fault tolerance", "8 self-healing lockstep pairs; SECDED register file; cache parity", "design", "Lockstep proven on the earlier 64-bit cores; port to RV128IMAC pending"]
@@ -48,7 +48,7 @@
     - ["AI workloads", "CNN, SNN, transformers, FP32 GEMV, MPC for attitude control", "pending", ""]
     - ["DSP cores", "5 cores for filters, FFTs and sensor fusion", "pending", ""]
     - ["Post-quantum crypto", "ML-KEM, ML-DSA, AES-GCM; key zeroisation in the flight version", "proven", "IP cores validated on FPGA"]
-    - ["SHA-3 / SHAKE engine", "SHA3-224/256/384/512, SHAKE128/256; usable from Linux programs without a driver", "proven", "99.8 MB/s from Linux on FPGA, 153× software"]
+    - ["SHA-3 / SHAKE engine", "SHA3-224/256/384/512, SHAKE128/256; usable from Linux programs without a driver", "proven", "129 MB/s from Linux on FPGA, ~140× software"]
 - grupo: "Physical, power and radiation"
   filas:
     - ["Test chips", "IHP SG13G2 130 nm (phase F1); advanced-node shuttle at a European foundry (phase F2)", "design", ""]

@@ -15,7 +15,7 @@ bloques:
     puntos:
       - "Runs standard 64-bit RISC-V software: Linux, FreeRTOS, Zephyr, RTEMS."
       - "Up to 16 isolated Linux domains, or SMP groups, mixed freely."
-      - "Core-to-core call: 1.4 µs round trip, about 5× faster than an empty Linux system call (2-CPU FPGA prototype)."
+      - "Core-to-core call: 1.35 µs round trip, about 5× faster than an empty Linux system call (2-CPU FPGA prototype)."
       - "Self-healing lockstep: any two neighbouring cores pair up and correct transient faults automatically, with no reset."
       - "64 KiB instruction and 32 KiB data cache per core (A1 target)."
 
@@ -60,7 +60,7 @@ bloques:
       post-quantum engine for the newly standardised algorithms.
     puntos:
       - "ML-KEM key exchange and ML-DSA signatures, plus AES-GCM."
-      - "Hardware SHA-3 / SHAKE, the base of these standards: ~100 MB/s from a Linux program without a driver, 153× software (FPGA prototype)."
+      - "Hardware SHA-3 / SHAKE, the base of these standards: 129 MB/s from a Linux program without a driver, ~140× software (FPGA prototype)."
       - "The same signatures protect FPGA bitstreams: a captured uplink cannot inject logic."
       - "Secure key zeroisation in the flight version."
 
@@ -180,7 +180,7 @@ fases:
         texto: "130 nm layout (IHP SG13G2, Frankfurt (Oder)), open-source flow; LVS, antenna and timing clean. GDS ready."
       - estado: hecho
         titulo: "RV128IMAC core runs Linux on FPGA"
-        texto: "Linux 6.6 SMP, core-to-core calls in 1.4 µs, hardware SHA-3 at 153× software without a driver, 214 of 214 board tests passing."
+        texto: "Linux 6.6 SMP, core-to-core calls in 1.35 µs, hardware SHA-3 at 129 MB/s without a driver, 214 of 214 board tests passing."
       - estado: hecho
         titulo: "Self-healing lockstep corrects faults on FPGA"
         texto: "24 of 24 injected faults corrected, 0 corrupted results, measured with the earlier 64-bit cores of the A1 SoC."

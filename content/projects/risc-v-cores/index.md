@@ -2,7 +2,7 @@
 title: "RISC-V processor cores"
 weight: 8
 estado: "Validated on FPGA · In development"
-summary: "Processor cores written from scratch in VHDL: a 64-bit core and the 128-bit RV128IMAC, the processor of the Exxo A1, already running Linux on real hardware with core-to-core calls in 1.4 µs and hardware SHA-3 at 153× software."
+summary: "Processor cores written from scratch in VHDL: a 64-bit core and the 128-bit RV128IMAC, the processor of the Exxo A1, already running Linux on real hardware with core-to-core calls in 1.35 µs and hardware SHA-3 at 129 MB/s, ~140× software."
 datos:
   - "RV64IMAC"
   - "RV128IMAC (dual mode)"
@@ -38,8 +38,8 @@ of the family: it talks directly to the rest of Hercoss's IP cores.
 
 The 128-bit core, and the processor chosen for the Exxo A1. It runs as a
 128-bit CPU, as a standard 64-bit CPU, or as two 64-bit CPUs, boots Linux on
-an FPGA prototype, lets one CPU call functions on another in 1.4 µs, and
-gives Linux programs hardware SHA-3 at 153× software without a driver. It
+an FPGA prototype, lets one CPU call functions on another in 1.35 µs, and
+gives Linux programs hardware SHA-3 at 129 MB/s, ~140× software, without a driver. It
 has its own page: [RV128IMAC — the core of the Exxo A1](/projects/rv128imac/).
 
 {{< detalle "Why 128 bits?" >}}

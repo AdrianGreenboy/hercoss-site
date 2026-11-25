@@ -4,19 +4,19 @@ layout: rv128
 weight: 2
 estado: "Running on FPGA silicon · Processor core of the HERCOSS Exxo A1"
 seotitle: "RV128IMAC — 128-bit RISC-V processor core for space computing — Hercoss"
-summary: "128-bit RISC-V, built from scratch in Europe. One core runs as a 128-bit CPU, a 64-bit CPU or two 64-bit CPUs; a Linux program calls a function on another CPU in 1.4 µs, and hashes with hardware SHA-3 at about 100 MB/s, 153× software, with no driver. It is the processor at the heart of the HERCOSS Exxo A1."
+summary: "128-bit RISC-V, built from scratch in Europe. One core runs as a 128-bit CPU, a 64-bit CPU or two 64-bit CPUs; a Linux program calls a function on another CPU in 1.35 µs, and hashes with hardware SHA-3 at 129 MB/s, about 140× software, with no driver. It is the processor at the heart of the HERCOSS Exxo A1."
 datos:
   - "128-bit RISC-V"
-  - "SHA-3 ×153, no driver"
-  - "1.4 µs CPU-to-CPU call"
+  - "SHA-3 at 129 MB/s, no driver"
+  - "1.35 µs CPU-to-CPU call"
   - "Linux 6.6 SMP"
   - "214 / 214 on silicon"
 ---
 
 {{< stats >}}
-{{< stat "×153" "SHA-3 in hardware vs the same algorithm in software on the same CPU" >}}
-{{< stat "~100 MB/s" "SHA3-256 from an ordinary Linux process, no driver" >}}
-{{< stat "1.4 µs" "a Linux program calls a function on another CPU, ~5× faster than an empty system call" >}}
+{{< stat "129 MB/s" "SHA3-256 from an ordinary Linux process, no driver" >}}
+{{< stat "×143" "faster than the same algorithm in software on the same CPU" >}}
+{{< stat "1.35 µs" "a Linux program calls a function on another CPU, ~5× faster than an empty system call" >}}
 {{< stat "214 / 214" "self-checking programs pass on silicon" >}}
 {{< /stats >}}
 
@@ -38,17 +38,17 @@ these cores.
 What makes it different is not only the width:
 
 - **Cores call each other directly.** An ordinary Linux program runs a
-  function on another processor and gets the answer in 1.4 µs, with no
+  function on another processor and gets the answer in 1.35 µs, with no
   driver and no operating-system round trip.
 - **Hardware accelerators without drivers.** The first one, a SHA-3 / SHAKE
-  engine, serves a Linux process at about 100 MB/s, 153× the same algorithm
+  engine, serves a Linux process at 129 MB/s, about 140× the same algorithm
   in software on the same CPU.
 - **One core, three personalities:** 128-bit CPU, 64-bit CPU, or two 64-bit
   CPUs.
 
 Everything on this page runs on a working FPGA prototype: two CPUs on an
 AMD Versal board at 60 MHz, running Linux. **From first Linux boot to a
-driverless hardware SHA-3 running 150× faster than software: two weeks, all
+driverless hardware SHA-3 running 140× faster than software: two weeks, all
 on real silicon.**
 
 ## One core, three personalities
@@ -68,7 +68,7 @@ The RV128IMAC adds **XCALL**, a Hercoss extension to RISC-V. An ordinary Linux
 program asks another CPU to run a function and gets the answer back, with no
 driver in between. The operating system only decides which programs may do it.
 
-{{< fig "xcall-latency.svg" "A complete call to another CPU and back, 1,402 ns, against an empty system call that does nothing, 6,771 ns." >}}
+{{< fig "xcall-latency.svg" "A complete call to another CPU and back, 1,352 ns, against an empty system call that does nothing, 6,590 ns." >}}
 
 {{< detalle "What exactly is being compared?" >}}
 Both numbers come from the same Linux process on the same CPU of the FPGA
@@ -112,20 +112,20 @@ a lot of software. On the RV128IMAC, an ordinary Linux process uses the
 SHA-3 engine **directly, with no driver**.
 
 {{< stats >}}
-{{< stat "99.8 MB/s" "SHA3-256 from a Linux process (1 MiB)" >}}
-{{< stat "107 MB/s" "on bare metal" >}}
-{{< stat "8.6 µs" "for a short 64-byte message, vs 199 µs in software (×23)" >}}
+{{< stat "129 MB/s" "SHA3-256 from a Linux process (1 MiB)" >}}
+{{< stat "140 MB/s" "on bare metal" >}}
+{{< stat "8.2 µs" "for a short 64-byte message, vs 143 µs in software (×17)" >}}
 {{< stat "~8,000" "LUTs for the whole engine" >}}
 {{< /stats >}}
 
 The engine covers SHA3-224, -256, -384, -512 and SHAKE128 / 256, one
 Keccak-f[1600] round per clock cycle.
 
-### ×54 to ×153 in four days
+### 33 to 129 MB/s in five days
 
 Each step was validated on silicon before the next one started.
 
-{{< fig "sha3-journey.svg" "SHA3-256 from a Linux process on the same board at the same 60 MHz. P13 is a simulation projection, not a measurement." >}}
+{{< fig "sha3-journey.svg" "SHA3-256 from a Linux process on the same board at the same 60 MHz. Every bar measured on silicon." >}}
 
 | Step | Date | What changed | Linux SHA3-256, 1 MiB | vs software |
 |---|---|---|---|---|
@@ -134,7 +134,11 @@ Each step was validated on silicon before the next one started.
 | P10 | 22 Nov | A new instruction in the core | 74.5 MB/s | ×94 |
 | P11 | 23 Nov | The data cache learns to fetch the next line ahead | 97.7 MB/s | ×150 |
 | P12 | 24 Nov | Timing redesign in instruction fetch: same speed, far more margin, fewer gates | 99.8 MB/s | ×153 |
-| P13 | next | In verification: simulation shows −22 % cycles | silicon pending | – |
+| P13b | 25 Nov | Pipeline and instruction-fetch improvements | **129.0 MB/s** | ×143 |
+
+The ratio dipped from ×153 to ×143 for a good reason: the same improvement
+also made the *software* version 1.39× faster. That is why we track MB/s and
+cycles for progress, not the ratio.
 
 ## Measured, not assumed
 
@@ -142,7 +146,7 @@ The core carries its own hardware performance counters, and every
 optimisation starts from a measurement of where the cycles go, not from a
 guess.
 
-{{< fig "sha3-cycles.svg" "Cost of each 8-byte step of the hash on bare metal: from 7.31 to 4.50 cycles on silicon." >}}
+{{< fig "sha3-cycles.svg" "Cost of each 8-byte step of the hash on bare metal: from 7.31 to 3.44 clock cycles, all measured on silicon." >}}
 
 - **The measurement redirected the work.** The counters showed that the path
   between the core and the engine costs almost nothing. That turned "a
@@ -154,19 +158,19 @@ guess.
   cycles came from somewhere else: the instruction-fetch queue ran dry on
   some code alignments. The very same loop took 5.15 or 3.28 cycles per step
   depending only on where it sat in memory. The fix makes alignment
-  irrelevant and speeds up all compact code, not only SHA-3.
+  irrelevant and speeds up all compact code: on silicon, the software SHA-3
+  in C ran 1.39× faster with it, and the hardware path 1.29× faster.
 - **Faster without spending timing margin.** The prefetch step left almost no
   timing margin (+0.010 ns). The next step redesigned the critical path and
   won +0.556 ns with 1,300 fewer LUTs at identical performance. Margin today
   is what makes the next features possible.
 
-{{< detalle "What is in verification right now (P13)?" >}}
-The RTL is done and passes a subset of the instruction-by-instruction
-co-simulation; the full regression is running. In simulation the SHA-3
-stream needs 22 % fewer cycles (4.45 → 3.47 per step) and a whole test
-program 14 % fewer. If silicon follows simulation, that would mean about
-135 MB/s on bare metal and about 125 MB/s from Linux. **This is a
-projection, not yet measured.** The silicon build is next.
+{{< detalle "Where do the remaining cycles go?" >}}
+The counters already show the next steps. Of the 3.44 cycles per 8-byte
+step, about 1.9 are the instructions themselves, about 0.9 are waiting on
+the data cache and about 0.66 are waiting to hand data to the engine. Two
+further optimisations are identified; each will be measured on silicon
+before it is reported.
 {{< /detalle >}}
 
 ## A 128-bit coprocessor that pays off
@@ -185,24 +189,25 @@ call them immediately, with no rebuild and no reboot.
 
 | What | Result |
 |---|---|
-| SHA3-256 from a Linux process, no driver (1 MiB) | **99.8 MB/s**, ×153 vs software on the same CPU (×123–×153 across boots) |
-| SHA3-256, bare metal | 107 MB/s |
-| Short message (64-byte hash) | 8.6 µs in hardware vs 199 µs in software (×23) |
-| Call to another CPU and back (XCALL) | **1.40 µs** (1,402 ns) |
-| Empty Linux system call, for reference | 6.77 µs (6,771 ns) |
+| SHA3-256 from a Linux process, no driver (1 MiB) | **129.0 MB/s** vs 0.90 MB/s in software on the same CPU: ×143 (×123–×153 across boots and bitstreams) |
+| SHA3-256, bare metal | 140 MB/s (3.44 clock cycles per 8 bytes) |
+| Short message (64-byte hash) | 8.2 µs in hardware vs 143 µs in software (×17) |
+| Call to another CPU and back (XCALL) | **1.35 µs** (1,352 ns) |
+| Empty Linux system call, for reference | 6.59 µs (6,590 ns) |
 | 128-bit vs 64-bit big-number maths (1000!) | 1.63× faster |
 | Two computations in parallel via asynchronous calls | 1.60× (ideal 1.61×) |
 | Linux 6.6 SMP on two hardware threads of one core | 20 / 20 consecutive boots, plus 20 / 20 SMP stress runs on the latest bitstream |
 | Board test suite | 214 / 214 self-checking programs (RV128, RV64, FreeRTOS, Zephyr, RTEMS, CoreMark, Forth) |
-| CoreMark 1.0 (64-bit mode) | 1.85 CoreMark/MHz |
-| Latest design: 2 CPUs + SHA-3 engine | 125.3 k LUTs (83 % of the VE2302); timing met with a 1.0 ns safety guard plus +0.566 ns to spare |
+| CoreMark 1.0 (64-bit mode) | 1.85 CoreMark/MHz (not yet re-measured on the latest bitstream) |
+| Latest design (p13b): 2 CPUs + SHA-3 engine | 128.0 k LUTs (85 % of the VE2302); timing met with a 1.0 ns safety guard plus +0.444 ns to spare |
 
 {{< detalle "What are the limits of these numbers?" >}}
 They come from an FPGA prototype running at 60 MHz on an AMD Versal AI Edge
 VE2302. A fabricated chip will have a different clock, power and area; those
 figures are not known yet, and absolute MB/s will change on the A1. The
-×153 compares against the software algorithm on the same 60 MHz in-order
-CPU, not against other vendors' products or desktop processors. The
+×143 (×153 on an earlier bitstream) compares against the software algorithm
+on the same 60 MHz in-order CPU, not against other vendors' products or
+desktop processors. The
 software reference varies by up to about 20 % between boots depending on
 memory placement, so the speed-up is a range and every gain is compared
 within one run.
@@ -270,7 +275,8 @@ one was fixed, and each one now has a test that would catch it again.
 | 21 Nov | **Hardware SHA-3 from Linux without a driver: 33 MB/s** |
 | 22 Nov | New instruction: 74.5 MB/s |
 | 23 Nov | Data-cache prefetch: 97.7 MB/s, ×150 |
-| 24 Nov | Timing redesign: 99.8 MB/s, ×153, more margin with fewer gates; next step in verification |
+| 24 Nov | Timing redesign: 99.8 MB/s, ×153, more margin with fewer gates |
+| 25 Nov | Pipeline and instruction-fetch improvements: **129 MB/s**; compiled C up to 1.39× faster |
 
 ## Next: sixteen cores
 

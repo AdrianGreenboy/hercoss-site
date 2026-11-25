@@ -168,7 +168,7 @@ One Exxo A1 can replace up to sixteen separate flight computers.
 - **Domain control:** a manager domain can stop, reload and restart any other
   domain while the rest keep running, the basis for fault recovery and
   in-orbit software updates.
-- **Fast inter-core communication:** direct core-to-core calls in 1.4 µs,
+- **Fast inter-core communication:** direct core-to-core calls in 1.35 µs,
   alongside standard Linux remoteproc / RPMsg.
 - **Open toolchain:** standard RISC-V GCC, mainline Linux and OpenSBI in
   64-bit mode; real-time systems FreeRTOS, Zephyr and RTEMS.
@@ -199,7 +199,7 @@ is in design, and what is still pending.
 | What | Evidence | Status |
 |---|---|---|
 | RV128IMAC processor core | Linux 6.6 SMP, 214 / 214 board tests, CoreMark 1.85 / MHz | Validated on FPGA |
-| Core-to-core calls | 1.4 µs round trip from a Linux program (an empty system call: 6.8 µs) | Validated on FPGA |
+| Core-to-core calls | 1.35 µs round trip from a Linux program (an empty system call: 6.6 µs) | Validated on FPGA |
 | Self-healing lockstep | 24 / 24 injected faults corrected, 0 corrupted results | Validated on FPGA (earlier 64-bit core) |
 | NOC_512 network-on-chip | Nine one-hour runs at full load: 3.19 trillion AXI4 transfers, 0 errors; 375 MHz unprotected, 265 MHz with every protection layer | Validated on FPGA |
 | NOC_512 fault tolerance | 10.5 M errors corrected live; state corrupted every cycle for 159 M cycles with a result identical to a fault-free run; 199 M words/s rebuilt with none lost; 14 self-repairs in ~10 µs, 0 words lost | Validated on FPGA (fault injection, not beam-tested) |
@@ -217,7 +217,7 @@ is in design, and what is still pending.
 | AOCS accelerator | Model-predictive attitude control in hardware, 70 × 70 float32, bit-identical to simulation | Validated on FPGA |
 | RF digital front-end | DDC and DUC chains, bit-exact in six domains | Validated on FPGA |
 | Post-quantum crypto | ML-KEM and ML-DSA accelerators | Validated on FPGA |
-| Hardware SHA-3 / SHAKE | 99.8 MB/s from a Linux process without a driver, 153× software on the same CPU | Validated on FPGA |
+| Hardware SHA-3 / SHAKE | 129 MB/s from a Linux process without a driver, ~140× software on the same CPU | Validated on FPGA |
 
 ## Still pending
 
