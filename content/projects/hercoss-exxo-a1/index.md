@@ -208,6 +208,7 @@ is in design, and what is still pending.
 | NOC_512 fault tolerance | 10.5 M errors corrected live; state corrupted every cycle for 159 M cycles with a result identical to a fault-free run; 199 M words/s rebuilt with none lost; 14 self-repairs in ~10 µs, 0 words lost | Validated on FPGA (fault injection, not beam-tested) |
 | NOC_512, 5 × 5 chip plan | 7.73 Tb/s on 19 protected circuits; 6 single-node failures under full traffic with 0 words lost | Simulation |
 | NOC_512 self-healing circuit plane | With a switch dead, 65 of 66 affected lanes back within tens of cycles, ~10× faster than prepared backup routes; 0 words lost or corrupted | RTL simulation |
+| DDRC_72 memory controller | Full-system run with injected bit flips, a dead memory chip and a failing row: 2,727 writes and 4,120 reads verified, 0 data errors, 0 JEDEC timing violations | Simulation |
 | A1 SoC infrastructure | Cluster, crossbar, coherence, mailbox, interrupt controller, IOPMP; two isolated Linux domains | Validated on FPGA |
 | Cache and prefetch tuning | 64 KiB I-cache: −69 % misses in Linux; prefetcher: cold copy −32 %, cold read −39 % | Measured on FPGA (earlier 64-bit core) |
 | Own eFPGA fabric | Runs inside an AMD Versal; runtime reconfiguration self-test passed | Validated on FPGA |
@@ -235,7 +236,11 @@ An honest list of what has to happen before the A1 is a chip:
 - **Network-on-chip:** automatic route recovery and the 3 × 3 mesh on
   silicon (both pass in simulation), meshes larger than 2 × 2 on a larger
   FPGA, and integration with the RV128IMAC cores and real peripherals.
-- **L2 caches and DDR controllers:** RTL still to be written.
+- **L2 caches:** RTL still to be written.
+- **DDR4 memory controller ([DDRC_72](/projects/ddrc-72/)):** RTL v0.1
+  complete; verified in simulation with 0 data errors and 0 JEDEC timing
+  violations, including a dead memory chip and a failing row repaired
+  automatically. FPGA synthesis is next.
 - **Analog and mixed-signal blocks:** the 224G PAM4 and 32G NRZ SerDes, PCIe
   Gen5 and DDR physical layers, PLLs and the sigma-delta ADC front ends, to be
   designed in-house or licensed.

@@ -21,6 +21,11 @@
   estado: validado
   que: "Self-repairing 512-bit network-on-chip, packet and stream planes: 3.19 trillion AXI4 transfers on FPGA silicon with zero errors; re-routes itself in ~10 µs with no word lost."
   a1: "Joins every block of the chip"
+- nombre: "DDRC_72"
+  cat: "Memory"
+  estado: desarrollo
+  que: "Self-healing 72-bit DDR4 controller, up to 128 GiB: survives a dead memory chip, repairs faults on its own; rad-hard variant heals its own logic after a latch-up. Verified in simulation: 0 data errors."
+  a1: "External memory of the chip"
 - nombre: "NPU"
   cat: "AI and control"
   estado: validado
