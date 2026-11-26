@@ -79,9 +79,10 @@ of Ethernet at once**, a **1.6TbE** port on eight 224 Gb/s PAM4 lanes,
 another 400G on 32 Gb/s lanes, and three PCIe Gen5 x16 links.
 
 The 1.6 Tb/s controller is already under way: [ETH_1T6](/projects/eth-1t6/)
-is a complete link layer, MAC, PCS, Reed-Solomon error correction and
-16-lane alignment, running on the FPGA board: 312 billion frames in one hour
-with zero errors, and bit-exact against the IEEE 802.3 reference vectors.
+is a complete link layer, MAC, PCS, RS(544,514) error correction and lane
+alignment, running on the FPGA board in a scaled configuration: 312 billion
+frames in one hour with zero errors, error bursts repaired at full speed, and
+bit-exact against the IEEE 802.3 reference vectors for 200G, 400G and 800G.
 Still pending: the analog
 transceivers themselves, which on the FPGA are AMD's and for the A1 have to
 be designed or licensed.

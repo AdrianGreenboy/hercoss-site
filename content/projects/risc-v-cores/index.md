@@ -36,11 +36,20 @@ of the family: it talks directly to the rest of Hercoss's IP cores.
 
 ## RV128IMAC
 
+{{< stats >}}
+{{< stat "129 MB/s" "hardware SHA-3 from a Linux process, no driver" >}}
+{{< stat "1.35 µs" "a Linux program calls a function on another CPU" >}}
+{{< stat "64" "hardware threads addressable on the core fabric" >}}
+{{< stat "214 / 214" "self-checking programs pass on the board" >}}
+{{< /stats >}}
+
 The 128-bit core, and the processor chosen for the Exxo A1. It runs as a
 128-bit CPU, as a standard 64-bit CPU, or as two 64-bit CPUs, boots Linux on
 an FPGA prototype, lets one CPU call functions on another in 1.35 µs, and
-gives Linux programs hardware SHA-3 at 129 MB/s, ~140× software, without a driver. It
-has its own page: [RV128IMAC — the core of the Exxo A1](/projects/rv128imac/).
+gives Linux programs hardware SHA-3 at 129 MB/s, ~140× software, without a driver.
+Its cores and accelerators share their own ring fabric, now scaled to 64
+hardware threads and verified at full load with 16 stations in simulation,
+fair to every station. It has its own page: [RV128IMAC — the core of the Exxo A1](/projects/rv128imac/).
 
 {{< detalle "Why 128 bits?" >}}
 Not for memory size: no application needs a 128-bit address space. The gain

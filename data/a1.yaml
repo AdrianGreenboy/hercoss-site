@@ -16,6 +16,7 @@ bloques:
       - "Runs standard 64-bit RISC-V software: Linux, FreeRTOS, Zephyr, RTEMS."
       - "Up to 16 isolated Linux domains, or SMP groups, mixed freely."
       - "Core-to-core call: 1.35 µs round trip, about 5× faster than an empty Linux system call (2-CPU FPGA prototype)."
+      - "Cores and accelerators share their own ring fabric, fair at full load: 64 hardware threads addressable, 16 stations verified in simulation."
       - "Self-healing lockstep: any two neighbouring cores pair up and correct transient faults automatically, with no reset."
       - "64 KiB instruction and 32 KiB data cache per core (A1 target)."
 
@@ -190,6 +191,15 @@ fases:
       - estado: hecho
         titulo: "NOC_512 network-on-chip: self-repairing on FPGA"
         texto: "Nine one-hour runs, 3.19 trillion AXI4 transfers, zero errors; faults corrected live; in silicon the network heals itself around a dead switch in ≈0.6 µs, 405,522 times in an hour, with no word lost. 5 × 5 chip plan verified in simulation."
+      - estado: hecho
+        titulo: "1.6TbE link layer on silicon"
+        texto: "MAC, PCS, Reed-Solomon FEC and lane alignment: 312 billion frames in one hour with zero errors, error bursts repaired at full speed, bit-exact to the IEEE reference vectors."
+      - estado: hecho
+        titulo: "Self-healing network on chip, in silicon and formally verified"
+        texto: "A switch killed 405,522 times in one hour, every repair in ≈0.6 µs, no data lost; nine safety rules formally verified within the checked depth."
+      - estado: curso
+        titulo: "Core fabric for 16 cores and DDRC_72 memory controller"
+        texto: "Ring for 64 hardware threads synthesised, 16 stations verified in simulation; self-healing DDR4 controller RTL v0.1 verified in simulation."
       - estado: curso
         titulo: "A1 architecture and RTL"
         texto: "SoC RTL with the RV128IMAC cluster; regression in simulation; review of every IP core for the chip."

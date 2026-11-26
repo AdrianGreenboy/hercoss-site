@@ -2,8 +2,8 @@
 title: "IP core family"
 layout: article
 weight: 11
-estado: "Validated on FPGA · Becoming the Exxo A1"
-summary: "A library of reusable hardware blocks written in VHDL-2008: processors, high-speed links, space buses, general peripherals and post-quantum cryptography. Most are already validated on FPGA hardware, and together they become the peripherals of the HERCOSS Exxo A1."
+estado: "Most cores validated on FPGA silicon · Becoming the Exxo A1"
+summary: "Hercoss's own library of hardware blocks, written in VHDL-2008: a 128-bit RISC-V processor, a self-healing network on chip, a 1.6 Tb/s Ethernet core, a self-healing DDR4 controller, AI, RF, space buses and post-quantum cryptography. Most are already validated on FPGA silicon; together they become the HERCOSS Exxo A1."
 datos:
   - "VHDL-2008"
   - "Simulation + real hardware"
@@ -11,6 +11,27 @@ datos:
   - "47 of the A1's 67 controllers"
 seotitle: "Space IP cores: SpaceWire, MIL-STD-1553, CAN, Ethernet, PQC — Hercoss"
 ---
+
+## The headline cores, November 2026
+
+{{< stats >}}
+{{< stat "129 MB/s" "RV128IMAC: hardware SHA-3 from Linux with no driver, ~140× software" >}}
+{{< stat "≈0.6 µs" "NOC_512: heals itself around a dead switch, 405,522 times in one hour, 0 words lost" >}}
+{{< stat "312 bn" "ETH_1T6: 1.6T Ethernet frames in one hour, zero errors, bursts corrected" >}}
+{{< stat "1 chip" "DDRC_72: a whole memory chip can die, the data stays correct (simulation)" >}}
+{{< /stats >}}
+
+| Core | What it does | Latest result | Status | Page |
+|---|---|---|---|---|
+| **RV128IMAC** | 128-bit RISC-V processor, the A1's 16 cores | Linux 6.6 SMP; calls between CPUs in 1.35 µs; SHA-3 at 129 MB/s with no driver; 214/214 board tests | Validated on FPGA | [View](/projects/rv128imac/) |
+| **Core fabric (ring)** | Cores and accelerators call each other directly | 64 hardware threads addressable; 16 stations at full load, 0 messages lost; fair to every station | Silicon (2 CPUs) + simulation (16 stations) | [View](/projects/rv128imac/#the-hercoss-core-fabric-a-ring-built-for-calls) |
+| **NOC_512** | Self-healing 512-bit network on chip | Heals itself in ≈0.6 µs, 405,522 failures in one hour, 0 of 160 bn+ words lost; formally verified | Validated on FPGA (2 × 2) | [View](/projects/noc-512/) |
+| **ETH_1T6** | 1.6 Tb/s Ethernet: MAC, PCS, FEC, lane alignment | 312 bn frames in one hour, 0 errors; 1–15 symbol errors corrected; bit-exact to IEEE vectors | Validated on FPGA (scaled) | [View](/projects/eth-1t6/) |
+| **DDRC_72** | Self-healing DDR4 memory controller, up to 128 GiB | 0 data errors and 0 JEDEC timing violations, with a dead memory chip and a failing row | Simulation | [View](/projects/ddrc-72/) |
+| **NPU + AOCS accelerator** | Onboard AI and attitude control | 0.333 ms per image; MPC 70 × 70 bit-identical from simulation to silicon | Validated on FPGA | [View](/projects/onboard-ai/) |
+| **RF front-end + ADC chain** | Software-defined radio and high-resolution ADC | DDC/DUC bit-exact in six domains; ~16.4–18.9 effective bits | Validated on FPGA | [View](/projects/rf/) |
+| **SerDes, 25G/40G Ethernet, PTP** | High-speed links | 103 Gb/s link, 0 errors in 1 h; 40GbE against a commercial NIC | Validated on FPGA | [View](/projects/high-speed-links/) |
+| **Own eFPGA fabric** | The A1's reconfigurable logic | Runs inside a Versal; 130 nm layout passes IHP's tape-out precheck | Validated on FPGA · GDS ready | [View](/projects/efpga-fabric/) |
 
 ## What an IP core is
 
@@ -33,11 +54,12 @@ family" means it is part of the library and planned for the chip.
 In the [HERCOSS Exxo A1](/projects/hercoss-exxo-a1/), these cores become
 **47 of the chip's 67 hard peripheral controllers**: 10 SpaceWire, 5
 MIL-STD-1553, 10 CAN, 5 UART, 5 I²C, 5 I³C, 5 SPI and 2 SD, all built from
-IP already validated on FPGA. The RV128IMAC becomes the chip's sixteen
-processors, the SerDes, PCS, MAC and PTP cores are the basis of its
-Ethernet, and [NOC_512](/projects/noc-512/) is the network that connects
-them all. The newest member, [DDRC_72](/projects/ddrc-72/), the chip's
-self-healing DDR4 memory controller, is verified in simulation and heads to
+IP already validated on FPGA. The [RV128IMAC](/projects/rv128imac/) becomes the chip's sixteen
+processors, linked by their own core fabric; the SerDes, PCS, MAC and PTP
+cores and [ETH_1T6](/projects/eth-1t6/) are its Ethernet up to 1.6 Tb/s;
+[NOC_512](/projects/noc-512/) is the self-healing network that connects them
+all; and [DDRC_72](/projects/ddrc-72/), the newest member, is its
+self-healing DDR4 memory controller, verified in simulation and heading to
 FPGA synthesis next.
 
 Every core is now being reviewed for chip readiness, with a common register

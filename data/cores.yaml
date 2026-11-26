@@ -4,7 +4,7 @@
 - nombre: "RV128IMAC"
   cat: "Processors"
   estado: validado
-  que: "128-bit RISC-V processor: runs as RV128, RV64 or two RV64 CPUs; Linux 6.6 SMP; core-to-core calls in 1.35 µs; hardware SHA-3 at 129 MB/s, ~140× software, no driver."
+  que: "128-bit RISC-V processor: runs as RV128, RV64 or two RV64 CPUs; Linux 6.6 SMP, 214/214 board tests; core-to-core calls in 1.35 µs; hardware SHA-3 at 129 MB/s, ~140× software, no driver."
   a1: "The A1's 16 processors"
 - nombre: "RV32IM"
   cat: "Processors"
@@ -16,10 +16,15 @@
   estado: desarrollo
   que: "64-bit RISC-V processor; its features are being carried over into the RV128IMAC."
   a1: ""
+- nombre: "Core fabric (ring)"
+  cat: "Interconnect"
+  estado: validado
+  que: "Hercoss's own ring where cores and accelerators call each other directly: on silicon with 2 CPUs and the SHA-3 engine; 64-thread build passes timing; 16 stations at full load verified in simulation, fair to every station."
+  a1: "Links the 16 cores and their accelerators"
 - nombre: "NOC_512"
   cat: "Interconnect"
   estado: validado
-  que: "Self-repairing 512-bit network-on-chip, packet and stream planes: 3.19 trillion AXI4 transfers on FPGA silicon with zero errors; heals itself around a dead switch in ≈0.6 µs on silicon, 0 of 160 bn+ words lost."
+  que: "Self-repairing 512-bit network-on-chip, packet and stream planes: 3.19 trillion AXI4 transfers on FPGA silicon with zero errors; heals itself around a dead switch in ≈0.6 µs on silicon, 405,522 times in one hour, 0 of 160 bn+ words lost; self-healing logic formally verified."
   a1: "Joins every block of the chip"
 - nombre: "DDRC_72"
   cat: "Memory"
@@ -53,8 +58,8 @@
   a1: "10 × 24-bit ΣΔ ADC"
 - nombre: "ETH_1T6"
   cat: "Links"
-  estado: desarrollo
-  que: "Complete 1.6 Tb/s Ethernet link layer: MAC, PCS, RS(544,514) FEC, lane alignment. On FPGA silicon: 312 billion frames in one hour, zero errors; error bursts repaired at full speed; full width in simulation."
+  estado: validado
+  que: "Complete 1.6 Tb/s Ethernet link layer: MAC, PCS, RS(544,514) FEC, lane alignment. On FPGA silicon (scaled): 312 billion frames in one hour, zero errors; 1–15 symbol errors corrected; bursts repaired at full speed; full width in simulation."
   a1: "The 1.6TbE port"
 - nombre: "SERDES_256G v1.0"
   cat: "Links"

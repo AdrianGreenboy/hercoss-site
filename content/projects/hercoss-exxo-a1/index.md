@@ -14,12 +14,28 @@ seotitle: "HERCOSS Exxo A1 — Radiation-hardened RISC-V FPGA SoC for space"
 product: "Space-grade FPGA SoC"
 ---
 
-{{< aviso "Patent analysis in progress" >}}
-Several innovations of the Exxo A1, among them the self-healing lockstep and
-the direct core-to-core calls, are being analysed for patent protection. This
-page shows what they achieve; how they work will be published once that
-analysis is complete.
+{{< aviso "Patent process in progress" >}}
+Several innovations of the Exxo A1 are in the patent process: among them the
+self-healing lockstep, the core fabric where cores and accelerators call each
+other directly, the self-healing network on chip, the error-correction
+receiver of the 1.6T Ethernet core and the self-healing memory controller.
+This page shows what they achieve; how they work will be published once that
+process allows it.
 {{< /aviso >}}
+
+### Proven in November 2026
+
+{{< stats >}}
+{{< stat "129 MB/s" "hardware SHA-3 from Linux, no driver, on our own 128-bit RISC-V core" >}}
+{{< stat "≈0.6 µs" "for the network on chip to heal itself around a dead switch, 405,522 times in one hour" >}}
+{{< stat "312 bn" "Ethernet frames in one hour through our own 1.6T link layer, zero errors" >}}
+{{< stat "1 chip" "of memory can die and the data still comes back correct (DDRC_72, simulation)" >}}
+{{< /stats >}}
+
+Each result has its own page: [RV128IMAC](/projects/rv128imac/) ·
+[NOC_512](/projects/noc-512/) · [1.6T Ethernet](/projects/eth-1t6/) ·
+[DDRC_72](/projects/ddrc-72/) · [Onboard AI](/projects/onboard-ai/) ·
+[RF](/projects/rf/) · [IP cores](/projects/ip-core-family/)
 
 ## The investment opportunity {#invest}
 
@@ -201,9 +217,9 @@ is in design, and what is still pending.
 
 | What | Evidence | Status |
 |---|---|---|
-| RV128IMAC processor core | Linux 6.6 SMP, 214 / 214 board tests, CoreMark 1.85 / MHz | Validated on FPGA |
+| RV128IMAC processor core | Linux 6.6 SMP, 214 / 214 board tests, CoreMark 1.85 / MHz; SHA-3 from a 33 to a 129 MB/s stream in five days | Validated on FPGA |
 | Core-to-core calls | 1.35 µs round trip from a Linux program (an empty system call: 6.6 µs) | Validated on FPGA |
-| Core fabric for 16 cores | Ring addressing 64 hardware threads; 16 stations at full load with zero lost, duplicated or reordered messages; every station guaranteed its turn | Simulation |
+| Core fabric for 16 cores | Ring addressing 64 hardware threads (build passes timing, 2,900 logic cells smaller); 16 stations at full load with zero lost, duplicated or reordered messages; every station guaranteed its turn | Synthesis + simulation |
 | Self-healing lockstep | 24 / 24 injected faults corrected, 0 corrupted results | Validated on FPGA (earlier 64-bit core) |
 | NOC_512 network-on-chip | Nine one-hour runs at full load: 3.19 trillion AXI4 transfers, 0 errors; 375 MHz unprotected, 265 MHz with every protection layer | Validated on FPGA |
 | NOC_512 fault tolerance | 10.5 M errors corrected live; state corrupted every cycle for 159 M cycles with a result identical to a fault-free run; 199 M words/s rebuilt with none lost; 14 self-repairs in ~10 µs, 0 words lost | Validated on FPGA (fault injection, not beam-tested) |
@@ -224,19 +240,22 @@ is in design, and what is still pending.
 | RF digital front-end | DDC and DUC chains, bit-exact in six domains | Validated on FPGA |
 | Post-quantum crypto | ML-KEM and ML-DSA accelerators | Validated on FPGA |
 | Hardware SHA-3 / SHAKE | 129 MB/s from a Linux process without a driver, ~140× software on the same CPU | Validated on FPGA |
+| 1.6TbE link layer (ETH_1T6) | MAC + PCS + RS(544,514) FEC + lane alignment: 312 billion frames in one hour, 0 errors; 1–15 symbol errors per codeword corrected; error bursts repaired at full speed; bit-exact to IEEE 802.3 200G/400G/800G and P802.3dj vectors | Validated on FPGA (scaled: one FEC flow, 8 lanes) |
 
 ## Still pending
 
 An honest list of what has to happen before the A1 is a chip:
 
-- **Scale the processor cluster** from the two-CPU prototype to sixteen cores,
-  including the core-to-core call network.
+- **Scale the processor cluster** from the two-CPU prototype to sixteen cores.
+  The core fabric already addresses 64 hardware threads and a 16-station ring
+  passes at full load in simulation; next is the full-length ring on silicon.
 - **Space hardening of the RV128IMAC:** port the self-healing lockstep, the
   error-correcting register file and cache parity; grow the caches to the A1
   sizes.
-- **Network-on-chip:** automatic route recovery and the 3 × 3 mesh on
-  silicon (both pass in simulation), meshes larger than 2 × 2 on a larger
-  FPGA, and integration with the RV128IMAC cores and real peripherals.
+- **Network-on-chip:** the 25-node network and the hardened self-healing
+  logic on a larger FPGA (both pass in simulation), formal verification of
+  the whole network (started), faster recovery when two switches fail at
+  once, and integration with the RV128IMAC cores and real peripherals.
 - **L2 caches:** RTL still to be written.
 - **DDR4 memory controller ([DDRC_72](/projects/ddrc-72/)):** RTL v0.1
   complete; verified in simulation with 0 data errors and 0 JEDEC timing
