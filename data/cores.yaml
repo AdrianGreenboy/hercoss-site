@@ -19,7 +19,7 @@
 - nombre: "NOC_512"
   cat: "Interconnect"
   estado: validado
-  que: "Self-repairing 512-bit network-on-chip, packet and stream planes: 3.19 trillion AXI4 transfers on FPGA silicon with zero errors; re-routes itself in ~10 µs with no word lost."
+  que: "Self-repairing 512-bit network-on-chip, packet and stream planes: 3.19 trillion AXI4 transfers on FPGA silicon with zero errors; heals itself around a dead switch in ≈0.6 µs on silicon, 0 of 160 bn+ words lost."
   a1: "Joins every block of the chip"
 - nombre: "DDRC_72"
   cat: "Memory"

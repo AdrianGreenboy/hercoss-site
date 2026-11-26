@@ -1,95 +1,198 @@
 ---
-title: "NOC_512 — the nervous system of the Exxo A1"
+title: "NOC_512 — the self-healing network on chip of the Exxo A1"
 layout: article
 weight: 3
-estado: "Running on FPGA silicon · Self-repairing · 5 × 5 chip plan verified in simulation"
+estado: "Self-healing validated in silicon · 5 × 5 chip plan verified in simulation"
 hidecover: true
-seotitle: "NOC_512 — self-repairing 512-bit network-on-chip for space — Hercoss"
-summary: "Hercoss's own 512-bit network-on-chip for the HERCOSS Exxo A1, built for a chip that must work for ten years where nobody can repair it. On FPGA silicon: 3.19 trillion AXI4 transfers in nine one-hour runs without a single error, and a network that moves its own traffic around a failed path in about 10 µs without losing a word."
+seotitle: "NOC_512 — self-healing 512-bit network-on-chip for space, validated in silicon — Hercoss"
+summary: "A 512-bit network on chip that carries guaranteed high-bandwidth streams and repairs itself around a failed switch in about 0.6 µs, with no software and no lost data. Validated in silicon: 405,522 switch failures in one hour, more than 160 billion data words, none lost or damaged."
 datos:
+  - "Self-heals in ≈0.6 µs, in silicon"
+  - "405,522 failures, 0 words lost"
   - "3.19 trillion transfers, 0 errors"
-  - "Self-repairing in ~10 µs"
-  - "Self-healing circuit plane"
   - "7.7 Tb/s chip plan"
-  - "375 MHz on FPGA silicon"
 ---
 
 {{< stats >}}
+{{< stat "≈0.6 µs" "for the network to repair itself around a dead switch, measured in silicon" >}}
+{{< stat "405,522" "switch failures in one hour under full traffic, every one handled" >}}
+{{< stat "0" "of more than 160 billion data words lost or damaged" >}}
 {{< stat "3.19 T" "AXI4 transfers on silicon in nine one-hour runs, without a single error" >}}
-{{< stat "7.7 Tb/s" "carried at once by the 5 × 5 chip plan, on 19 protected circuits" >}}
-{{< stat "0" "words lost in every single-node failure rehearsed on the 5 × 5 mesh, under full traffic" >}}
-{{< stat "~10 µs" "for a circuit to move itself onto another route after losing one, on silicon" >}}
 {{< /stats >}}
 
 {{< aviso "Patent analysis in progress" >}}
-This page shows what NOC_512 achieves. How its protection and self-repair
+This page reports what NOC_512 achieves. How its protection and self-healing
 mechanisms work is not published while a patent analysis is in progress.
 {{< /aviso >}}
 
-## What it is
+## The short version
 
-Every block of the HERCOSS Exxo A1 has to talk to every other one: sixteen
-processors, the FPGA fabric, PCIe, 1.6 Tb/s Ethernet, AI accelerators,
-converters. **NOC_512 is the network that carries that traffic inside the
-chip**, Hercoss's own, written from scratch in VHDL. It was designed from the
-first line for a chip that has to work for ten years in orbit, where nobody
-can repair it.
+Every large chip is a city of blocks: processor clusters, Ethernet, PCIe, AI
+engines, radio converters, memory. The network on chip is its road system.
+**If a road closes, the city stops.**
 
-It moves **512 bits per clock** on two planes that work side by side:
+**NOC_512** is the network on chip of the
+[HERCOSS Exxo A1](/projects/hercoss-exxo-a1/). It moves data 512 bits at a
+time, carries ordinary memory traffic and guaranteed high-bandwidth streams
+side by side, and protects both against faults at every level.
 
-- **Packet plane:** everything that looks like memory access, such as
-  registers, DMA and processor traffic. Every block sees a standard AXI4
-  interface.
-- **Stream plane:** bulk data that cannot wait, such as Ethernet, PCIe,
-  converters and AI. Circuits with fixed latency that can be rearranged
-  while traffic is running.
+This month it passed its hardest test yet, **in silicon**. A switch of the
+network was switched off and on again **more than 400,000 times in one hour,
+under full traffic**. Every time, the network restored the affected data lane
+**by itself in about 0.6 microseconds**, with no software, no route tables
+and no central controller, and went back to its original configuration when
+the switch returned. **Not one of more than 160 billion data words was lost
+or damaged.**
 
-The mesh scales to 8 × 8 nodes; the A1 uses 5 × 5.
+## The headline result: self-healing, in silicon
+
+### The test
+
+A 2 × 2 version of NOC_512 runs on an AMD Versal FPGA (Trenz TE0950,
+VE2302) at **255 MHz**, with memory traffic on the packet plane and two
+stream circuits on the stream plane, one of them protected. A test hook
+**kills the stream switch of one node**: it stops sending anything, exactly
+like a switch that has failed.
+
+Nobody tells the network which switch failed. No software reacts. No backup
+route is prepared.
+
+{{< fig "noc-heal-concept.svg" "Self-healing in three steps: normal route, detour found by the mesh itself, automatic return. Conceptual drawing." >}}
+
+### What happens
+
+{{< fig "noc-heal-withwithout.svg" "Without self-healing, the stream survives but runs without a safety net. With it, the safety net is back in under a microsecond." >}}
+
+| | Without self-healing | With self-healing |
+|---|---|---|
+| The lane through the failed switch | Stays dead for as long as the switch is dead | **Alive again after 148–156 clock cycles (≈ 0.6 µs)** |
+| Data words the protection has to rebuild | **191 million per second** | **None** once the lane is back |
+| Words lost | 0 (protection covers it) | **0** |
+| When the switch comes back | – | The network returns to its original configuration by itself |
+
+Without self-healing, the stream survives only because its protection
+rebuilds every word. That works, but the stream is running without a safety
+net: one more fault and data is lost. **With self-healing, the safety net is
+restored in under a microsecond.**
+
+### One hour, 405,522 failures
+
+A single success proves the idea works. To show it is reliable, the switch
+was killed and revived again and again for one hour, with random timing,
+from microseconds to tens of milliseconds, including failures that strike
+while the network is still repairing the previous one.
+
+{{< fig "noc-heal-soak.svg" "The one-hour silicon soak at 255 MHz, every counter checked at the end." >}}
+
+| One-hour silicon soak | |
+|---|---|
+| Switch failures | **405,522** |
+| Repairs measured | 324,687, **all between 148 and 156 clock cycles** (mean 148.8) |
+| Failures that struck while the repair was still in place | 80,835: the lane never even went down |
+| Return to the original configuration checked | 6,336 times, 6,336 correct |
+| Stream data words | More than **160 billion**, **none lost, none damaged** |
+| Memory traffic alongside | **24.8 billion** transaction batches, **zero errors** |
+
+### Practically deterministic
+
+{{< fig "noc-heal-time.svg" "How long a lane stays down after its switch dies. Self-healing measured in silicon; prepared backup routes from full-chip simulation." >}}
+
+| Repair time (clock cycles) | Repairs |
+|---|---|
+| 0 – 150 | 311,774 |
+| 151 – 200 | 12,913 |
+| More than 200 | **0** |
+
+A spread of eight clock cycles over hundreds of thousands of events, and no
+long tail. The same 149 cycles were measured in RTL simulation before the
+first silicon run: **the hardware does exactly what the model predicted.**
+
+### Why this is different
+
+- **No software in the loop.** The repair is over before a processor would
+  even have noticed an interrupt.
+- **No route tables.** Nothing has to be prepared in advance for each
+  possible failure.
+- **No central controller.** There is no single block whose failure would
+  stop the repair itself.
+- **No knowledge of what failed.** The network does not need to be told
+  which switch is gone.
+
+{{< detalle "Clock cycles, not microseconds: what does this mean for the chip?" >}}
+The repair takes about 149 clock cycles whatever the clock. At 255 MHz on
+the FPGA that is 0.58 µs; at the gigahertz-class clocks of a dedicated chip
+it would be a fraction of that. In the 2 × 2 test system the self-healing
+logic of all four nodes takes about 10,300 LUTs, roughly 9 % of the test
+system. Its hardened version is verified in simulation; it does not fit this
+small device together with everything else, and waits for a larger one.
+{{< /detalle >}}
+
+## Why a network on chip matters
+
+In a modern system-on-chip, raw compute is rarely the bottleneck. **Moving
+data is.** A 1.6 Tb/s Ethernet port, a PCIe Gen5 x16 link, an AI array and an
+RF front end all need to exchange data at the same time, without one slowing
+the others down, and without the whole chip failing when one part
+misbehaves.
+
+For a chip meant for long space missions, that last point is decisive. Over
+ten years in orbit or in deep space, parts of a chip will be hit by energetic
+particles. A bit flips; a switch locks up. On Earth, the same reliability
+matters for data centres, telecom and any system that cannot be stopped for
+repair. **A network that keeps its data intact and works around its own
+failures is what lets the rest of the chip keep running.**
+
+## What NOC_512 is
+
+Two networks in one, sharing the same mesh of nodes:
+
+| | Packet plane | Stream plane |
+|---|---|---|
+| Carries | Memory reads and writes between any two blocks (AXI4) | Continuous high-bandwidth streams: Ethernet, PCIe, AI, RF, converters |
+| How | Packets find their way hop by hop | Lanes reserved end to end: guaranteed bandwidth, constant latency |
+| Width | 512-bit data, with protection | 512-bit lanes, 8 lanes per link in the A1 |
 
 {{< fig "noc-planes.svg" "One mesh, two planes. Conceptual." >}}
 
-## What makes it different
+**Built for the A1 chip:** a 5 × 5 mesh of 25 nodes connecting four processor
+clusters (16 [RV128IMAC](/projects/rv128imac/) cores), six FPGA fabric ports,
+three PCIe and three Ethernet ports (including
+[1.6 Tb/s](/projects/eth-1t6/)), three AI array ports, the ADC and RF
+converters, two external memory ports ([DDRC_72](/projects/ddrc-72/)), and
+the boot, crypto and slow-peripheral node.
 
-**Most networks on chip assume the silicon works. This one assumes parts of
-it will not.**
+**Protected at every level:**
 
-- **It checks and corrects its own data.** Single-bit errors anywhere
-  between two blocks are corrected on the fly; double errors are detected
-  and reported.
-- **Its control logic survives being wrong.** Internal state corrupted on
-  every clock cycle gives exactly the same result as a run with no faults.
-- **A circuit survives the loss of a path.** A protected stream keeps
-  delivering every word when a path dies, bits flip on the wires or data is
-  damaged in a buffer.
-- **It repairs its own routing.** When a path dies, the hardware moves the
-  circuit to another route by itself, without software and without losing a
-  word, and moves it back when the path recovers.
-- **It tells the truth when it cannot cope.** If two failures at once are
-  more than a circuit can absorb, every lost word is counted and none is ever
-  delivered wrong, so whatever consumes the data knows exactly what is
-  missing. Then the network recovers on its own.
+- **End-to-end error correction** on every packet: single-bit errors
+  corrected, double-bit errors detected.
+- **Fault-tolerant control state** in routers, links, bridges and
+  configuration: internal state corrupted on every clock gives exactly the
+  same result as a run with no faults.
+- **Protected memories** inside the bridges.
+- **Protected streams:** a cut path or flipped bits cost no data.
+- **Automatic re-routing** onto prepared backup routes, with automatic return
+  when the original path works again.
+- **New: self-healing.** The mesh finds its own way around a switch that has
+  failed.
+- **It tells the truth when it cannot cope:** every lost word is counted and
+  none is ever delivered wrong.
 
 ### Faults on purpose, on silicon
 
-{{< fig "noc-faults.svg" "Faults injected deliberately on the FPGA board while the network carried traffic." >}}
+{{< fig "noc-faults.svg" "Earlier fault-injection runs on the FPGA board while the network carried traffic." >}}
 
-{{< detalle "Is NOC_512 radiation-qualified?" >}}
-No. Fault injection shows the protection behaves as designed, but it does not
-replace a test under a particle beam. A radiation test campaign is planned;
-**no radiation qualification is claimed.**
-{{< /detalle >}}
-
-## Proven on silicon: the price of protection, published
+## The price of protection, published
 
 Each protection layer was taken to the board on its own and run for one hour
 at full load before the next one was added. Every run: **zero errors.**
 
-{{< fig "noc-ladder.svg" "Seven one-hour runs on an AMD Versal VE2302 (Trenz TE0950). Clock and AXI4 transfers per hour." >}}
+{{< fig "noc-ladder.svg" "One-hour runs on an AMD Versal VE2302 (Trenz TE0950). Clock and AXI4 transfers per hour." >}}
 
-The full protection costs about **30 % of the clock rate** on this small
-FPGA. That is the honest price, and we publish it. The protected network's
-frequency has not been optimised yet; that work is planned on a larger
-device.
+Every silicon result is measured on the same small board, the only one
+available today. Each new protection layer meant fitting more logic into the
+same device, which is why the clock moved from 375 MHz for the bare network
+to 255 MHz with every protection and the self-healing logic on board. **In
+the A1 chip, this logic is dedicated silicon, not FPGA fabric.**
 
 {{< detalle "What do the FPGA clock figures mean for the chip?" >}}
 They are measured on an FPGA, not on the Exxo A1. The chip's clock depends
@@ -100,125 +203,67 @@ traffic is spread over several stream circuits in parallel.
 
 {{< fig "noc-why.svg" "Clock needed for 1.6 Tb/s on one 512-bit link, against the ceilings measured on the FPGA." >}}
 
-## The plan for the chip: 7.7 Tb/s, all protected
-
-The 25 blocks of the HERCOSS Exxo A1 are placed on a 5 × 5 mesh, with every
-high-speed connection running at the same time. The traffic of the whole
-chip is planned and routed automatically.
+## The full chip, in simulation
 
 {{< fig "noc-a1plan.svg" "Traffic plan of the Exxo A1 on the 5 × 5 mesh, run in simulation with the complete network." >}}
 
-### Rehearsing failures at chip scale
+On the 25-node A1 plan, in RTL simulation:
 
-With the complete A1 traffic running in simulation, nodes were switched off
-under load:
+- **19 stream circuits at once**, 57 data lanes, **7.73 Tb/s** of guaranteed
+  bandwidth at 265 MHz, alongside the packet plane.
+- **One dead switch at a time** (six different switches, each dead for 800
+  cycles): **65 of 66 affected lanes back in service** while the switch is
+  still dead. The remaining one has no free path anywhere in the mesh.
+  **Zero words lost**, and every circuit returns home once the switch
+  recovers.
+- **Two switches dead at the same time**, in the worst pair of the chip:
+  **72 % fewer words lost** than with no repair at all, and only one of the
+  eight affected circuit groups stays cut, the one for which no free path is
+  left.
+- With the self-healing logic hardened and its internal state corrupted on
+  **every clock cycle in all 25 switches**, the results are **identical word
+  for word** to the run without corruption.
 
-{{< fig "noc-chipfail.svg" "Node failures rehearsed on the full 5 × 5 mesh in simulation." >}}
+{{< fig "noc-chipfail.svg" "Failures rehearsed on the full 5 × 5 mesh in simulation." >}}
 
-- **A node dies:** six nodes that traffic passes through were switched off,
-  one after the other. Up to 16 protected groups lost a path at the same
-  moment. **Not one word was lost** on any of them. (A circuit cannot survive
-  the loss of the block it starts or ends at; nothing can.)
-- **The network heals around it:** with the switch still dead, the new
-  self-healing circuit plane brings 65 of 66 affected lanes back into
-  service, most within tens of clock cycles (see below).
-- **Two nodes die together:** 27 of 35 protected groups lose nothing. The
-  other 8 lose data, but every lost word is counted, nothing is corrupted,
-  and the whole network returns to its planned state by itself when the nodes
-  come back.
+## How we got here
 
-## New: a circuit plane that heals itself
-
-The high-bandwidth circuits of the A1 (1.6 Tb/s Ethernet, PCIe, RF and AI
-streams) run over fixed lanes through the mesh. Until now, a switch that
-stopped working cut every circuit passing through it until a prepared backup
-route was written in: 580 to 1,030 clock cycles, covering 94 % of the
-affected lanes.
-
-This month we built and verified, in RTL simulation of the full 5 × 5 chip
-plan, a circuit plane where **the mesh finds its own way around a dead
-switch**: without software, without a central controller, and without being
-told which switch failed.
-
-{{< fig "noc-heal-concept.svg" "Self-healing in three steps: normal route, detour found by the mesh itself, automatic return. Conceptual drawing." >}}
-
-{{< stats >}}
-{{< stat "65 / 66" "affected lanes back in service while the switch is still dead" >}}
-{{< stat "~10×" "faster than prepared backup routes: most lanes back within tens of cycles" >}}
-{{< stat "0" "words lost, 0 corrupted; circuits return home on their own" >}}
-{{< stat "25 / 25" "switches under constant internal corruption, results identical word for word" >}}
-{{< /stats >}}
-
-{{< fig "noc-heal-compare.svg" "One dead switch at a time, six different switches, each dead for 800 cycles, in RTL simulation of the full chip plan." >}}
-
-- **It repairs itself fast.** Most lanes are back within a few tens of clock
-  cycles, about ten times faster than the prepared backup routes. The one
-  lane that is not restored has no free path in the mesh at all.
-- **Nothing is lost.** The network's existing data protection covers the short
-  gap: zero words lost, zero corrupted.
-- **The repair logic is hardened too.** In simulation, its internal state was
-  deliberately corrupted on every single clock cycle in all 25 switches; the
-  results were identical, word for word, to a run without corruption.
-- **Two failures at once** is a much harder case. In the worst pair of the
-  chip, self-healing already loses far fewer words than no repair at all.
-  How much fewer still depends on the order in which repairs compete for the
-  few free lanes, so the next step is to make that deterministic.
-
-{{< detalle "What does self-healing cost?" >}}
-Out-of-context synthesis on the VE2302, for one switch of the 5 × 5 mesh:
-
-| | Logic | Clock |
-|---|---|---|
-| Stream switch (data path) | 68,000 LUTs | 356 MHz |
-| Self-healing logic | 16,000 LUTs | 333 MHz |
-| Self-healing logic, hardened | 26,000 LUTs | 256 MHz (target 265 MHz, closing) |
-
-These are synthesis figures, not a run on hardware. The self-healing circuit
-plane is verified in RTL simulation; the 5 × 5 mesh needs a larger FPGA than
-the one we own.
-{{< /detalle >}}
-
-## Where it stands
-
-| | Status |
+| Stage | Result |
 |---|---|
-| Both planes, AXI4 bridges, 2 × 2 mesh | **Running on silicon** |
-| Error correction, fault-tolerant control, protected circuits, self-repairing routing | **Running on silicon**, one-hour runs without error |
-| 5 × 5 mesh with the full A1 traffic plan | Verified in simulation |
-| Behaviour under one and two node failures at chip scale | Verified in simulation |
-| Self-healing circuit plane (5 × 5) | **New:** verified in RTL simulation; hardened version closing timing at 265 MHz |
-| 5 × 5 on hardware | Next step: needs a larger FPGA than the one we own |
-| Radiation testing | Not done yet. No radiation qualification is claimed |
-| ASIC implementation | Part of the HERCOSS Exxo A1 chip programme |
-
-## How we got here: one month
-
-From a first router to a self-repairing network on an FPGA board, in
-November 2026.
-
-| Step | Milestone |
-|---|---|
-| 1 · First light | Packet routers, AXI4 bridges and the stream plane pass their tests; the router reaches 400 MHz on its own |
-| 2 · On silicon | The complete network runs on the board at 250, then 350, then 375 MHz, each with a one-hour run without error |
-| 3 · Hardening | Error correction, then fault-tolerant control logic, block by block, each step taken to silicon before the next |
-| 4 · Circuits that survive | Stream circuits keep delivering through dead paths, flipped bits and damaged buffers |
-| 5 · Self-repair | The hardware re-routes around a failure and returns on its own: first in simulation, then on the board |
-| 6 · Chip scale | 5 × 5 mesh, the whole A1 traffic planned and routed automatically, node failures rehearsed with everything running |
-| 7 · Self-healing circuits | The mesh finds its own way around a dead switch: 65 of 66 lanes back within tens of cycles, nothing lost (RTL simulation) |
+| Packet router, 512-bit | ~409 MHz out-of-context on the VE2302 |
+| Stream plane | ~583 MHz ceiling out-of-context |
+| First silicon, 2 × 2 | Passed at **250 MHz**, then **350** and **375 MHz**; one-hour soaks with zero errors |
+| End-to-end error correction | Silicon at **375 MHz**: self-test, injected errors corrected, one-hour soak, zero errors |
+| Fault-tolerant control state | Silicon at **285–300 MHz**, with internal state corrupted on every clock: zero errors |
+| Protected stream circuits | Silicon at **275 MHz**: a dead path or flipped bits cost no data |
+| Protected bridge memories | Silicon at **275 MHz** |
+| Automatic re-route with return | Silicon at **265 MHz**: no word lost while moving to the backup route and back |
+| Wider data units for the 25-node chip | Silicon at **265 MHz**, one-hour soak, zero errors |
+| 25-node A1 plan | Full circuit plan in simulation, 7.73 Tb/s guaranteed |
+| **Self-healing** | Simulation on the full chip, then **silicon at 255 MHz: 405,522 failures repaired in ≈ 0.6 µs, no data lost** |
 
 Every step followed the same rule: **simulate it, put it on silicon, run it
 for an hour, publish the number.** What does not fit our board yet is
 labelled as simulation, not as a result.
 
-## What comes next
+## What this is, and what it is not yet
 
-- Close timing of the hardened self-healing logic at 265 MHz.
-- Deterministic repair order for two simultaneous switch failures.
-- The 5 × 5 network on a larger FPGA.
-- Higher clock rates for the fully protected network.
-- Integration with the [RV128IMAC](/projects/rv128imac/) cores and the
-  [1.6 Tb/s Ethernet](/projects/eth-1t6/) core of the A1.
-- A radiation test campaign.
+| | Status |
+|---|---|
+| Packet plane with all its protections, stream protection, automatic re-routing | **Measured in silicon** |
+| Self-healing of the stream plane, 2 × 2 network with one possible detour | **Measured in silicon** |
+| 25-node A1 network, two simultaneous failures, hardened self-healing logic | Simulation and synthesis |
+| Formal verification of the self-healing logic | Started |
+| Radiation testing | Not done yet. Fault injection shows tolerance to the faults we inject, nothing more. **No radiation qualification is claimed** |
+| ASIC implementation | Part of the HERCOSS Exxo A1 chip programme |
+
+## Next steps
+
+1. Formal verification of the self-healing logic (in progress).
+2. A larger Versal device, to take the full 25-node network and the hardened
+   self-healing logic from simulation to hardware.
+3. Faster recovery when two switches fail at once.
+4. A radiation test campaign.
 
 ## In the Exxo A1
 

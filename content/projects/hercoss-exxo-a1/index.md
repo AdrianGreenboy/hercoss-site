@@ -91,7 +91,8 @@ Everything hangs off one 512-bit network-on-chip, Hercoss's own
 [NOC_512](/projects/noc-512/): the sixteen processors, the FPGA fabric, the
 AI array, memory and all I/O. On FPGA silicon it has carried 3.19 trillion
 AXI4 transfers in nine one-hour runs without a single error, and it repairs
-its own routing around a failed path in about 10 µs without losing a word.
+itself around a failed switch in about 0.6 µs, measured in silicon over
+405,522 failures in one hour without losing a word.
 
 {{< fig "a1-architecture.svg" "Top-level architecture of the HERCOSS Exxo A1. Conceptual; not to scale." >}}
 
@@ -207,7 +208,7 @@ is in design, and what is still pending.
 | NOC_512 network-on-chip | Nine one-hour runs at full load: 3.19 trillion AXI4 transfers, 0 errors; 375 MHz unprotected, 265 MHz with every protection layer | Validated on FPGA |
 | NOC_512 fault tolerance | 10.5 M errors corrected live; state corrupted every cycle for 159 M cycles with a result identical to a fault-free run; 199 M words/s rebuilt with none lost; 14 self-repairs in ~10 µs, 0 words lost | Validated on FPGA (fault injection, not beam-tested) |
 | NOC_512, 5 × 5 chip plan | 7.73 Tb/s on 19 protected circuits; 6 single-node failures under full traffic with 0 words lost | Simulation |
-| NOC_512 self-healing circuit plane | With a switch dead, 65 of 66 affected lanes back within tens of cycles, ~10× faster than prepared backup routes; 0 words lost or corrupted | RTL simulation |
+| NOC_512 self-healing | In silicon: a switch killed 405,522 times in one hour under full traffic, every repair in 148–156 cycles (≈0.6 µs), 0 of 160 bn+ words lost; full chip in simulation: 65 of 66 lanes restored | Validated on FPGA (2 × 2); chip scale in simulation |
 | DDRC_72 memory controller | Full-system run with injected bit flips, a dead memory chip and a failing row: 2,727 writes and 4,120 reads verified, 0 data errors, 0 JEDEC timing violations | Simulation |
 | A1 SoC infrastructure | Cluster, crossbar, coherence, mailbox, interrupt controller, IOPMP; two isolated Linux domains | Validated on FPGA |
 | Cache and prefetch tuning | 64 KiB I-cache: −69 % misses in Linux; prefetcher: cold copy −32 %, cold read −39 % | Measured on FPGA (earlier 64-bit core) |
