@@ -116,7 +116,7 @@ up with bursts tolerates far more errors than its size suggests.
 {{< fig "eth-vectors.svg" "The transmit path reproduces the official reference test vectors exactly." >}}
 
 The transmit path reproduces the official IEEE 802.3 reference test vectors
-for 200G and 800G, and the published example vectors of the 1.6T draft
+for 200G, 400G and 800G, and the published example vectors of the 1.6T draft
 standard (P802.3dj), exactly.
 
 ## How we got here
