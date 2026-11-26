@@ -123,13 +123,13 @@ results exist.
 
 | Milestone | Status |
 |---|---|
-| RTL complete: controller, error correction, reliability engine, rad-hard supervisor, self-test | ✅ **v0.1** |
-| Error-correction unit test: 3,776 cases, including dead-chip and poison cases | ✅ **Passed, 0 errors** |
-| Full-system simulation: DRAM initialisation, random traffic, partial writes, injected bit flips, a dead memory chip, a failing row with automatic spare | ✅ **Passed: 2,727 writes and 4,120 reads verified, 0 data errors, 0 JEDEC timing violations** |
-| Rad-hard simulation: upset, latch-up and destroyed hardware in the controller's own logic | ⏳ In progress |
-| FPGA synthesis on AMD Versal (area, frequency) | ⏳ Next |
-| Silicon validation on the TE0950 board, controller in the loop with a DRAM stand-in | ⏳ Planned |
-| Real DDR4 PHY and DRAM, radiation testing | 🔜 Future, with the A1 test chip |
+| RTL complete: controller, error correction, reliability engine, rad-hard supervisor, self-test | **Done** · v0.1 |
+| Error-correction unit test: 3,776 cases, including dead-chip and poison cases | **Done** · passed, 0 errors |
+| Full-system simulation: DRAM initialisation, random traffic, partial writes, injected bit flips, a dead memory chip, a failing row with automatic spare | **Done** · 2,727 writes and 4,120 reads verified, 0 data errors, 0 JEDEC timing violations |
+| Rad-hard simulation: upset, latch-up and destroyed hardware in the controller's own logic | In progress |
+| FPGA synthesis on AMD Versal (area, frequency) | Next |
+| Silicon validation on the TE0950 board, controller in the loop with a DRAM stand-in | Planned |
+| Real DDR4 PHY and DRAM, radiation testing | Future, with the A1 test chip |
 
 *All results above are verified in simulation. DDRC_72 has not yet run on
 silicon, has no flight heritage, and is not qualified or certified. It is
