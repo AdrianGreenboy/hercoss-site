@@ -49,7 +49,7 @@
 - nombre: "ETH_1T6"
   cat: "Links"
   estado: desarrollo
-  que: "Complete 1.6 Tb/s Ethernet link layer: MAC, PCS, Reed-Solomon FEC, 16-lane alignment. On FPGA silicon: 312 billion frames in one hour, zero errors; full width verified in simulation."
+  que: "Complete 1.6 Tb/s Ethernet link layer: MAC, PCS, RS(544,514) FEC, lane alignment. On FPGA silicon: 312 billion frames in one hour, zero errors; error bursts repaired at full speed; full width in simulation."
   a1: "The 1.6TbE port"
 - nombre: "SERDES_256G v1.0"
   cat: "Links"

@@ -1,8 +1,8 @@
 ---
-title: "1.6 Tb/s Ethernet — from the standard to working silicon"
+title: "1.6 Tb/s Ethernet — error correction running in silicon"
 layout: article
 weight: 6
-estado: "Running on FPGA silicon · MAC, PCS, error correction and lane alignment"
+estado: "Validated in silicon · MAC, PCS, RS(544,514) error correction, lane alignment"
 hidecover: true
 seotitle: "1.6 Tb/s Ethernet MAC, PCS and FEC IP core, European and in-house — Hercoss"
 summary: "Hercoss's own implementation of the fastest Ethernet rate being standardised today: a complete 1.6 Tb/s link layer (MAC, PCS, Reed-Solomon error correction and lane alignment) designed from a blank page for the HERCOSS Exxo A1. Running on FPGA silicon: 312 billion frames in one hour, zero errors."
@@ -10,19 +10,21 @@ datos:
   - "1.6 Tb/s target"
   - "312 billion frames, 0 errors"
   - "1–15 symbol errors: all corrected"
+  - "Error bursts repaired at full speed"
   - "Bit-exact to IEEE 802.3 vectors"
 ---
 
 {{< stats >}}
 {{< stat "312 bn" "frames in a one-hour run on silicon, zero errors" >}}
 {{< stat "108 bn" "error-correction codewords checked in that hour, zero bad" >}}
-{{< stat "15 / 15" "symbol-error levels per codeword corrected in hardware, no frame lost" >}}
+{{< stat "20 / 20" "codewords repaired when hit two at a time, ten times in a row" >}}
 {{< stat "0" "times corrupted data was passed on as valid" >}}
 {{< /stats >}}
 
-{{< aviso "Patent analysis in progress" >}}
-This page shows what the core achieves. Technology details are withheld
-while the architecture behind it is being prepared for patent protection.
+{{< aviso "Patent process in progress" >}}
+The architecture of the error-correction receiver is new, and its patent
+process is in progress. This page shows what the core achieves; technology
+details are withheld until that process allows it.
 {{< /aviso >}}
 
 ## What it is
@@ -36,12 +38,14 @@ complete link layer, designed in-house from a blank page for the
 
 - **MAC:** frame generation and checking.
 - **PCS:** line coding, scrambling and lane distribution.
-- **FEC:** Reed-Solomon forward error correction, encoder and full decoder.
-- **Lane alignment:** automatic lock, deskew and reordering of 16 lanes.
+- **FEC:** Reed-Solomon RS(544,514) forward error correction: encoder, error
+  detection and full error correction.
+- **Lane alignment:** automatic lock, deskew and reordering of the lanes.
 - **Software interface:** a register bank with counters, events and
   interrupts.
 
-**It is not a wrapper around third-party IP. Every block is ours.**
+**It is not a wrapper around third-party IP. Every block is ours**, and the
+architecture of its error-correction receiver is new.
 
 ## Why it matters
 
@@ -64,8 +68,9 @@ conversion.
 ## Measured, not promised
 
 The core runs today on real silicon, an AMD Versal FPGA, in a scaled
-configuration that fits the device, at a 300 MHz system clock. The
-complete chain runs at once: MAC, PCS, FEC and lane alignment.
+configuration that fits the device (one FEC flow, 8 lanes), at a 300 MHz
+system clock with measured timing margin. The complete chain runs at once:
+MAC, PCS, FEC and lane alignment.
 
 {{< fig "eth-hour.svg" "One hour at full load on the FPGA board, with independent counters at both ends of the link." >}}
 
@@ -76,31 +81,43 @@ complete chain runs at once: MAC, PCS, FEC and lane alignment.
 | Codewords checked in that hour | **108 billion, zero bad** |
 | Error correction | **1 to 15 symbol errors per codeword: all corrected, no frame lost** |
 | Beyond the code's limit | 16 symbol errors: detected and flagged, never delivered as good data |
+| Several damaged codewords at once | **Repaired together, at full speed** |
 | Lane handling | Lanes shuffled, shifted and skewed on purpose: locked and reordered automatically |
+| Timing | Closes at 300 MHz with measured margin |
 
 ### It corrects errors, in hardware, at speed
 
-We inject errors into the running link on purpose. With the decoder active,
-a burst that would destroy a frame is repaired on the fly: the receiver
-reports one corrected codeword and the application loses nothing.
-Throughput is unchanged.
+We inject errors into the running link on purpose, from software, with full
+control over how many symbols are hit and where. With correction active,
+damage that would destroy frames is repaired on the fly: the receiver
+reports the repaired codewords and the application loses nothing.
+Throughput does not change.
 
 ### It knows its own limit
 
 {{< fig "eth-fec.svg" "Symbol errors injected per codeword on the running link. 1 to 15: repaired. 16: declared uncorrectable, never passed on." >}}
 
-The code can repair up to 15 symbol errors per codeword. We tested 1, 2,
-3 … 15: all repaired. At 16 the core does exactly what it must: it declares
+The code can repair up to 15 symbol errors per codeword. We tested every
+case, 1, 2, 3 … 15: all repaired. At 16 the core does exactly what it must: it declares
 the codeword uncorrectable and marks the data as invalid. **In every test,
 corrupted data was never passed on as valid.**
+
+### It keeps up when errors come in bursts
+
+Real links do not fail one codeword at a time. On silicon we hit two
+codewords at the same instant, then repeated it ten times in a row: **every
+codeword was repaired, with no frame lost.** A compact receiver that keeps
+up with bursts tolerates far more errors than its size suggests.
+
+{{< fig "eth-burst.svg" "Two codewords damaged at the same instant, ten rounds in a row, on the running link in silicon." >}}
 
 ### It follows the standard bit for bit
 
 {{< fig "eth-vectors.svg" "The transmit path reproduces the official reference test vectors exactly." >}}
 
 The transmit path reproduces the official IEEE 802.3 reference test vectors
-for 200G, 400G and 800G, and the published example vectors of the 1.6T
-draft standard, exactly.
+for 200G and 800G, and the published example vectors of the 1.6T draft
+standard (P802.3dj), exactly.
 
 ## How we got here
 
@@ -108,12 +125,13 @@ draft standard, exactly.
 |---|---|
 | MAC | Frame controller complete and verified in simulation at four datapath widths, including the full 1.6 Tb/s width; from first line to timing-clean design in a single working session |
 | MAC + PCS on silicon | At a quarter of the final width: 258.3 Gb/s of payload, exactly the theoretical figure; 625 billion frames in one hour, zero errors |
-| Full link layer on silicon | Error correction and 16-lane alignment added: 129 Gb/s through the complete chain, 312 billion frames in one hour, zero errors |
+| Full link layer on silicon | Error correction and lane alignment added: 129 Gb/s through the complete chain, 312 billion frames in one hour, zero errors |
+| Error bursts on silicon | Two codewords hit at once, ten times in a row: all repaired at full speed, no frame lost |
 
 {{< detalle "Why is the latest throughput lower than the earlier one?" >}}
 The earlier 258.3 Gb/s run carried the frame controller and the first PCS
 stages. The latest run carries the complete link layer, including the
-Reed-Solomon decoder and 16-lane alignment, in a configuration scaled to fit
+Reed-Solomon decoder and lane alignment, in a configuration scaled to fit
 the same FPGA. Both are measured at 300 MHz on the same board. The rate
 of the full 1.6 Tb/s datapath will be established on the A1 chip itself.
 {{< /detalle >}}
@@ -122,19 +140,21 @@ of the full 1.6 Tb/s datapath will be established on the A1 chip itself.
 
 We believe in saying what is not done yet.
 
-- The silicon results come from a **scaled configuration** on an FPGA. The
-  full-width 1.6 Tb/s datapath is verified in simulation; its speed in
-  silicon will be established on the A1 chip itself, not on this FPGA.
+- The silicon results come from a **scaled configuration** (one FEC flow,
+  8 lanes). The full 1.6T structure, two FEC flows and 16 lanes, is
+  verified in simulation and is larger than our evaluation FPGA. It will be
+  validated in silicon on a larger device or on the A1 chip itself, which is
+  also where its full speed will be established.
 - The test link is an **internal channel** inside the device. Connection to
   optical or electrical transceivers is the next integration step.
-- The error-correction capacity under heavy, continuous error rates is being
-  extended.
 
 ## The method
 
 Every result on this page follows the same rule: **simulate it, synthesise
 it, then prove it on the board.** Nothing is reported as working until it
-has run in silicon with independent counters on both ends of the link.
+has run in silicon with independent counters on both ends of the link, and
+every change runs for at least an hour of continuous traffic before it
+counts.
 
 ## Built on proven Ethernet
 
