@@ -106,10 +106,10 @@
   estado: validado
   que: "Network clock synchronisation with hardware time-stamping."
   a1: "Common time base for every Ethernet port"
-- nombre: "PCIe"
+- nombre: "PCIE_G5"
   cat: "Links"
   estado: desarrollo
-  que: "PCI Express controller for high-bandwidth expansion."
+  que: "Own PCI Express Gen4 / Gen5 controller, 1 to 16 lanes, COTS and rad-hard from one source, designed to repair common particle upsets on the spot while data keeps flowing. Physical layer passes 44 / 44 simulation runs; 286 MHz on FPGA; first silicon test prepared."
   a1: "3 × Gen5 x16"
 - nombre: "MIPI CSI-2"
   cat: "Links"

@@ -1,7 +1,7 @@
 ---
 title: "IP core family"
 layout: article
-weight: 11
+weight: 12
 estado: "Most cores validated on FPGA silicon · Becoming the Exxo A1"
 summary: "Hercoss's own library of hardware blocks, written in VHDL-2008: a 128-bit RISC-V processor, a self-healing network on chip, a 1.6 Tb/s Ethernet core, a self-healing DDR4 controller, AI, RF, space buses and post-quantum cryptography. Most are already validated on FPGA silicon; together they become the HERCOSS Exxo A1."
 datos:
@@ -28,6 +28,7 @@ seotitle: "Space IP cores: SpaceWire, MIL-STD-1553, CAN, Ethernet, PQC — Herco
 | **NOC_512** | Self-healing 512-bit network on chip | Heals itself in ≈0.6 µs, 405,522 failures in one hour, 0 of 160 bn+ words lost; formally verified | Validated on FPGA (2 × 2) | [View](/projects/noc-512/) |
 | **ETH_1T6** | 1.6 Tb/s Ethernet: MAC, PCS, FEC, lane alignment | 312 bn frames in one hour, 0 errors; 1–15 symbol errors corrected; bit-exact to IEEE vectors | Validated on FPGA (scaled) | [View](/projects/eth-1t6/) |
 | **DDRC_72** | Self-healing DDR4 memory controller, up to 128 GiB | 0 data errors and 0 JEDEC timing violations, with a dead memory chip and a failing row | Simulation | [View](/projects/ddrc-72/) |
+| **PCIE_G5** | PCI Express Gen4 / Gen5, 1–16 lanes, COTS and rad-hard; designed to repair common particle upsets on the spot | Physical layer passes 44 / 44 simulation runs, incl. injected faults; 286 MHz on FPGA, above the ~246 MHz Gen5 needs | Simulation · first silicon test prepared | [View](/projects/pcie-g5/) |
 | **NPU + AOCS accelerator** | Onboard AI and attitude control | 0.333 ms per image; MPC 70 × 70 bit-identical from simulation to silicon | Validated on FPGA | [View](/projects/onboard-ai/) |
 | **RF front-end + ADC chain** | Software-defined radio and high-resolution ADC | DDC/DUC bit-exact in six domains; ~16.4–18.9 effective bits | Validated on FPGA | [View](/projects/rf/) |
 | **SerDes, 25G/40G Ethernet, PTP** | High-speed links | 103 Gb/s link, 0 errors in 1 h; 40GbE against a commercial NIC | Validated on FPGA | [View](/projects/high-speed-links/) |
@@ -58,9 +59,7 @@ IP already validated on FPGA. The [RV128IMAC](/projects/rv128imac/) becomes the 
 processors, linked by their own core fabric; the SerDes, PCS, MAC and PTP
 cores and [ETH_1T6](/projects/eth-1t6/) are its Ethernet up to 1.6 Tb/s;
 [NOC_512](/projects/noc-512/) is the self-healing network that connects them
-all; and [DDRC_72](/projects/ddrc-72/), the newest member, is its
-self-healing DDR4 memory controller, verified in simulation and heading to
-FPGA synthesis next.
+all; [DDRC_72](/projects/ddrc-72/) is its self-healing DDR4 memory controller, verified in simulation and heading to FPGA synthesis next; and [PCIE_G5](/projects/pcie-g5/), the newest member, started on 27 November 2026, becomes its three PCIe Gen5 x16 ports.
 
 Every core is now being reviewed for chip readiness, with a common register
 convention and full AXI4 interfaces, and with flight features such as

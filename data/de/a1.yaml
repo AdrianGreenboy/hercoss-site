@@ -91,7 +91,7 @@ bloques:
       Beschleuniger oder einen Host-Rechner: rund 1,5 Tbit/s pro Richtung.
     puntos:
       - "Gen5: 32 GT/s pro Lane."
-      - "Kompatibel mit vorhandener kommerzieller Hardware."
+      - "Hercoss' eigener Controller PCIE_G5: Gen4 und Gen5, 1 bis 16 Lanes, COTS und Rad-hard aus einer Quelle; der Physical Layer besteht die Simulation, Kompatibilitätstests mit kommerziellen Geräten sind ein späterer Meilenstein."
       - "Bitstreams lassen sich auch über PCIe laden."
 
   - id: enlaces

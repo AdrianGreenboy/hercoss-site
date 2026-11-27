@@ -130,7 +130,7 @@
   - - PCIe
     - 3 × Gen5 x16 (48 Lanes)
     - design
-    - Controller in Entwicklung
+    - 'Eigener Controller PCIE_G5 in Entwicklung: Physical Layer besteht die Simulation; erster Silizium-Test vorbereitet'
   - - Zugriff aus der Fabric
     - Die FPGA-Fabric kann jede Transceiver-Lane ansteuern
     - pending

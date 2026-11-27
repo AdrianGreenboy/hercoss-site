@@ -35,7 +35,7 @@ process allows it.
 Each result has its own page: [RV128IMAC](/projects/rv128imac/) ·
 [NOC_512](/projects/noc-512/) · [1.6T Ethernet](/projects/eth-1t6/) ·
 [DDRC_72](/projects/ddrc-72/) · [Onboard AI](/projects/onboard-ai/) ·
-[RF](/projects/rf/) · [IP cores](/projects/ip-core-family/)
+[RF](/projects/rf/) · [PCIe Gen5](/projects/pcie-g5/) · [IP cores](/projects/ip-core-family/)
 
 ## The investment opportunity {#invest}
 
@@ -272,7 +272,8 @@ An honest list of what has to happen before the A1 is a chip:
   larger device; connection to real transceivers is next.
 - **AI Engine and DSP cores:** architecture defined, RTL pending; the NPU
   and the AOCS accelerator are already validated as building blocks.
-- **Remaining peripherals:** PCIe and MIPI controllers in development.
+- **PCIe Gen5 controller ([PCIE_G5](/projects/pcie-g5/)):** started on 27 November 2026; the physical layer's logical part and its transceiver interface pass simulation (44 / 44 runs, 286 MHz on the FPGA) and the first silicon test is prepared. Link training, data link and transaction layers still to come.
+- **Remaining peripherals:** MIPI controller in development.
 - **Scale the FPGA fabric** from the 130 nm test-chip tile to 500,000 LUTs.
 - **Chip implementation flow:** memory macros, test logic (DFT), timing and
   area on the production node.

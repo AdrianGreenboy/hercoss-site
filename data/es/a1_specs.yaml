@@ -130,7 +130,7 @@
   - - PCIe
     - 3 × Gen5 x16 (48 carriles)
     - design
-    - Controlador en desarrollo
+    - 'Controlador propio PCIE_G5 en desarrollo: la capa física pasa simulación; primera prueba en silicio preparada'
   - - Acceso desde el tejido
     - El tejido FPGA puede manejar cada carril de los transceptores
     - pending

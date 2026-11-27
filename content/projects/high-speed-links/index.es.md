@@ -1,7 +1,7 @@
 ---
 title: "Enlaces de alta velocidad"
 layout: article
-weight: 10
+weight: 11
 estado: "Validado en FPGA · Rumbo a 1.6TbE"
 summary: "Núcleos SerDes, PCS Ethernet y MAC propios de Hercoss, probados en hardware real: un enlace de 103 Gb/s con una prueba de una hora a cero errores, y un puerto Ethernet de 40G que se comunica con una tarjeta de red comercial. El mismo IP lleva al 1.6TbE y a los ~2 Tbps de Ethernet del Exxo A1."
 datos:

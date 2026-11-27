@@ -1,7 +1,7 @@
 ---
 title: "Familia de núcleos IP"
 layout: article
-weight: 11
+weight: 12
 estado: "La mayoría de los núcleos validados en silicio FPGA · En camino a ser el Exxo A1"
 summary: "La biblioteca propia de bloques de hardware de Hercoss, escrita en VHDL-2008: un procesador RISC-V de 128 bits, una red en chip que se repara sola, un núcleo Ethernet de 1.6 Tb/s, un controlador DDR4 que se repara solo, IA, RF, buses espaciales y criptografía post-cuántica. La mayoría ya están validados en silicio FPGA; juntos se convierten en el HERCOSS Exxo A1."
 datos:
@@ -28,6 +28,7 @@ seotitle: "Núcleos IP espaciales: SpaceWire, MIL-STD-1553, CAN, Ethernet, PQC �
 | **NOC_512** | Red en chip de 512 bits que se repara sola | Se repara sola en ≈0.6 µs, 405,522 fallas en una hora, 0 de más de 160 mil millones de palabras perdidas; verificada formalmente | Validado en FPGA (2 × 2) | [Ver](/es/projects/noc-512/) |
 | **ETH_1T6** | Ethernet de 1.6 Tb/s: MAC, PCS, FEC, alineación de carriles | 312 mil millones de tramas en una hora, 0 errores; de 1 a 15 errores de símbolo corregidos; idéntico bit a bit a los vectores del IEEE | Validado en FPGA (a escala) | [Ver](/es/projects/eth-1t6/) |
 | **DDRC_72** | Controlador de memoria DDR4 que se repara solo, hasta 128 GiB | 0 errores de datos y 0 violaciones de timing JEDEC, con un chip de memoria muerto y una fila fallando | Simulación | [Ver](/es/projects/ddrc-72/) |
+| **PCIE_G5** | PCI Express Gen4 / Gen5, 1–16 carriles, COTS y rad-hard; diseñado para reparar en el lugar las perturbaciones comunes por partículas | La capa física pasa 44 / 44 corridas de simulación, con fallos inyectados; 286 MHz en FPGA, por encima de los ~246 MHz que necesita Gen5 | Simulación · primera prueba en silicio preparada | [Ver](/es/projects/pcie-g5/) |
 | **NPU + acelerador AOCS** | IA a bordo y control de actitud | 0.333 ms por imagen; MPC de 70 × 70 idéntico bit a bit de la simulación al silicio | Validado en FPGA | [Ver](/es/projects/onboard-ai/) |
 | **Front-end de RF + cadena ADC** | Radio definida por software y ADC de alta resolución | DDC/DUC idéntico bit a bit en seis dominios; ~16.4–18.9 bits efectivos | Validado en FPGA | [Ver](/es/projects/rf/) |
 | **SerDes, Ethernet 25G/40G, PTP** | Enlaces de alta velocidad | Enlace de 103 Gb/s, 0 errores en 1 h; 40GbE contra una NIC comercial | Validado en FPGA | [Ver](/es/projects/high-speed-links/) |
@@ -58,9 +59,7 @@ construidos con IP ya validado en FPGA. El [RV128IMAC](/es/projects/rv128imac/)
 se convierte en los dieciséis procesadores del chip, unidos por su propio
 anillo; los núcleos SerDes, PCS, MAC y PTP y [ETH_1T6](/es/projects/eth-1t6/)
 son su Ethernet de hasta 1.6 Tb/s; [NOC_512](/es/projects/noc-512/) es la red
-que se repara sola y que los conecta a todos; y [DDRC_72](/es/projects/ddrc-72/),
-el miembro más nuevo, es su controlador de memoria DDR4 que se repara solo,
-verificado en simulación y con la síntesis en FPGA como siguiente paso.
+que se repara sola y que los conecta a todos; [DDRC_72](/es/projects/ddrc-72/) es su controlador de memoria DDR4 que se repara solo, verificado en simulación y con la síntesis en FPGA como siguiente paso; y [PCIE_G5](/es/projects/pcie-g5/), el miembro más nuevo, iniciado el 27 de noviembre de 2026, se convierte en sus tres puertos PCIe Gen5 x16.
 
 Cada núcleo se está revisando ahora para el chip, con una convención común de
 registros e interfaces AXI4 completas, y con funciones de vuelo como el borrado

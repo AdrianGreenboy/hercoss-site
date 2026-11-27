@@ -1,7 +1,7 @@
 ---
 title: "Hochgeschwindigkeitsverbindungen"
 layout: article
-weight: 10
+weight: 11
 estado: "Auf FPGA validiert · Weg zu 1.6TbE"
 summary: "Hercoss' eigene SerDes-, Ethernet-PCS- und MAC-Cores, auf echter Hardware bewiesen: eine 103-Gbit/s-Verbindung mit einstündigem Dauertest bei null Fehlern und ein 40G-Ethernet-Port, der mit einer kommerziellen Netzwerkkarte spricht. Dieselbe IP führt zum 1.6TbE und den ~2 Tbit/s Ethernet des Exxo A1."
 datos:

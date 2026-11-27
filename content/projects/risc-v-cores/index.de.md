@@ -1,6 +1,6 @@
 ---
 title: "RISC-V-Prozessorkerne"
-weight: 9
+weight: 10
 estado: "Auf FPGA validiert · In Entwicklung"
 summary: "Von Grund auf in VHDL geschriebene Prozessorkerne: ein 64-Bit-Kern und der 128-Bit-RV128IMAC, der Prozessor des Exxo A1, der bereits Linux auf echter Hardware ausführt, mit Aufrufen zwischen Kernen in 1,35 µs und SHA-3 in Hardware mit 129 MB/s, ~140× Software."
 datos:

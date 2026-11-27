@@ -1,6 +1,6 @@
 ---
 title: "eFPGA-Fabric"
-weight: 8
+weight: 9
 estado: "Läuft auf FPGA · GDS bereit"
 summary: "Hercoss' eigene programmierbare Logik-Fabric: der rekonfigurierbare Teil des Exxo A1, läuft bereits und ist bis zum physischen Layout gebracht."
 datos:

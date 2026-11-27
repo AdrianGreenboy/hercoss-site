@@ -1,7 +1,7 @@
 ---
 title: "IP-Core-Familie"
 layout: article
-weight: 11
+weight: 12
 estado: "Die meisten Cores auf FPGA-Silizium validiert · Werden zum Exxo A1"
 summary: "Hercoss' eigene Bibliothek von Hardwarebausteinen, geschrieben in VHDL-2008: ein 128-Bit-RISC-V-Prozessor, ein selbstheilendes Network-on-Chip, ein 1,6-Tbit/s-Ethernet-Core, ein selbstheilender DDR4-Controller, KI, HF, Raumfahrtbusse und Post-Quanten-Kryptografie. Die meisten sind bereits auf FPGA-Silizium validiert; zusammen werden sie zum HERCOSS Exxo A1."
 datos:
@@ -28,6 +28,7 @@ seotitle: "Raumfahrt-IP-Cores: SpaceWire, MIL-STD-1553, CAN, Ethernet, PQC — H
 | **NOC_512** | Selbstheilendes 512-Bit-Network-on-Chip | Heilt sich in ≈0,6 µs, 405.522 Ausfälle in einer Stunde, 0 von über 160 Mrd. Wörtern verloren; formal verifiziert | Auf FPGA validiert (2 × 2) | [Ansehen](/de/projects/noc-512/) |
 | **ETH_1T6** | 1,6-Tbit/s-Ethernet: MAC, PCS, FEC, Lane-Ausrichtung | 312 Mrd. Frames in einer Stunde, 0 Fehler; 1 bis 15 Symbolfehler korrigiert; bitgenau zu den IEEE-Vektoren | Auf FPGA validiert (skaliert) | [Ansehen](/de/projects/eth-1t6/) |
 | **DDRC_72** | Selbstheilender DDR4-Speichercontroller, bis 128 GiB | 0 Datenfehler und 0 JEDEC-Timing-Verletzungen, mit einem ausgefallenen Speicherchip und einer fehlerhaften Zeile | Simulation | [Ansehen](/de/projects/ddrc-72/) |
+| **PCIE_G5** | PCI Express Gen4 / Gen5, 1–16 Lanes, COTS und Rad-hard; ausgelegt, häufige Störungen durch Teilchen an Ort und Stelle zu reparieren | Physical Layer besteht 44 / 44 Simulationsläufe, inkl. injizierter Fehler; 286 MHz auf FPGA, über den ~246 MHz, die Gen5 braucht | Simulation · erster Silizium-Test vorbereitet | [Ansehen](/de/projects/pcie-g5/) |
 | **NPU + AOCS-Beschleuniger** | KI an Bord und Lageregelung | 0,333 ms pro Bild; MPC 70 × 70 bitgenau von der Simulation bis zum Silizium | Auf FPGA validiert | [Ansehen](/de/projects/onboard-ai/) |
 | **HF-Frontend + ADC-Kette** | Software-Defined Radio und hochauflösender ADC | DDC/DUC bitgenau in sechs Domänen; ~16,4–18,9 effektive Bits | Auf FPGA validiert | [Ansehen](/de/projects/rf/) |
 | **SerDes, 25G/40G-Ethernet, PTP** | Hochgeschwindigkeitsverbindungen | 103-Gbit/s-Verbindung, 0 Fehler in 1 h; 40GbE gegen eine kommerzielle NIC | Auf FPGA validiert | [Ansehen](/de/projects/high-speed-links/) |
@@ -58,9 +59,7 @@ validierter IP gebaut. Der [RV128IMAC](/de/projects/rv128imac/) wird zu den
 sechzehn Prozessoren des Chips, verbunden durch ihren eigenen Ring; die SerDes-,
 PCS-, MAC- und PTP-Cores und [ETH_1T6](/de/projects/eth-1t6/) bilden sein
 Ethernet bis 1,6 Tbit/s; [NOC_512](/de/projects/noc-512/) ist das selbstheilende
-Netz, das alle verbindet; und [DDRC_72](/de/projects/ddrc-72/), das neueste
-Mitglied, ist sein selbstheilender DDR4-Speichercontroller, in der Simulation
-verifiziert und als Nächstes auf dem Weg zur FPGA-Synthese.
+Netz, das alle verbindet; [DDRC_72](/de/projects/ddrc-72/) ist sein selbstheilender DDR4-Speichercontroller, in der Simulation verifiziert und als Nächstes auf dem Weg zur FPGA-Synthese; und [PCIE_G5](/de/projects/pcie-g5/), das neueste Mitglied, begonnen am 27. November 2026, wird zu seinen drei PCIe-Gen5-x16-Ports.
 
 Jeder Core wird jetzt auf Chiptauglichkeit geprüft, mit einer gemeinsamen
 Registerkonvention und vollständigen AXI4-Schnittstellen sowie mit

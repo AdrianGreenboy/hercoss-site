@@ -38,7 +38,7 @@
     - ["SerDes pool", "72 lanes: 8 × 224 Gb/s PAM4 (2 quads) + 64 × 32 Gb/s NRZ (16 quads); ~3.8 Tb/s raw per direction", "pending", "Analog PHYs to be designed or licensed"]
     - ["Ethernet (TSN)", "Up to ~2 Tbps at once: 1 × 1.6TbE (or 2 × 800G, 4 × 400G, 8 × 200G) + 400G on NRZ (1 × 400G, 4 × 100G, 8 × 50G, 16 × 25G / 10G) + 1 × 1G management", "design", "25G and 40G MAC/PCS validated against a commercial NIC; 1.6T link layer (MAC, PCS, FEC, lane alignment) on FPGA silicon: 312 billion frames in one hour, zero errors; full width in simulation"]
     - ["Time base", "Common PTP / IEEE 802.1AS for every Ethernet port", "proven", ""]
-    - ["PCIe", "3 × Gen5 x16 (48 lanes)", "design", "Controller in development"]
+    - ["PCIe", "3 × Gen5 x16 (48 lanes)", "design", "Own controller PCIE_G5 in development: physical layer passes simulation; first silicon test prepared"]
     - ["Fabric access", "The FPGA fabric can drive every transceiver lane", "pending", ""]
     - ["RF digital front-end", "Software-defined radio DDC / DUC as IP; basis of the A1-RF variant", "proven", "Validated on FPGA silicon"]
 - grupo: "AI, DSP and security"

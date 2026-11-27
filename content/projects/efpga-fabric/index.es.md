@@ -1,6 +1,6 @@
 ---
 title: "Tejido eFPGA"
-weight: 8
+weight: 9
 estado: "Funciona en FPGA · GDS listo"
 summary: "El tejido de lógica programable propio de Hercoss: la parte reconfigurable del Exxo A1, ya funcionando y llevado hasta el layout físico."
 datos:

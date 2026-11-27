@@ -91,7 +91,7 @@ bloques:
       accelerators or a host computer: about 1.5 Tb/s in each direction.
     puntos:
       - "Gen5: 32 GT/s per lane."
-      - "Compatible with existing commercial hardware."
+      - "Hercoss's own controller, PCIE_G5: Gen4 and Gen5, 1 to 16 lanes, COTS and rad-hard from one source; physical layer passes simulation, compatibility testing against commercial devices is a later milestone."
       - "Bitstreams can also be loaded over PCIe."
 
   - id: enlaces

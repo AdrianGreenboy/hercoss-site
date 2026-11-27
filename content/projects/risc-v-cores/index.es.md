@@ -1,6 +1,6 @@
 ---
 title: "Núcleos de procesador RISC-V"
-weight: 9
+weight: 10
 estado: "Validado en FPGA · En desarrollo"
 summary: "Núcleos de procesador escritos desde cero en VHDL: un núcleo de 64 bits y el RV128IMAC de 128 bits, el procesador del Exxo A1, que ya ejecuta Linux en hardware real con llamadas entre núcleos en 1.35 µs y SHA-3 en hardware a 129 MB/s, ~140× el software."
 datos:

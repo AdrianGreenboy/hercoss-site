@@ -104,10 +104,10 @@
   estado: validado
   que: Taktsynchronisation über das Netz mit Zeitstempeln in Hardware.
   a1: Gemeinsame Zeitbasis für alle Ethernet-Ports
-- nombre: PCIe
+- nombre: PCIE_G5
   cat: Verbindungen
   estado: desarrollo
-  que: PCI-Express-Controller für Erweiterungen mit hoher Bandbreite.
+  que: 'Eigener PCI-Express-Gen4/Gen5-Controller, 1 bis 16 Lanes, COTS und Rad-hard aus einer Quelle, ausgelegt, um häufige Störungen durch Teilchen an Ort und Stelle zu reparieren, während die Daten weiterfließen. Der Physical Layer besteht 44 / 44 Simulationsläufe; 286 MHz auf FPGA; erster Silizium-Test vorbereitet.' 
   a1: 3 × Gen5 x16
 - nombre: MIPI CSI-2
   cat: Verbindungen
