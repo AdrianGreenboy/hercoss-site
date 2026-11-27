@@ -49,8 +49,7 @@ CPU de 128 bits, como CPU estándar de 64 bits o como dos CPUs de 64 bits, arran
 Linux en un prototipo FPGA, permite que una CPU llame a funciones en otra en
 1.35 µs y da a los programas de Linux SHA-3 en hardware a 129 MB/s, ~140× el
 software, sin driver. Sus núcleos y aceleradores comparten su propio anillo,
-ahora escalado a 64 hilos de hardware y verificado a plena carga con 16
-estaciones en simulación, justo con cada estación. Tiene su propia página:
+ahora escalado a 64 hilos de hardware; una versión de 17 estaciones funciona a plena carga en silicio con cero errores, y el software decide qué estaciones se atienden primero. Tiene su propia página:
 [RV128IMAC, el núcleo del Exxo A1](/es/projects/rv128imac/).
 
 {{< detalle "¿Por qué 128 bits?" >}}

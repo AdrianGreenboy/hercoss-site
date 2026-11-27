@@ -4,14 +4,15 @@ layout: rv128
 weight: 2
 estado: "Running on FPGA silicon · Processor core of the HERCOSS Exxo A1"
 seotitle: "RV128IMAC — 128-bit RISC-V processor core for space computing — Hercoss"
-summary: "128-bit RISC-V, built from scratch in Europe. One core runs as a 128-bit CPU, a 64-bit CPU or two 64-bit CPUs; a Linux program calls a function on another CPU in 1.35 µs, and hashes with hardware SHA-3 at 129 MB/s, about 140× software, with no driver. It is the processor at the heart of the HERCOSS Exxo A1."
+summary: "128-bit RISC-V, built from scratch in Europe. One core runs as a 128-bit CPU, a 64-bit CPU or two 64-bit CPUs; a Linux program calls a function on another CPU in 1.35 µs, and hashes with hardware SHA-3 at 129 MB/s, about 140× software, with no driver. Since 27 November a 17-station version of its core fabric runs on silicon, with service priority set by software at run time. It is the processor at the heart of the HERCOSS Exxo A1."
 datos:
   - "128-bit RISC-V"
   - "SHA-3 at 129 MB/s, no driver"
   - "1.35 µs CPU-to-CPU call"
   - "Linux 6.6 SMP"
   - "214 / 214 on silicon"
-  - "Ring fabric: 64 threads"
+  - "17-station ring on silicon"
+  - "Priority set by software"
 ---
 
 {{< stats >}}
@@ -26,6 +27,88 @@ The core fabric and the innovations on this page are in the patent process.
 This page shows what they achieve and why they matter; how they work
 internally will be published once that process allows it.
 {{< /aviso >}}
+
+## New on 27 November: software decides who goes first {#priority}
+
+**The HERCOSS core fabric now runs on real silicon at full length and under full
+load, and software decides who gets served first.**
+
+{{< stats >}}
+{{< stat "17" "stations on one ring, on silicon: a real core, the SHA-3 accelerator and 15 traffic stations" >}}
+{{< stat "~9 M" "messages per run, every one checked: 0 errors, 0 lost, 0 duplicated" >}}
+{{< stat "−36 %" "time for the same job when the core and its accelerator are marked critical, ring still saturated" >}}
+{{< stat "0" "reboots or hardware changes: software sets the priority per station, at run time" >}}
+{{< /stats >}}
+
+{{< fig "ring17-silicon.svg" "A 17-station version of the HERCOSS core fabric on the FPGA board: one RV128IMAC core, the SHA-3 accelerator and fifteen self-checking traffic stations. It fills 95 % of the device." >}}
+
+Every one of about nine million messages per run is checked for content,
+sender, receiver and order, across repeated runs while the core hashes 1 MiB
+through the accelerator. **Zero errors, zero lost, zero duplicated.**
+
+### Why it matters
+
+In a many-core chip a few cores do work that cannot wait: control loops,
+safety monitors, the core that feeds an accelerator. Others do bulk work that
+only cares about throughput. Most on-chip interconnects treat everyone the
+same, or fix the priorities in hardware when the chip is designed.
+
+The HERCOSS fabric lets **system software assign service priority per
+station, at run time.** On a satellite, the attitude-control core can be
+marked critical during a manoeuvre and returned to normal afterwards: no
+hardware change, no reboot.
+
+{{< fig "prio-mission.svg" "How a mission could use it. An illustration; it has not yet been demonstrated in flight software." >}}
+
+### Measured on silicon, under a deliberate worst case
+
+The test is the same job each time, 1 MiB of SHA-3 through the accelerator,
+on a ring that fifteen neighbours keep saturated on purpose. Only the priority
+setting changes.
+
+{{< fig "prio-results.svg" "The same job on silicon at 60 MHz with three priority settings. With the core and the accelerator marked critical, the job finishes 36 % sooner and its main loop runs 42 % faster." >}}
+
+| Service priority | Time for the job | Main loop | Traffic messages moved |
+|---|---|---|---|
+| Same for all stations | 13.35 M cycles | 9.19 cycles / 8 bytes | 8.9 M |
+| **Core + accelerator critical** | **8.60 M cycles (−36 %)** | **5.29 (−42 %)** | 8.4 M |
+| Critical, milder setting | 9.28 M cycles (−30 %) | 6.20 | 9.1 M |
+
+The critical stations got their work done more than a third faster (up to
+50 % on individual loops), and **the traffic of the rest of the ring did not
+drop.** Every run: sent = received, 0 errors, nothing left pending. Simulation
+agrees on the direction, with the critical station 23 % faster and 33 % more
+traffic per cycle, and checks the same configurations instruction by
+instruction against a reference model.
+
+### Distance is nearly free
+
+{{< fig "ring-distance.svg" "On an idle ring the main hashing loop runs exactly as fast with 17 stations as with 2." >}}
+
+{{< detalle "For chip enthusiasts: fairness without the usual trade-off" >}}
+On a shared interconnect, fairness is usually a design-time compromise.
+Favour throughput and some station starves; favour fairness and everyone
+slows down. We measured that trade-off on our own fabric first, then removed
+it: when latency-critical stations and bulk stations are configured
+differently, both win at once. Software chooses the classes, and the silicon
+numbers are in the table above. We have not seen an on-chip ring expose
+per-station service priority to software at run time in this way, although
+we have not yet checked this against the literature.
+{{< /detalle >}}
+
+{{< detalle "What these numbers are, and what they are not" >}}
+- **An FPGA prototype with one real core and fifteen traffic stations**, not
+  sixteen real cores. Sixteen real cores need a larger device.
+- **The load is a deliberate worst case:** every traffic station sends as fast
+  as the fabric allows. Real workloads are lighter.
+- **Traffic per run:** when the critical job finishes sooner the run is
+  shorter, so fewer messages are counted in it; the rate of the rest of the
+  ring does not drop. Per-cycle gains on silicon are inflated by a few
+  milliseconds of measurement window, so we quote the per-cycle figure from
+  simulation only (+33 %).
+- **The satellite example** illustrates a use. It has not been demonstrated in
+  flight software.
+{{< /detalle >}}
 
 ## What it is
 
@@ -123,13 +206,10 @@ fabric allows, which no real workload does, the hashing loop is 2.1× slower
 than on an idle ring (7.4 against 3.5 cycles per 8 bytes). Guaranteeing every
 station its turn also costs some peak throughput at saturation. We publish
 these worst-case numbers because they are the data that sizes the A1's
-interconnect, and we will measure the trade-off on silicon before choosing
-the balance.
+interconnect, and since 27 November we have measured it on silicon: see [software decides who goes first](#priority).
 
 The 64-thread build has passed synthesis and timing closure (125.1 k logic
-cells, 83 % of the device, +0.33 ns spare beyond a 1.0 ns safety guard) but
-has not run on the board yet. The 16-station results are verified in
-simulation.
+cells, 83 % of the device, +0.33 ns spare beyond a 1.0 ns safety guard). A 17-station ring has run on the board since 27 November.
 {{< /detalle >}}
 
 ## One core, three personalities
@@ -360,26 +440,27 @@ one was fixed, and each one now has a test that would catch it again.
 | 25 Nov | Pipeline and instruction-fetch improvements: **129 MB/s**; compiled C up to 1.39× faster |
 | 25 Nov | Core fabric re-engineered for 64 hardware threads: new build 2,900 logic cells smaller, timing met |
 | 26 Nov | **16-station ring at full load in simulation**: real cores, zero divergences, every station guaranteed its turn |
+| 27 Nov | **17-station ring on silicon at full load**: ~9 M messages per run, 0 errors; service priority set by software, critical job 36 % sooner |
 
-## Next: the 16-station ring on real silicon
+## Next: from 17 stations to the A1
 
 The Exxo A1 places **sixteen RV128IMAC cores** with their accelerators on the
 core fabric, around the [NOC_512](/projects/noc-512/) network that carries
-memory and I/O. The next steps:
+memory and I/O. The full-length ring now runs on silicon; the next steps:
 
-1. **The full-length ring on the FPGA board:** a real CPU, the SHA-3
-   accelerator and 15 self-checking traffic stations, at hardware speed.
-   Call latency and accelerator bandwidth under load, plus hours-long soak
-   tests with every message checked.
-2. **Tuning fairness against raw throughput** with real measurements.
-3. **One ring or two for the A1**, decided from those silicon measurements
+1. **Hours-long soak runs** of the 17-station ring, with every message
+   checked.
+2. **Priority settings under real software workloads**, not only the
+   deliberate worst case.
+3. **More real cores on the ring**, on a larger device than today's board,
+   which the 17-station build already fills to 95 %.
+4. **One ring or two for the A1**, decided from these silicon measurements
    before the chip architecture is frozen.
 
 {{< fig "a1-cluster.svg" "Planned processor cluster of the HERCOSS Exxo A1. Conceptual diagram; not to scale." >}}
 
 {{< detalle "What still has to happen before the A1 uses this core?" >}}
-The prototype has two CPUs on silicon; the 16-station ring is verified in
-simulation and its silicon run is next. The radiation-hardening features planned for the A1 and
+The prototype has two CPUs on silicon, and a 17-station ring with one real core and fifteen traffic stations runs at full load; sixteen real cores on one ring need a larger device. The radiation-hardening features planned for the A1 and
 the larger caches still have to be added. And the core has so far only been
 built for FPGA: the chip flow (memory macros, test logic, timing and area in
 silicon) comes next.

@@ -14,7 +14,7 @@ bloques:
       - "Führt standardkonforme 64-Bit-RISC-V-Software aus: Linux, FreeRTOS, Zephyr, RTEMS."
       - "Bis zu 16 isolierte Linux-Domänen oder SMP-Gruppen, frei kombinierbar."
       - "Aufruf zwischen Kernen: 1,35 µs hin und zurück, etwa 5× schneller als ein leerer Linux-Systemaufruf (FPGA-Prototyp mit 2 CPUs)."
-      - "Kerne und Beschleuniger teilen sich ihren eigenen Ring, fair auch unter Volllast: 64 Hardware-Threads adressierbar, 16 Stationen in der Simulation verifiziert."
+      - "Kerne und Beschleuniger teilen sich ihren eigenen Ring: 64 Hardware-Threads adressierbar; ein Ring mit 17 Stationen läuft unter Volllast auf Silizium, und Software legt fest, welche Stationen zuerst drankommen."
       - "Selbstheilender Lockstep: Zwei beliebige benachbarte Kerne bilden ein Paar und korrigieren transiente Fehler automatisch, ohne Reset."
       - "64 KiB Instruktions- und 32 KiB Daten-Cache pro Kern (A1-Ziel)."
 
@@ -197,7 +197,7 @@ fases:
         texto: "Ein Switch 405.522-mal in einer Stunde abgeschaltet, jede Reparatur in ≈0,6 µs, keine Daten verloren; neun Sicherheitsregeln innerhalb der geprüften Tiefe formal verifiziert."
       - estado: curso
         titulo: "Ring für 16 Kerne und Speichercontroller DDRC_72"
-        texto: "Ring für 64 Hardware-Threads synthetisiert, 16 Stationen in der Simulation verifiziert; selbstheilender DDR4-Controller, RTL v0.1 in der Simulation verifiziert."
+        texto: "Ring mit 17 Stationen unter Volllast auf Silizium, 0 Fehler, Dienstpriorität per Software; selbstheilender DDR4-Controller, RTL v0.1 in der Simulation verifiziert."
       - estado: curso
         titulo: "A1-Architektur und RTL"
         texto: "SoC-RTL mit dem RV128IMAC-Cluster; Regression in der Simulation; Prüfung jedes IP-Cores für den Chip."

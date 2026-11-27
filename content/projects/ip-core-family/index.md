@@ -24,7 +24,7 @@ seotitle: "Space IP cores: SpaceWire, MIL-STD-1553, CAN, Ethernet, PQC — Herco
 | Core | What it does | Latest result | Status | Page |
 |---|---|---|---|---|
 | **RV128IMAC** | 128-bit RISC-V processor, the A1's 16 cores | Linux 6.6 SMP; calls between CPUs in 1.35 µs; SHA-3 at 129 MB/s with no driver; 214/214 board tests | Validated on FPGA | [View](/projects/rv128imac/) |
-| **Core fabric (ring)** | Cores and accelerators call each other directly | 64 hardware threads addressable; 16 stations at full load, 0 messages lost; fair to every station | Silicon (2 CPUs) + simulation (16 stations) | [View](/projects/rv128imac/#the-hercoss-core-fabric-a-ring-built-for-calls) |
+| **Core fabric (ring)** | Cores and accelerators call each other directly | 17-station ring on silicon at full load: ~9 M messages per run, 0 errors; software sets service priority at run time, critical job 36 % sooner | Validated on FPGA (17 stations) | [View](/projects/rv128imac/#priority) |
 | **NOC_512** | Self-healing 512-bit network on chip | Heals itself in ≈0.6 µs, 405,522 failures in one hour, 0 of 160 bn+ words lost; formally verified | Validated on FPGA (2 × 2) | [View](/projects/noc-512/) |
 | **ETH_1T6** | 1.6 Tb/s Ethernet: MAC, PCS, FEC, lane alignment | 312 bn frames in one hour, 0 errors; 1–15 symbol errors corrected; bit-exact to IEEE vectors | Validated on FPGA (scaled) | [View](/projects/eth-1t6/) |
 | **DDRC_72** | Self-healing DDR4 memory controller, up to 128 GiB | 0 data errors and 0 JEDEC timing violations, with a dead memory chip and a failing row | Simulation | [View](/projects/ddrc-72/) |

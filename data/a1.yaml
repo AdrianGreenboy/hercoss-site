@@ -16,7 +16,7 @@ bloques:
       - "Runs standard 64-bit RISC-V software: Linux, FreeRTOS, Zephyr, RTEMS."
       - "Up to 16 isolated Linux domains, or SMP groups, mixed freely."
       - "Core-to-core call: 1.35 µs round trip, about 5× faster than an empty Linux system call (2-CPU FPGA prototype)."
-      - "Cores and accelerators share their own ring fabric, fair at full load: 64 hardware threads addressable, 16 stations verified in simulation."
+      - "Cores and accelerators share their own ring fabric: 64 hardware threads addressable; a 17-station ring runs at full load on silicon, and software sets which stations go first."
       - "Self-healing lockstep: any two neighbouring cores pair up and correct transient faults automatically, with no reset."
       - "64 KiB instruction and 32 KiB data cache per core (A1 target)."
 
@@ -199,7 +199,7 @@ fases:
         texto: "A switch killed 405,522 times in one hour, every repair in ≈0.6 µs, no data lost; nine safety rules formally verified within the checked depth."
       - estado: curso
         titulo: "Core fabric for 16 cores and DDRC_72 memory controller"
-        texto: "Ring for 64 hardware threads synthesised, 16 stations verified in simulation; self-healing DDR4 controller RTL v0.1 verified in simulation."
+        texto: "17-station ring at full load on silicon, 0 errors, service priority set by software; self-healing DDR4 controller RTL v0.1 verified in simulation."
       - estado: curso
         titulo: "A1 architecture and RTL"
         texto: "SoC RTL with the RV128IMAC cluster; regression in simulation; review of every IP core for the chip."

@@ -17,7 +17,7 @@
 - nombre: Anillo de núcleos
   cat: Interconexión
   estado: validado
-  que: 'Anillo propio de Hercoss donde núcleos y aceleradores se llaman directamente: en silicio con 2 CPUs y el motor SHA-3; la versión de 64 hilos cumple timing; 16 estaciones a plena carga verificadas en simulación, justo con cada estación.'
+  que: 'Anillo propio de Hercoss donde núcleos y aceleradores se llaman directamente: 17 estaciones a plena carga en silicio, ~9 M de mensajes por corrida con 0 errores; el software fija la prioridad de servicio por estación en ejecución, trabajo crítico un 36 % antes.'
   a1: Une los 16 núcleos y sus aceleradores
 - nombre: NOC_512
   cat: Interconexión

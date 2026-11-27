@@ -195,7 +195,7 @@ Un Exxo A1 puede sustituir hasta dieciséis computadoras de vuelo separadas.
 - **Comunicación rápida entre núcleos:** el
   [anillo de núcleos](/es/projects/rv128imac/#the-hercoss-core-fabric-a-ring-built-for-calls)
   de Hercoss, donde núcleos y aceleradores se llaman directamente: 1.35 µs desde
-  un programa de Linux, justo a plena carga, junto al remoteproc / RPMsg estándar
+  un programa de Linux, justo a plena carga, con la prioridad de servicio por estación fijada por software en ejecución, junto al remoteproc / RPMsg estándar
   de Linux.
 - **Toolchain abierto:** RISC-V GCC estándar, Linux mainline y OpenSBI en modo de
   64 bits; sistemas de tiempo real FreeRTOS, Zephyr y RTEMS.
@@ -227,7 +227,7 @@ diseño y qué sigue pendiente.
 |---|---|---|
 | Núcleo de procesador RV128IMAC | Linux 6.6 SMP, 214 / 214 pruebas en placa, CoreMark 1.85 / MHz; SHA-3 de 33 a 129 MB/s en flujo en cinco días | Validado en FPGA |
 | Llamadas entre núcleos | 1.35 µs ida y vuelta desde un programa de Linux (una llamada al sistema vacía: 6.6 µs) | Validado en FPGA |
-| Anillo de núcleos para 16 núcleos | Anillo que direcciona 64 hilos de hardware (la compilación cumple timing, 2,900 celdas lógicas más pequeña); 16 estaciones a plena carga con cero mensajes perdidos, duplicados o desordenados; cada estación tiene su turno garantizado | Síntesis + simulación |
+| Anillo de núcleos para 16 núcleos | Anillo de 17 estaciones a plena carga en silicio (un núcleo real, el acelerador SHA-3, 15 estaciones de tráfico): ~9 M de mensajes por corrida, 0 errores, 0 perdidos, 0 duplicados; prioridad de servicio fijada por software en ejecución, trabajo crítico un 36 % antes con el anillo saturado; el anillo direcciona 64 hilos de hardware | Validado en FPGA (17 estaciones); faltan 16 núcleos reales |
 | Lockstep que se repara solo | 24 / 24 fallos inyectados corregidos, 0 resultados corruptos | Validado en FPGA (núcleo anterior de 64 bits) |
 | Red en chip NOC_512 | Nueve corridas de una hora a plena carga: 3.19 billones de transferencias AXI4, 0 errores; 375 MHz sin protección, 265 MHz con todas las capas de protección | Validado en FPGA |
 | Tolerancia a fallos de NOC_512 | 10.5 M de errores corregidos en vivo; estado corrompido en cada ciclo durante 159 M de ciclos con un resultado idéntico a una corrida sin fallos; 199 M de palabras/s reconstruidas sin perder ninguna; 14 autorreparaciones en ~10 µs, 0 palabras perdidas | Validado en FPGA (inyección de fallos, sin pruebas con haz) |
@@ -255,9 +255,7 @@ diseño y qué sigue pendiente.
 Una lista honesta de lo que tiene que pasar antes de que el A1 sea un chip:
 
 - **Escalar el clúster de procesadores** del prototipo de dos CPUs a dieciséis
-  núcleos. El anillo de núcleos ya direcciona 64 hilos de hardware y un anillo
-  de 16 estaciones pasa a plena carga en simulación; lo siguiente es el anillo
-  de longitud completa en silicio.
+  núcleos. El anillo de núcleos direcciona 64 hilos de hardware, y un anillo de 17 estaciones ya funciona a plena carga en silicio con un núcleo real; dieciséis núcleos reales necesitan un dispositivo más grande.
 - **Endurecimiento espacial del RV128IMAC:** portar el lockstep que se repara
   solo, el banco de registros con corrección de errores y la paridad de cachés;
   crecer las cachés a los tamaños del A1.

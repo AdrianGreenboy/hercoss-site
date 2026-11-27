@@ -14,7 +14,7 @@ bloques:
       - "Ejecuta software RISC-V estándar de 64 bits: Linux, FreeRTOS, Zephyr, RTEMS."
       - "Hasta 16 dominios Linux aislados, o grupos SMP, combinados libremente."
       - "Llamada entre núcleos: 1.35 µs ida y vuelta, unas 5× más rápida que una llamada al sistema vacía de Linux (prototipo FPGA de 2 CPUs)."
-      - "Núcleos y aceleradores comparten su propio anillo, justo a plena carga: 64 hilos de hardware direccionables, 16 estaciones verificadas en simulación."
+      - "Núcleos y aceleradores comparten su propio anillo: 64 hilos de hardware direccionables; un anillo de 17 estaciones funciona a plena carga en silicio, y el software decide qué estaciones van primero."
       - "Lockstep que se repara solo: dos núcleos vecinos cualesquiera se emparejan y corrigen fallos transitorios automáticamente, sin reinicio."
       - "64 KiB de caché de instrucciones y 32 KiB de datos por núcleo (objetivo del A1)."
 
@@ -198,7 +198,7 @@ fases:
         texto: "Un switch apagado 405,522 veces en una hora, cada reparación en ≈0.6 µs, sin perder datos; nueve reglas de seguridad verificadas formalmente dentro de la profundidad comprobada."
       - estado: curso
         titulo: "Anillo para 16 núcleos y controlador de memoria DDRC_72"
-        texto: "Anillo para 64 hilos de hardware sintetizado, 16 estaciones verificadas en simulación; controlador DDR4 que se repara solo, RTL v0.1 verificado en simulación."
+        texto: "Anillo de 17 estaciones a plena carga en silicio, 0 errores, prioridad de servicio fijada por software; controlador DDR4 que se repara solo, RTL v0.1 verificado en simulación."
       - estado: curso
         titulo: "Arquitectura y RTL del A1"
         texto: "RTL del SoC con el clúster RV128IMAC; regresión en simulación; revisión de cada núcleo IP para el chip."

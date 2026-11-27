@@ -49,8 +49,7 @@ Der 128-Bit-Kern und der für den Exxo A1 gewählte Prozessor. Er läuft als
 Linux auf einem FPGA-Prototyp, lässt eine CPU in 1,35 µs Funktionen auf einer
 anderen aufrufen und gibt Linux-Programmen SHA-3 in Hardware mit 129 MB/s,
 ~140× Software, ohne Treiber. Seine Kerne und Beschleuniger teilen sich ihren
-eigenen Ring, inzwischen auf 64 Hardware-Threads skaliert und in der Simulation
-mit 16 Stationen unter Volllast verifiziert, fair zu jeder Station. Er hat eine
+eigenen Ring, inzwischen auf 64 Hardware-Threads skaliert; eine Version mit 17 Stationen läuft unter Volllast fehlerfrei auf Silizium, und Software legt fest, welche Stationen zuerst bedient werden. Er hat eine
 eigene Seite: [RV128IMAC, der Kern des Exxo A1](/de/projects/rv128imac/).
 
 {{< detalle "Warum 128 Bit?" >}}

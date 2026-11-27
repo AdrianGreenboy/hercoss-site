@@ -4,14 +4,15 @@ layout: rv128
 weight: 2
 estado: "Funciona en silicio FPGA · Núcleo de procesador del HERCOSS Exxo A1"
 seotitle: "RV128IMAC: núcleo de procesador RISC-V de 128 bits para cómputo espacial — Hercoss"
-summary: "RISC-V de 128 bits, construido desde cero en Europa. Un núcleo funciona como CPU de 128 bits, como CPU de 64 bits o como dos CPUs de 64 bits; un programa de Linux llama a una función en otra CPU en 1.35 µs y calcula hashes con SHA-3 en hardware a 129 MB/s, unas 140× el software, sin driver. Es el procesador en el corazón del HERCOSS Exxo A1."
+summary: "RISC-V de 128 bits, construido desde cero en Europa. Un núcleo funciona como CPU de 128 bits, como CPU de 64 bits o como dos CPUs de 64 bits; un programa de Linux llama a una función en otra CPU en 1.35 µs y calcula hashes con SHA-3 en hardware a 129 MB/s, unas 140× el software, sin driver. Desde el 27 de noviembre, una versión de 17 estaciones de su anillo de núcleos funciona en silicio, con la prioridad de servicio fijada por software en ejecución. Es el procesador en el corazón del HERCOSS Exxo A1."
 datos:
   - "RISC-V de 128 bits"
   - "SHA-3 a 129 MB/s, sin driver"
   - "Llamada entre CPUs en 1.35 µs"
   - "Linux 6.6 SMP"
   - "214 / 214 en silicio"
-  - "Anillo: 64 hilos"
+  - "Anillo de 17 estaciones en silicio"
+  - "Prioridad fijada por software"
 ---
 
 {{< stats >}}
@@ -26,6 +27,92 @@ El anillo de núcleos y las innovaciones de esta página están en proceso de
 patente. Esta página muestra lo que logran y por qué importan; cómo funcionan por
 dentro se publicará cuando ese proceso lo permita.
 {{< /aviso >}}
+
+## Nuevo, 27 de noviembre: el software decide quién va primero {#priority}
+
+**El anillo de núcleos de HERCOSS ya funciona en silicio real a longitud
+completa y a plena carga, y el software decide a quién se atiende primero.**
+
+{{< stats >}}
+{{< stat "17" "estaciones en un anillo, en silicio: un núcleo real, el acelerador SHA-3 y 15 estaciones de tráfico" >}}
+{{< stat "~9 M" "de mensajes por corrida, todos revisados: 0 errores, 0 perdidos, 0 duplicados" >}}
+{{< stat "−36 %" "de tiempo para el mismo trabajo cuando el núcleo y su acelerador se marcan como críticos, con el anillo saturado" >}}
+{{< stat "0" "reinicios o cambios de hardware: el software fija la prioridad por estación, en ejecución" >}}
+{{< /stats >}}
+
+{{< fig "ring17-silicon.es.svg" "Una versión de 17 estaciones del anillo de núcleos de HERCOSS en la placa FPGA: un núcleo RV128IMAC, el acelerador SHA-3 y quince estaciones de tráfico autoverificables. Ocupa el 95 % del dispositivo." >}}
+
+Cada uno de los cerca de nueve millones de mensajes por corrida se revisa:
+contenido, remitente, destinatario y orden, en corridas repetidas mientras el
+núcleo calcula el hash de 1 MiB con el acelerador. **Cero errores, cero
+perdidos, cero duplicados.**
+
+### Por qué importa
+
+En un chip de muchos núcleos, algunos hacen trabajo que no puede esperar:
+lazos de control, monitores de seguridad, el núcleo que alimenta a un
+acelerador. Otros hacen trabajo masivo al que solo le importa el rendimiento.
+La mayoría de las interconexiones en chip tratan a todos igual, o fijan las
+prioridades en hardware al diseñar el chip.
+
+El anillo de HERCOSS permite que **el software del sistema asigne la prioridad
+de servicio por estación, en ejecución.** En un satélite, el núcleo de control
+de actitud se puede marcar como crítico durante una maniobra y volver a normal
+después: sin cambiar hardware y sin reiniciar.
+
+{{< fig "prio-mission.es.svg" "Cómo podría usarlo una misión. Es una ilustración; aún no se ha demostrado en software de vuelo." >}}
+
+### Medido en silicio, en un peor caso a propósito
+
+La prueba es siempre el mismo trabajo, 1 MiB de SHA-3 por el acelerador, en un
+anillo que quince vecinas mantienen saturado a propósito. Solo cambia el
+ajuste de prioridad.
+
+{{< fig "prio-results.es.svg" "El mismo trabajo en silicio a 60 MHz con tres ajustes de prioridad. Con el núcleo y el acelerador marcados como críticos, el trabajo termina un 36 % antes y su bucle principal corre un 42 % más rápido." >}}
+
+| Prioridad de servicio | Tiempo del trabajo | Bucle principal | Mensajes de tráfico movidos |
+|---|---|---|---|
+| Igual para todas las estaciones | 13.35 M ciclos | 9.19 ciclos / 8 bytes | 8.9 M |
+| **Núcleo + acelerador críticos** | **8.60 M ciclos (−36 %)** | **5.29 (−42 %)** | 8.4 M |
+| Críticos, ajuste moderado | 9.28 M ciclos (−30 %) | 6.20 | 9.1 M |
+
+Las estaciones críticas terminaron su trabajo más de un tercio antes (hasta un
+50 % en bucles individuales), y **el tráfico del resto del anillo no bajó.** En
+cada corrida: enviados = recibidos, 0 errores, nada pendiente. La simulación
+coincide en la dirección, con la estación crítica un 23 % más rápida y un 33 %
+más de tráfico por ciclo, y revisa las mismas configuraciones instrucción por
+instrucción contra un modelo de referencia.
+
+### La distancia casi no cuesta
+
+{{< fig "ring-distance.es.svg" "En un anillo libre, el bucle principal de hashing corre exactamente igual de rápido con 17 estaciones que con 2." >}}
+
+{{< detalle "Para los amantes de los chips: justicia sin el compromiso de siempre" >}}
+En una interconexión compartida, la justicia suele ser un compromiso que se
+fija al diseñar. Si se favorece el rendimiento, alguna estación se queda sin
+turno; si se favorece la justicia, todas se frenan. Primero medimos ese
+compromiso en nuestro propio anillo y después lo eliminamos: cuando las
+estaciones críticas en latencia y las de trabajo masivo se configuran de forma
+distinta, ganan las dos a la vez. El software elige las clases, y las cifras
+en silicio están en la tabla de arriba. No hemos visto un anillo en chip que
+exponga al software la prioridad de servicio por estación, en ejecución, de
+esta forma, aunque todavía no lo hemos comparado con la literatura.
+{{< /detalle >}}
+
+{{< detalle "Qué son estas cifras y qué no son" >}}
+- **Un prototipo FPGA con un núcleo real y quince estaciones de tráfico**, no
+  dieciséis núcleos reales. Dieciséis núcleos reales necesitan un dispositivo
+  más grande.
+- **La carga es un peor caso a propósito:** cada estación de tráfico envía tan
+  rápido como el anillo permite. Las cargas reales son más ligeras.
+- **Tráfico por corrida:** cuando el trabajo crítico termina antes, la corrida
+  es más corta y se cuentan menos mensajes en ella; la tasa del resto del
+  anillo no baja. Las ganancias por ciclo en silicio se inflan por unos pocos
+  milisegundos de ventana de medición, así que la cifra por ciclo solo la
+  damos de simulación (+33 %).
+- **El ejemplo del satélite** ilustra un uso. No se ha demostrado en software
+  de vuelo.
+{{< /detalle >}}
 
 ## Qué es
 
@@ -127,13 +214,11 @@ rápido como el anillo permite, algo que ninguna carga real hace, el bucle de
 hashing es 2.1× más lento que en un anillo libre (7.4 frente a 3.5 ciclos por cada
 8 bytes). Garantizar el turno de cada estación también cuesta algo de
 rendimiento máximo en saturación. Publicamos estos números de peor caso porque
-son los datos que dimensionan la interconexión del A1, y mediremos el balance en
-silicio antes de elegirlo.
+son los datos que dimensionan la interconexión del A1, y desde el 27 de noviembre lo medimos en silicio: vea [el software decide quién va primero](#priority).
 
 La versión de 64 hilos pasó la síntesis y el cierre de timing (125.1 mil celdas
 lógicas, 83 % del dispositivo, +0.33 ns de holgura más allá de una guarda de
-seguridad de 1.0 ns), pero aún no ha corrido en la placa. Los resultados de 16
-estaciones están verificados en simulación.
+seguridad de 1.0 ns). Un anillo de 17 estaciones funciona en la placa desde el 27 de noviembre.
 {{< /detalle >}}
 
 ## Un núcleo, tres personalidades
@@ -369,26 +454,28 @@ detectar.
 | 25 nov | Mejoras en el pipeline y la búsqueda de instrucciones: **129 MB/s**; C compilado hasta 1.39× más rápido |
 | 25 nov | Anillo de núcleos rediseñado para 64 hilos de hardware: nueva versión 2,900 celdas lógicas más pequeña, timing cumplido |
 | 26 nov | **Anillo de 16 estaciones a plena carga en simulación**: núcleos reales, cero divergencias, cada estación con su turno garantizado |
+| 27 nov | **Anillo de 17 estaciones en silicio a plena carga**: ~9 M de mensajes por corrida, 0 errores; prioridad de servicio fijada por software, trabajo crítico un 36 % antes |
 
-## Siguiente: el anillo de 16 estaciones en silicio real
+## Siguiente: de 17 estaciones al A1
 
 El Exxo A1 coloca **dieciséis núcleos RV128IMAC** con sus aceleradores en el
-anillo de núcleos, alrededor de la red [NOC_512](/es/projects/noc-512/) que lleva
-la memoria y la E/S. Los siguientes pasos:
+anillo de núcleos, alrededor de la red [NOC_512](/es/projects/noc-512/) que
+lleva la memoria y la E/S. El anillo de longitud completa ya funciona en
+silicio; los siguientes pasos:
 
-1. **El anillo de longitud completa en la placa FPGA:** una CPU real, el
-   acelerador SHA-3 y 15 estaciones de tráfico autoverificables, a velocidad de
-   hardware. Latencia de llamada y ancho de banda del acelerador bajo carga, más
-   pruebas de resistencia de horas con cada mensaje revisado.
-2. **Ajustar la justicia frente al rendimiento bruto** con mediciones reales.
-3. **Uno o dos anillos para el A1**, decidido con esas mediciones en silicio
+1. **Pruebas de resistencia de horas** del anillo de 17 estaciones, con cada
+   mensaje revisado.
+2. **Ajustes de prioridad con cargas de software reales**, no solo con el peor
+   caso a propósito.
+3. **Más núcleos reales en el anillo**, en un dispositivo más grande que la
+   placa actual, que la versión de 17 estaciones ya ocupa al 95 %.
+4. **Uno o dos anillos para el A1**, decidido con estas mediciones en silicio
    antes de congelar la arquitectura del chip.
 
 {{< fig "a1-cluster.svg" "Clúster de procesadores planeado del HERCOSS Exxo A1. Diagrama conceptual; no a escala." >}}
 
 {{< detalle "¿Qué falta antes de que el A1 use este núcleo?" >}}
-El prototipo tiene dos CPUs en silicio; el anillo de 16 estaciones está
-verificado en simulación y su prueba en silicio es lo siguiente. Aún faltan las
+El prototipo tiene dos CPUs en silicio, y un anillo de 17 estaciones con un núcleo real y quince estaciones de tráfico funciona a plena carga; dieciséis núcleos reales en un anillo necesitan un dispositivo más grande. Aún faltan las
 funciones de endurecimiento contra radiación previstas para el A1 y las cachés
 más grandes. Y hasta ahora el núcleo solo se ha construido para FPGA: el flujo de
 chip (macros de memoria, lógica de prueba, timing y área en silicio) viene

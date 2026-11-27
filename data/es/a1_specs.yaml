@@ -20,11 +20,11 @@
   - - Llamadas entre núcleos
     - 'Llamadas directas a funciones entre núcleos desde programas de usuario: 1.35 µs ida y vuelta'
     - proven
-    - Medido con 2 CPUs en silicio; anillo de 16 estaciones a plena carga verificado en simulación
+    - Medido con 2 CPUs en silicio; anillo de 17 estaciones a plena carga en silicio, 0 errores
   - - Anillo de núcleos
-    - 'Anillo de Hercoss para llamadas y peticiones a aceleradores: hasta 64 hilos de hardware direccionables, cada estación tiene su turno garantizado a plena carga'
-    - design
-    - 16 estaciones verificadas en simulación; la prueba en silicio es lo siguiente; en proceso de patente
+    - 'Anillo de Hercoss para llamadas y peticiones a aceleradores: hasta 64 hilos de hardware direccionables, cada estación tiene su turno garantizado a plena carga, prioridad de servicio por estación fijada por software en ejecución'
+    - proven
+    - 17 estaciones en silicio (1 núcleo real, SHA-3, 15 estaciones de tráfico); faltan 16 núcleos reales; en proceso de patente
   - - Cachés L1 por núcleo
     - 64 KiB de instrucciones (16 vías) + 32 KiB de datos (8 vías)
     - design

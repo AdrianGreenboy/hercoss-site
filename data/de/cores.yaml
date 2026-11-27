@@ -17,7 +17,7 @@
 - nombre: Kern-Ring
   cat: Interconnect
   estado: validado
-  que: 'Hercoss'' eigener Ring, über den sich Kerne und Beschleuniger direkt aufrufen: auf Silizium mit 2 CPUs und der SHA-3-Engine; der Build mit 64 Threads erfüllt das Timing; 16 Stationen unter Volllast in der Simulation verifiziert, fair zu jeder Station.'
+  que: 'Hercoss'' eigener Ring, über den sich Kerne und Beschleuniger direkt aufrufen: 17 Stationen unter Volllast auf Silizium, ~9 Mio. Nachrichten pro Lauf mit 0 Fehlern; Software legt die Dienstpriorität pro Station zur Laufzeit fest, kritische Aufgabe 36 % früher.'
   a1: Verbindet die 16 Kerne und ihre Beschleuniger
 - nombre: NOC_512
   cat: Interconnect

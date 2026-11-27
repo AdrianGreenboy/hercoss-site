@@ -187,7 +187,7 @@ One Exxo A1 can replace up to sixteen separate flight computers.
   in-orbit software updates.
 - **Fast inter-core communication:** the Hercoss [core fabric](/projects/rv128imac/#the-hercoss-core-fabric-a-ring-built-for-calls),
   a ring where cores and accelerators call each other directly: 1.35 µs from
-  a Linux program, fair at full load, alongside standard Linux remoteproc /
+  a Linux program, fair at full load, with service priority per station set by software at run time, alongside standard Linux remoteproc /
   RPMsg.
 - **Open toolchain:** standard RISC-V GCC, mainline Linux and OpenSBI in
   64-bit mode; real-time systems FreeRTOS, Zephyr and RTEMS.
@@ -219,7 +219,7 @@ is in design, and what is still pending.
 |---|---|---|
 | RV128IMAC processor core | Linux 6.6 SMP, 214 / 214 board tests, CoreMark 1.85 / MHz; SHA-3 from a 33 to a 129 MB/s stream in five days | Validated on FPGA |
 | Core-to-core calls | 1.35 µs round trip from a Linux program (an empty system call: 6.6 µs) | Validated on FPGA |
-| Core fabric for 16 cores | Ring addressing 64 hardware threads (build passes timing, 2,900 logic cells smaller); 16 stations at full load with zero lost, duplicated or reordered messages; every station guaranteed its turn | Synthesis + simulation |
+| Core fabric for 16 cores | 17-station ring at full load on silicon (one real core, the SHA-3 accelerator, 15 traffic stations): ~9 M messages per run, 0 errors, 0 lost, 0 duplicated; service priority set by software at run time, critical job 36 % sooner on a saturated ring; ring addresses 64 hardware threads | Validated on FPGA (17 stations); 16 real cores pending |
 | Self-healing lockstep | 24 / 24 injected faults corrected, 0 corrupted results | Validated on FPGA (earlier 64-bit core) |
 | NOC_512 network-on-chip | Nine one-hour runs at full load: 3.19 trillion AXI4 transfers, 0 errors; 375 MHz unprotected, 265 MHz with every protection layer | Validated on FPGA |
 | NOC_512 fault tolerance | 10.5 M errors corrected live; state corrupted every cycle for 159 M cycles with a result identical to a fault-free run; 199 M words/s rebuilt with none lost; 14 self-repairs in ~10 µs, 0 words lost | Validated on FPGA (fault injection, not beam-tested) |
@@ -247,8 +247,7 @@ is in design, and what is still pending.
 An honest list of what has to happen before the A1 is a chip:
 
 - **Scale the processor cluster** from the two-CPU prototype to sixteen cores.
-  The core fabric already addresses 64 hardware threads and a 16-station ring
-  passes at full load in simulation; next is the full-length ring on silicon.
+  The core fabric addresses 64 hardware threads, and a 17-station ring already runs at full load on silicon with one real core; sixteen real cores need a larger device.
 - **Space hardening of the RV128IMAC:** port the self-healing lockstep, the
   error-correcting register file and cache parity; grow the caches to the A1
   sizes.

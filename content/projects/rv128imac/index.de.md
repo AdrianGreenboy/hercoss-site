@@ -4,14 +4,15 @@ layout: rv128
 weight: 2
 estado: "Läuft auf FPGA-Silizium · Prozessorkern des HERCOSS Exxo A1"
 seotitle: "RV128IMAC: 128-Bit-RISC-V-Prozessorkern für Raumfahrt-Computing — Hercoss"
-summary: "128-Bit-RISC-V, von Grund auf in Europa gebaut. Ein Kern läuft als 128-Bit-CPU, als 64-Bit-CPU oder als zwei 64-Bit-CPUs; ein Linux-Programm ruft in 1,35 µs eine Funktion auf einer anderen CPU auf und hasht mit SHA-3 in Hardware mit 129 MB/s, etwa 140× Software, ohne Treiber. Er ist der Prozessor im Herzen des HERCOSS Exxo A1."
+summary: "128-Bit-RISC-V, von Grund auf in Europa gebaut. Ein Kern läuft als 128-Bit-CPU, als 64-Bit-CPU oder als zwei 64-Bit-CPUs; ein Linux-Programm ruft in 1,35 µs eine Funktion auf einer anderen CPU auf und hasht mit SHA-3 in Hardware mit 129 MB/s, etwa 140× Software, ohne Treiber. Seit dem 27. November läuft eine Version seines Kern-Rings mit 17 Stationen auf Silizium, mit einer Dienstpriorität, die Software zur Laufzeit festlegt. Er ist der Prozessor im Herzen des HERCOSS Exxo A1."
 datos:
   - "128-Bit-RISC-V"
   - "SHA-3 mit 129 MB/s, ohne Treiber"
   - "CPU-zu-CPU-Aufruf in 1,35 µs"
   - "Linux 6.6 SMP"
   - "214 / 214 auf Silizium"
-  - "Ring: 64 Threads"
+  - "Ring mit 17 Stationen auf Silizium"
+  - "Priorität per Software"
 ---
 
 {{< stats >}}
@@ -26,6 +27,93 @@ Der Kern-Ring und die Innovationen auf dieser Seite befinden sich im
 Patentverfahren. Diese Seite zeigt, was sie erreichen und warum sie zählen; wie
 sie intern funktionieren, wird veröffentlicht, sobald das Verfahren es erlaubt.
 {{< /aviso >}}
+
+## Neu am 27. November: Software entscheidet, wer zuerst drankommt {#priority}
+
+**Der HERCOSS-Kern-Ring läuft jetzt in voller Länge und unter Volllast auf
+echtem Silizium, und Software entscheidet, wer zuerst bedient wird.**
+
+{{< stats >}}
+{{< stat "17" "Stationen auf einem Ring, auf Silizium: ein echter Kern, der SHA-3-Beschleuniger und 15 Verkehrsstationen" >}}
+{{< stat "~9 Mio." "Nachrichten pro Lauf, jede geprüft: 0 Fehler, 0 verloren, 0 doppelt" >}}
+{{< stat "−36 %" "Zeit für dieselbe Aufgabe, wenn Kern und Beschleuniger als kritisch markiert sind, bei weiterhin gesättigtem Ring" >}}
+{{< stat "0" "Neustarts oder Hardwareänderungen: Software legt die Priorität pro Station zur Laufzeit fest" >}}
+{{< /stats >}}
+
+{{< fig "ring17-silicon.de.svg" "Eine Version des HERCOSS-Kern-Rings mit 17 Stationen auf dem FPGA-Board: ein RV128IMAC-Kern, der SHA-3-Beschleuniger und fünfzehn selbstprüfende Verkehrsstationen. Sie belegt 95 % des Bausteins." >}}
+
+Jede der rund neun Millionen Nachrichten pro Lauf wird auf Inhalt, Absender,
+Empfänger und Reihenfolge geprüft, in wiederholten Läufen, während der Kern
+1 MiB durch den Beschleuniger hasht. **Null Fehler, null verloren, null
+doppelt.**
+
+### Warum das zählt
+
+In einem Vielkernchip erledigen einige Kerne Arbeit, die nicht warten kann:
+Regelschleifen, Sicherheitsmonitore, den Kern, der einen Beschleuniger
+versorgt. Andere erledigen Massenarbeit, bei der nur der Durchsatz zählt. Die
+meisten On-Chip-Verbindungen behandeln alle gleich oder legen die Prioritäten
+beim Chipentwurf fest in Hardware fest.
+
+Der HERCOSS-Ring lässt **die Systemsoftware die Dienstpriorität pro Station
+zur Laufzeit festlegen.** Auf einem Satelliten kann der Kern für die
+Lageregelung während eines Manövers als kritisch markiert und danach wieder
+auf normal gesetzt werden: ohne Hardwareänderung, ohne Neustart.
+
+{{< fig "prio-mission.de.svg" "Wie eine Mission es nutzen könnte. Eine Darstellung; in Flugsoftware ist das noch nicht demonstriert." >}}
+
+### Auf Silizium gemessen, unter einem absichtlichen Worst Case
+
+Der Test ist jedes Mal dieselbe Aufgabe, 1 MiB SHA-3 durch den Beschleuniger,
+auf einem Ring, den fünfzehn Nachbarn absichtlich gesättigt halten. Nur die
+Prioritätseinstellung ändert sich.
+
+{{< fig "prio-results.de.svg" "Dieselbe Aufgabe auf Silizium bei 60 MHz mit drei Prioritätseinstellungen. Mit Kern und Beschleuniger als kritisch ist die Aufgabe 36 % früher fertig, und ihre Hauptschleife läuft 42 % schneller." >}}
+
+| Dienstpriorität | Zeit für die Aufgabe | Hauptschleife | Bewegte Verkehrsnachrichten |
+|---|---|---|---|
+| Gleich für alle Stationen | 13,35 Mio. Takte | 9,19 Takte / 8 Byte | 8,9 Mio. |
+| **Kern + Beschleuniger kritisch** | **8,60 Mio. Takte (−36 %)** | **5,29 (−42 %)** | 8,4 Mio. |
+| Kritisch, mildere Einstellung | 9,28 Mio. Takte (−30 %) | 6,20 | 9,1 Mio. |
+
+Die kritischen Stationen waren mit ihrer Arbeit mehr als ein Drittel früher
+fertig (bis zu 50 % bei einzelnen Schleifen), und **der Verkehr des übrigen
+Rings ging nicht zurück.** Jeder Lauf: gesendet = empfangen, 0 Fehler, nichts
+offen. Die Simulation bestätigt die Richtung, mit der kritischen Station 23 %
+schneller und 33 % mehr Verkehr pro Takt, und prüft dieselben Konfigurationen
+Befehl für Befehl gegen ein Referenzmodell.
+
+### Entfernung kostet fast nichts
+
+{{< fig "ring-distance.de.svg" "Auf einem freien Ring läuft die Hashing-Hauptschleife mit 17 Stationen exakt so schnell wie mit 2." >}}
+
+{{< detalle "Für Chip-Begeisterte: Fairness ohne den üblichen Kompromiss" >}}
+Auf einer gemeinsam genutzten Verbindung ist Fairness meist ein Kompromiss,
+der beim Entwurf festgelegt wird. Bevorzugt man den Durchsatz, verhungert eine
+Station; bevorzugt man Fairness, werden alle langsamer. Wir haben diesen
+Kompromiss zuerst auf unserem eigenen Ring gemessen und ihn dann beseitigt:
+Werden latenzkritische Stationen und Massenstationen unterschiedlich
+konfiguriert, gewinnen beide gleichzeitig. Die Software wählt die Klassen,
+und die Silizium-Werte stehen in der Tabelle oben. Wir haben keinen On-Chip-Ring
+gesehen, der der Software die Dienstpriorität pro Station zur Laufzeit auf
+diese Weise zugänglich macht, haben das aber noch nicht mit der Literatur
+abgeglichen.
+{{< /detalle >}}
+
+{{< detalle "Was diese Zahlen sind und was nicht" >}}
+- **Ein FPGA-Prototyp mit einem echten Kern und fünfzehn Verkehrsstationen**,
+  nicht sechzehn echte Kerne. Sechzehn echte Kerne brauchen einen größeren
+  Baustein.
+- **Die Last ist ein absichtlicher Worst Case:** Jede Verkehrsstation sendet
+  so schnell, wie der Ring es zulässt. Reale Lasten sind leichter.
+- **Verkehr pro Lauf:** Ist die kritische Aufgabe früher fertig, ist der Lauf
+  kürzer, und es werden weniger Nachrichten darin gezählt; die Rate des
+  übrigen Rings sinkt nicht. Gewinne pro Takt auf Silizium sind durch wenige
+  Millisekunden Messfenster überzeichnet, daher nennen wir den Wert pro Takt
+  nur aus der Simulation (+33 %).
+- **Das Satellitenbeispiel** zeigt eine Anwendung. In Flugsoftware ist es
+  noch nicht demonstriert.
+{{< /detalle >}}
 
 ## Was es ist
 
@@ -126,13 +214,11 @@ reale Last tut, ist die Hashing-Schleife 2,1× langsamer als auf einem freien Ri
 (7,4 gegenüber 3,5 Takten pro 8 Byte). Jeder Station ihren Zug zu garantieren,
 kostet bei Sättigung auch etwas Spitzendurchsatz. Wir veröffentlichen diese
 Worst-Case-Zahlen, weil sie die Daten sind, nach denen der Interconnect des A1
-dimensioniert wird, und wir messen den Kompromiss auf Silizium, bevor wir die
-Balance wählen.
+dimensioniert wird, und seit dem 27. November messen wir ihn auf Silizium: siehe [Software entscheidet, wer zuerst drankommt](#priority).
 
 Der Build mit 64 Threads hat Synthese und Timing-Closure bestanden (125,1 Tsd.
 Logikzellen, 83 % des Bausteins, +0,33 ns Reserve über einer
-Sicherheitsmarge von 1,0 ns), ist aber noch nicht auf dem Board gelaufen. Die
-Ergebnisse mit 16 Stationen sind in der Simulation verifiziert.
+Sicherheitsmarge von 1,0 ns). Ein Ring mit 17 Stationen läuft seit dem 27. November auf dem Board.
 {{< /detalle >}}
 
 ## Ein Kern, drei Persönlichkeiten
@@ -370,26 +456,28 @@ gibt es jetzt einen Test, der ihn wieder erkennen würde.
 | 25. Nov. | Verbesserungen an Pipeline und Befehlsabruf: **129 MB/s**; kompiliertes C bis zu 1,39× schneller |
 | 25. Nov. | Kern-Ring für 64 Hardware-Threads umgebaut: neuer Build 2.900 Logikzellen kleiner, Timing erfüllt |
 | 26. Nov. | **Ring mit 16 Stationen unter Volllast in der Simulation**: echte Kerne, null Abweichungen, jede Station kommt garantiert an die Reihe |
+| 27. Nov. | **Ring mit 17 Stationen auf Silizium unter Volllast**: ~9 Mio. Nachrichten pro Lauf, 0 Fehler; Dienstpriorität per Software, kritische Aufgabe 36 % früher |
 
-## Als Nächstes: der Ring mit 16 Stationen auf echtem Silizium
+## Als Nächstes: von 17 Stationen zum A1
 
 Der Exxo A1 setzt **sechzehn RV128IMAC-Kerne** mit ihren Beschleunigern auf den
 Kern-Ring, rund um das Netz [NOC_512](/de/projects/noc-512/), das Speicher und
-I/O trägt. Die nächsten Schritte:
+I/O trägt. Der Ring in voller Länge läuft jetzt auf Silizium; die nächsten
+Schritte:
 
-1. **Der Ring in voller Länge auf dem FPGA-Board:** eine echte CPU, der
-   SHA-3-Beschleuniger und 15 selbstprüfende Verkehrsstationen, mit
-   Hardware-Geschwindigkeit. Aufruflatenz und Beschleuniger-Bandbreite unter
-   Last, dazu stundenlange Dauertests mit Prüfung jeder Nachricht.
-2. **Fairness gegen Rohdurchsatz abstimmen**, mit echten Messungen.
-3. **Ein Ring oder zwei für den A1**, entschieden anhand dieser
+1. **Stundenlange Dauertests** des Rings mit 17 Stationen, mit Prüfung jeder
+   Nachricht.
+2. **Prioritätseinstellungen unter realen Software-Lasten**, nicht nur im
+   absichtlichen Worst Case.
+3. **Mehr echte Kerne auf dem Ring**, auf einem größeren Baustein als dem
+   heutigen Board, das der Build mit 17 Stationen bereits zu 95 % füllt.
+4. **Ein Ring oder zwei für den A1**, entschieden anhand dieser
    Silizium-Messungen, bevor die Chiparchitektur eingefroren wird.
 
 {{< fig "a1-cluster.svg" "Geplanter Prozessorcluster des HERCOSS Exxo A1. Konzeptdiagramm; nicht maßstäblich." >}}
 
 {{< detalle "Was muss noch geschehen, bevor der A1 diesen Kern nutzt?" >}}
-Der Prototyp hat zwei CPUs auf Silizium; der Ring mit 16 Stationen ist in der
-Simulation verifiziert, und sein Lauf auf Silizium folgt als Nächstes. Die für den
+Der Prototyp hat zwei CPUs auf Silizium, und ein Ring mit 17 Stationen mit einem echten Kern und fünfzehn Verkehrsstationen läuft unter Volllast; sechzehn echte Kerne auf einem Ring brauchen einen größeren Baustein. Die für den
 A1 geplanten Funktionen zur Strahlungshärtung und die größeren Caches müssen
 noch ergänzt werden. Und der Kern wurde bisher nur für FPGA gebaut: Der Chip-Flow
 (Speichermakros, Testlogik, Timing und Fläche auf Silizium) kommt als Nächstes.

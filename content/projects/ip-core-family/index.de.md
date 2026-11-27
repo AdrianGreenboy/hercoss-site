@@ -24,7 +24,7 @@ seotitle: "Raumfahrt-IP-Cores: SpaceWire, MIL-STD-1553, CAN, Ethernet, PQC — H
 | Core | Was er tut | Neuestes Ergebnis | Status | Seite |
 |---|---|---|---|---|
 | **RV128IMAC** | 128-Bit-RISC-V-Prozessor, die 16 Kerne des A1 | Linux 6.6 SMP; Aufrufe zwischen CPUs in 1,35 µs; SHA-3 mit 129 MB/s ohne Treiber; 214/214 Board-Tests | Auf FPGA validiert | [Ansehen](/de/projects/rv128imac/) |
-| **Kern-Ring** | Kerne und Beschleuniger rufen sich direkt auf | 64 Hardware-Threads adressierbar; 16 Stationen unter Volllast, 0 Nachrichten verloren; fair zu jeder Station | Silizium (2 CPUs) + Simulation (16 Stationen) | [Ansehen](/de/projects/rv128imac/#the-hercoss-core-fabric-a-ring-built-for-calls) |
+| **Kern-Ring** | Kerne und Beschleuniger rufen sich direkt auf | Ring mit 17 Stationen unter Volllast auf Silizium: ~9 Mio. Nachrichten pro Lauf, 0 Fehler; Software legt die Priorität zur Laufzeit fest, kritische Aufgabe 36 % früher | Auf FPGA validiert (17 Stationen) | [Ansehen](/de/projects/rv128imac/#priority) |
 | **NOC_512** | Selbstheilendes 512-Bit-Network-on-Chip | Heilt sich in ≈0,6 µs, 405.522 Ausfälle in einer Stunde, 0 von über 160 Mrd. Wörtern verloren; formal verifiziert | Auf FPGA validiert (2 × 2) | [Ansehen](/de/projects/noc-512/) |
 | **ETH_1T6** | 1,6-Tbit/s-Ethernet: MAC, PCS, FEC, Lane-Ausrichtung | 312 Mrd. Frames in einer Stunde, 0 Fehler; 1 bis 15 Symbolfehler korrigiert; bitgenau zu den IEEE-Vektoren | Auf FPGA validiert (skaliert) | [Ansehen](/de/projects/eth-1t6/) |
 | **DDRC_72** | Selbstheilender DDR4-Speichercontroller, bis 128 GiB | 0 Datenfehler und 0 JEDEC-Timing-Verletzungen, mit einem ausgefallenen Speicherchip und einer fehlerhaften Zeile | Simulation | [Ansehen](/de/projects/ddrc-72/) |

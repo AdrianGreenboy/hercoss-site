@@ -20,11 +20,11 @@
   - - Aufrufe zwischen Kernen
     - 'Direkte Funktionsaufrufe zwischen Kernen aus Anwenderprogrammen: 1,35 µs hin und zurück'
     - proven
-    - Mit 2 CPUs auf Silizium gemessen; Ring mit 16 Stationen unter Volllast in der Simulation verifiziert
+    - Mit 2 CPUs auf Silizium gemessen; Ring mit 17 Stationen unter Volllast auf Silizium, 0 Fehler
   - - Kern-Ring
-    - 'Hercoss-Ring für Aufrufe und Beschleuniger-Anfragen: bis zu 64 Hardware-Threads adressierbar, jede Station kommt auch unter Volllast garantiert an die Reihe'
-    - design
-    - 16 Stationen in der Simulation verifiziert; als Nächstes der Lauf auf Silizium; Patentverfahren läuft
+    - 'Hercoss-Ring für Aufrufe und Beschleuniger-Anfragen: bis zu 64 Hardware-Threads adressierbar, jede Station kommt auch unter Volllast garantiert an die Reihe, Dienstpriorität pro Station per Software zur Laufzeit'
+    - proven
+    - 17 Stationen auf Silizium (1 echter Kern, SHA-3, 15 Verkehrsstationen); 16 echte Kerne ausstehend; Patentverfahren läuft
   - - L1-Caches pro Kern
     - 64 KiB Instruktionen (16-fach) + 32 KiB Daten (8-fach)
     - design

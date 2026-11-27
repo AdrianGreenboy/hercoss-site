@@ -197,7 +197,7 @@ Ein Exxo A1 kann bis zu sechzehn separate Flugrechner ersetzen.
 - **Schnelle Kommunikation zwischen Kernen:** der Hercoss-
   [Kern-Ring](/de/projects/rv128imac/#the-hercoss-core-fabric-a-ring-built-for-calls),
   über den sich Kerne und Beschleuniger direkt aufrufen: 1,35 µs aus einem
-  Linux-Programm, fair unter Volllast, neben dem standardmäßigen Linux-remoteproc
+  Linux-Programm, fair unter Volllast, mit Dienstpriorität pro Station, die Software zur Laufzeit festlegt, neben dem standardmäßigen Linux-remoteproc
   / RPMsg.
 - **Offene Toolchain:** Standard-RISC-V-GCC, Mainline-Linux und OpenSBI im
   64-Bit-Modus; Echtzeitsysteme FreeRTOS, Zephyr und RTEMS.
@@ -229,7 +229,7 @@ ist, was im Design ist und was noch aussteht.
 |---|---|---|
 | Prozessorkern RV128IMAC | Linux 6.6 SMP, 214 / 214 Board-Tests, CoreMark 1,85 / MHz; SHA-3 als Datenstrom von 33 auf 129 MB/s in fünf Tagen | Auf FPGA validiert |
 | Aufrufe zwischen Kernen | 1,35 µs hin und zurück aus einem Linux-Programm (ein leerer Systemaufruf: 6,6 µs) | Auf FPGA validiert |
-| Kern-Ring für 16 Kerne | Ring adressiert 64 Hardware-Threads (Build erfüllt das Timing, 2.900 Logikzellen kleiner); 16 Stationen unter Volllast mit null verlorenen, doppelten oder vertauschten Nachrichten; jede Station kommt garantiert an die Reihe | Synthese + Simulation |
+| Kern-Ring für 16 Kerne | Ring mit 17 Stationen unter Volllast auf Silizium (ein echter Kern, der SHA-3-Beschleuniger, 15 Verkehrsstationen): ~9 Mio. Nachrichten pro Lauf, 0 Fehler, 0 verloren, 0 doppelt; Dienstpriorität per Software zur Laufzeit, kritische Aufgabe 36 % früher auf gesättigtem Ring; Ring adressiert 64 Hardware-Threads | Auf FPGA validiert (17 Stationen); 16 echte Kerne ausstehend |
 | Selbstheilender Lockstep | 24 / 24 injizierte Fehler korrigiert, 0 verfälschte Ergebnisse | Auf FPGA validiert (früherer 64-Bit-Kern) |
 | Network-on-Chip NOC_512 | Neun einstündige Läufe unter Volllast: 3,19 Billionen AXI4-Transfers, 0 Fehler; 375 MHz ungeschützt, 265 MHz mit allen Schutzschichten | Auf FPGA validiert |
 | Fehlertoleranz von NOC_512 | 10,5 Mio. Fehler live korrigiert; Zustand 159 Mio. Takte lang in jedem Takt verfälscht, mit einem Ergebnis identisch zu einem fehlerfreien Lauf; 199 Mio. Wörter/s rekonstruiert, keines verloren; 14 Selbstreparaturen in ~10 µs, 0 Wörter verloren | Auf FPGA validiert (Fehlerinjektion, kein Strahltest) |
@@ -257,9 +257,7 @@ ist, was im Design ist und was noch aussteht.
 Eine ehrliche Liste dessen, was geschehen muss, bevor der A1 ein Chip ist:
 
 - **Den Prozessorcluster skalieren**, vom Prototyp mit zwei CPUs auf sechzehn
-  Kerne. Der Kern-Ring adressiert bereits 64 Hardware-Threads, und ein Ring mit
-  16 Stationen besteht in der Simulation unter Volllast; als Nächstes kommt der
-  Ring in voller Länge auf Silizium.
+  Kerne. Der Kern-Ring adressiert 64 Hardware-Threads, und ein Ring mit 17 Stationen läuft bereits unter Volllast auf Silizium, mit einem echten Kern; sechzehn echte Kerne brauchen einen größeren Baustein.
 - **Raumfahrthärtung des RV128IMAC:** den selbstheilenden Lockstep, den
   fehlerkorrigierenden Registersatz und die Cache-Parität portieren; die Caches
   auf die A1-Größen bringen.

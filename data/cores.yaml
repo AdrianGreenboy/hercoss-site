@@ -19,7 +19,7 @@
 - nombre: "Core fabric (ring)"
   cat: "Interconnect"
   estado: validado
-  que: "Hercoss's own ring where cores and accelerators call each other directly: on silicon with 2 CPUs and the SHA-3 engine; 64-thread build passes timing; 16 stations at full load verified in simulation, fair to every station."
+  que: "Hercoss's own ring where cores and accelerators call each other directly: 17 stations at full load on silicon, ~9 M messages per run with 0 errors; software sets service priority per station at run time, critical job 36 % sooner."
   a1: "Links the 16 cores and their accelerators"
 - nombre: "NOC_512"
   cat: "Interconnect"
