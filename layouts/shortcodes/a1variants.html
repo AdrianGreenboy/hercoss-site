@@ -1,5 +1,5 @@
-{{ $d := hugo.Data.a1 }}
-<div class="toggle" role="tablist" aria-label="Variants">
+{{ $d := partial "ldata.html" (dict "p" .Page "n" "a1") }}
+<div class="toggle" role="tablist" aria-label="{{ i18n "variants" }}">
   {{ range $i, $v := $d.variantes }}
   <button role="tab" data-variante="{{ $v.id }}" aria-selected="{{ if eq $i 1 }}true{{ else }}false{{ end }}">{{ $v.nombre }}</button>
   {{ end }}

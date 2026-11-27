@@ -4,58 +4,58 @@
           data-tex="{{ "img/earth/earth.jpg" | relURL }}" data-clouds="{{ "img/earth/clouds.jpg" | relURL }}"></canvas>
   <div class="hero-shade" aria-hidden="true"></div>
   <div class="hero-content">
-    <p class="eyebrow">Chips for space · Designed on Earth</p>
+    <p class="eyebrow">{{ i18n "hero_eyebrow" }}</p>
     <h1>{{ site.Params.tagline }}</h1>
     <p class="lead">{{ site.Params.description }}</p>
     <p>
-      <a class="button" href="{{ "invest/" | relURL }}">Invest in Hercoss →</a>
-      <a class="button secundario" href="{{ "projects/" | relURL }}">Projects</a>
+      <a class="button" href="{{ "invest/" | relLangURL }}">{{ i18n "btn_invest" }} →</a>
+      <a class="button secundario" href="{{ "projects/" | relLangURL }}">{{ i18n "projects" }}</a>
     </p>
   </div>
-  <p class="hud" aria-hidden="true">ORBITAL VIEW · RENDERED IN REAL TIME</p>
+  <p class="hud" aria-hidden="true">{{ i18n "hud" }}</p>
 </section>
 
 {{ with site.GetPage "/projects/hercoss-exxo-a1" }}
 {{ $a1 := .RelPermalink }}
 <section class="destacado">
   <div>
-    <p class="eyebrow">Flagship</p>
+    <p class="eyebrow">{{ i18n "flagship" }}</p>
     <h2 class="grande">{{ .Title }}</h2>
     <p class="lead">{{ .Params.summary }}</p>
     {{ with .Params.datos }}<ul class="datos">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
     <p>
-      <a class="button" href="{{ "invest/" | relURL }}">Invest in Hercoss →</a>
-      <a class="button secundario" href="{{ .RelPermalink }}#explore">Explore the chip</a>
+      <a class="button" href="{{ "invest/" | relLangURL }}">{{ i18n "btn_invest" }} →</a>
+      <a class="button secundario" href="{{ .RelPermalink }}#explore">{{ i18n "explore_chip" }}</a>
     </p>
   </div>
   {{ with .Resources.GetMatch "cover.*" }}{{ with .Fill "900x700 Center" }}
-  <a href="{{ $a1 }}"><img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Concept illustration of the HERCOSS Exxo A1 chip"></a>
+  <a href="{{ $a1 }}"><img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="{{ i18n "a1_alt" }}"></a>
   {{ end }}{{ end }}
 </section>
 {{ end }}
 
 <section class="hl">
-  <p class="eyebrow">Measured on silicon · November 2026</p>
-  <h2>Results, not slides</h2>
+  <p class="eyebrow">{{ i18n "hl_eyebrow" }}</p>
+  <h2>{{ i18n "hl_title" }}</h2>
   <div class="hl-grid">
-    <a href="/projects/rv128imac/"><span class="io-num">129 MB/s</span><span class="io-lbl">Hardware SHA-3 from Linux, no driver: ~140× software</span><span class="hl-src">RV128IMAC</span></a>
-    <a href="/projects/rv128imac/"><span class="io-num">1.35 µs</span><span class="io-lbl">A Linux program calls a function on another CPU</span><span class="hl-src">RV128IMAC</span></a>
-    <a href="/projects/rv128imac/"><span class="io-num">214/214</span><span class="io-lbl">Self-checking programs pass on the board</span><span class="hl-src">RV128IMAC</span></a>
-    <a href="/projects/noc-512/"><span class="io-num">≈0.6 µs</span><span class="io-lbl">for the network on chip to heal itself around a dead switch: 405,522 times in one hour, 0 words lost</span><span class="hl-src">NOC_512</span></a>
-    <a href="/projects/eth-1t6/"><span class="io-num">312 bn</span><span class="io-lbl">frames in one hour through our own 1.6T Ethernet link layer, zero errors</span><span class="hl-src">ETH_1T6</span></a>
-    <a href="/projects/risc-v-cores/"><span class="io-num">2 weeks</span><span class="io-lbl">From first Linux boot to 140× hardware SHA-3</span><span class="hl-src">RV128IMAC</span></a>
+    <a href="{{ "projects/rv128imac/" | relLangURL }}"><span class="io-num">129 MB/s</span><span class="io-lbl">{{ i18n "hl1" }}</span><span class="hl-src">RV128IMAC</span></a>
+    <a href="{{ "projects/rv128imac/" | relLangURL }}"><span class="io-num">{{ i18n "hl2_n" }}</span><span class="io-lbl">{{ i18n "hl2" }}</span><span class="hl-src">RV128IMAC</span></a>
+    <a href="{{ "projects/rv128imac/" | relLangURL }}"><span class="io-num">214/214</span><span class="io-lbl">{{ i18n "hl3" }}</span><span class="hl-src">RV128IMAC</span></a>
+    <a href="{{ "projects/noc-512/" | relLangURL }}"><span class="io-num">{{ i18n "hl4_n" }}</span><span class="io-lbl">{{ i18n "hl4" }}</span><span class="hl-src">NOC_512</span></a>
+    <a href="{{ "projects/eth-1t6/" | relLangURL }}"><span class="io-num">{{ i18n "hl5_n" }}</span><span class="io-lbl">{{ i18n "hl5" }}</span><span class="hl-src">ETH_1T6</span></a>
+    <a href="{{ "projects/risc-v-cores/" | relLangURL }}"><span class="io-num">{{ i18n "hl6_n" }}</span><span class="io-lbl">{{ i18n "hl6" }}</span><span class="hl-src">RV128IMAC</span></a>
   </div>
-  <p class="hl-note">Measured on FPGA prototypes (AMD Versal VE2302). Patents under analysis.</p>
+  <p class="hl-note">{{ i18n "hl_note" }}</p>
 </section>
 
 <section>
-  <h2>Projects</h2>
+  <h2>{{ i18n "projects" }}</h2>
   {{ partial "cards.html" (where site.RegularPages "Section" "projects").ByWeight }}
 </section>
 
 <section id="contact">
-  <h2>Contact</h2>
-  <p class="lead">For collaboration, investment or technical questions.</p>
+  <h2>{{ i18n "contact" }}</h2>
+  <p class="lead">{{ i18n "contact_lead" }}</p>
   <p>
     <a class="button" href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a>
     <a class="button secundario" href="{{ site.Params.github }}">GitHub · AdrianGreenboy</a>

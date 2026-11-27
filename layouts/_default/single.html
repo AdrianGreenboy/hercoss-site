@@ -17,7 +17,7 @@
 
   {{ $imgs := where (.Resources.ByType "image") "Name" "not in" (slice "cover.jpg" "cover.png" "cover.webp") }}
   {{ with $imgs }}
-  <h2>Gallery</h2>
+  <h2>{{ i18n "gallery" }}</h2>
   <div class="gallery">
     {{ range . }}
       {{ $full := .Fit "1600x1600" }}

@@ -1,12 +1,12 @@
 {{- /* Tabbed diagram: one core, three personalities. */ -}}
 {{- $p := .Page -}}
 {{- $modes := slice
-  (dict "id" "rv128" "label" "128-bit CPU" "img" "mode-rv128.svg" "text" "The full 128-bit machine: every register and every arithmetic operation is 128 bits wide. It shines on big-number maths and cryptography, where twice the word width means fewer steps.")
-  (dict "id" "rv64" "label" "64-bit CPU" "img" "mode-rv64.svg" "text" "A standard 64-bit RISC-V processor. Linux, FreeRTOS, Zephyr, RTEMS and the normal compilers run unchanged, so the whole existing RISC-V software world is available on day one.")
-  (dict "id" "dual" "label" "2 × 64-bit CPUs" "img" "mode-2xrv64.svg" "text" "The same silicon behaves as two independent 64-bit processors, each with its own program. Linux runs as a two-CPU SMP system on a single core: twice the CPUs without twice the area.")
+  (dict "id" "rv128" "label" (i18n "m1_l") "img" "mode-rv128.svg" "text" (i18n "m1_t"))
+  (dict "id" "rv64" "label" (i18n "m2_l") "img" "mode-rv64.svg" "text" (i18n "m2_t"))
+  (dict "id" "dual" "label" (i18n "m3_l") "img" "mode-2xrv64.svg" "text" (i18n "m3_t"))
 -}}
 <div class="tabs" data-tabs>
-  <div class="toggle" role="tablist" aria-label="Core modes">
+  <div class="toggle" role="tablist" aria-label="{{ i18n "core_modes" }}">
     {{- range $i, $m := $modes }}
     <button role="tab" data-tab="{{ $m.id }}" aria-selected="{{ if eq $i 0 }}true{{ else }}false{{ end }}">{{ $m.label }}</button>
     {{- end }}
@@ -18,4 +18,4 @@
   </div>
   {{- end }}
 </div>
-<noscript><p>Mode diagrams require JavaScript to switch; all three modes are described above.</p></noscript>
+<noscript><p>{{ i18n "m_noscript" }}</p></noscript>

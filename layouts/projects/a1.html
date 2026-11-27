@@ -1,15 +1,15 @@
 {{ define "main" }}
 <article class="a1">
-  <p class="eyebrow">Flagship · {{ .Params.estado }}</p>
+  <p class="eyebrow">{{ i18n "flagship" }} · {{ .Params.estado }}</p>
   <h1>{{ .Title }}</h1>
   <p class="lead">{{ .Params.summary }}</p>
   {{ with .Params.datos }}<ul class="datos">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
   <p>
-    <a class="button" href="{{ "invest/" | relURL }}">Invest in Hercoss</a>
-    <a class="button secundario" href="#specs">Full specification</a>
+    <a class="button" href="{{ "invest/" | relLangURL }}">{{ i18n "btn_invest" }}</a>
+    <a class="button secundario" href="#specs">{{ i18n "full_spec" }}</a>
   </p>
   {{ with .Resources.GetMatch "cover.*" }}{{ with .Fit "1600x1000" }}
-  <img class="hero-img" src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Concept illustration of the HERCOSS Exxo A1 chip">
+  <img class="hero-img" src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="{{ i18n "a1_alt" }}">
   {{ end }}{{ end }}
   <div class="prose">{{ .Content }}</div>
 </article>

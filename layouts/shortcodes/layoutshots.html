@@ -4,9 +4,9 @@
   {{- $img := $p.Resources.Get (printf "%s.jpg" $s.f) -}}
   {{- $hd := $p.Resources.Get (printf "%s-hd.jpg" $s.f) -}}
   <figure class="shot{{ if eq $i 0 }} shot-main{{ end }}">
-    <a href="{{ $hd.RelPermalink }}" target="_blank" rel="noopener" aria-label="Open full resolution">
+    <a href="{{ $hd.RelPermalink }}" target="_blank" rel="noopener" aria-label="{{ i18n "open_full" }}">
       <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="{{ $s.c }}" loading="lazy">
-      <span class="shot-tag">{{ if eq $i 0 }}FULL BLOCK{{ else }}ZOOM · STANDARD CELLS{{ end }}</span>
+      <span class="shot-tag">{{ if eq $i 0 }}{{ i18n "shot1" }}{{ else }}{{ i18n "shot2" }}{{ end }}</span>
     </a>
     <figcaption>{{ $s.c }}</figcaption>
   </figure>

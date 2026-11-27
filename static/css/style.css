@@ -471,3 +471,11 @@ button.inv-submit { background: var(--accent); color: var(--bg); }
   .site-header nav { display: flex; flex-wrap: wrap; gap: 8px 18px; }
   .site-header nav a { margin-left: 0; }
 }
+
+/* v11 language switcher */
+.site-header { gap: 18px; }
+.lang { display: flex; gap: 2px; margin-left: 18px; font: 12px var(--mono); }
+.lang a { padding: 4px 7px; color: var(--muted); border: 1px solid transparent; text-decoration: none; letter-spacing: .08em; }
+.lang a:hover { color: var(--text); border-color: var(--line); }
+.lang a[aria-current="true"] { color: var(--accent); border-color: var(--accent); }
+@media (max-width: 700px) { .lang { margin-left: 0; } }

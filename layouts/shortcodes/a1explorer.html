@@ -1,6 +1,6 @@
-{{ $d := hugo.Data.a1 }}
+{{ $d := partial "ldata.html" (dict "p" .Page "n" "a1") }}
 <div class="soc-wrap">
-  <div class="soc" role="tablist" aria-label="Chip blocks">
+  <div class="soc" role="tablist" aria-label="{{ i18n "chip_blocks" }}">
     {{ range $i, $b := $d.bloques }}
     <button class="soc-block" style="grid-area: {{ $b.id }}" role="tab" data-block="{{ $b.id }}" aria-selected="{{ if eq $i 0 }}true{{ else }}false{{ end }}">
       <span class="soc-corto">{{ $b.corto }}</span>

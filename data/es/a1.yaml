@@ -1,0 +1,246 @@
+# HERCOSS Exxo A1: explorador del chip, variantes y hoja de ruta (español).
+bloques:
+  - id: cpu
+    nombre: "Clúster de 16 × RV128IMAC"
+    corto: "Procesadores"
+    titulo: "Dieciséis procesadores RISC-V de 128 bits"
+    texto: >-
+      Dieciséis núcleos RV128IMAC, el diseño RISC-V de 128 bits propio de
+      Hercoss, en cuatro clústeres de cuatro con 1 MiB de caché L2 por clúster.
+      Cada núcleo funciona como CPU de 128 bits, como CPU estándar de 64 bits o
+      como dos CPUs de 64 bits, y cualquier núcleo puede llamar a una función en
+      otro directamente, sin el sistema operativo de por medio.
+    puntos:
+      - "Ejecuta software RISC-V estándar de 64 bits: Linux, FreeRTOS, Zephyr, RTEMS."
+      - "Hasta 16 dominios Linux aislados, o grupos SMP, combinados libremente."
+      - "Llamada entre núcleos: 1.35 µs ida y vuelta, unas 5× más rápida que una llamada al sistema vacía de Linux (prototipo FPGA de 2 CPUs)."
+      - "Núcleos y aceleradores comparten su propio anillo, justo a plena carga: 64 hilos de hardware direccionables, 16 estaciones verificadas en simulación."
+      - "Lockstep que se repara solo: dos núcleos vecinos cualesquiera se emparejan y corrigen fallos transitorios automáticamente, sin reinicio."
+      - "64 KiB de caché de instrucciones y 32 KiB de datos por núcleo (objetivo del A1)."
+
+  - id: fpga
+    nombre: "Tejido FPGA de ~500K LUT"
+    corto: "Lógica reconfigurable"
+    titulo: "Una FPGA de 500,000 LUT dentro del chip"
+    texto: >-
+      Arquitectura FPGA propia de Hercoss: 500,000 LUT de seis entradas en
+      cuatro cuadrantes, unos 3,000 bloques DSP y unos 72 Mb de block RAM y
+      ultra RAM con ECC. Hardware que se puede redefinir después del
+      lanzamiento: se corrigen errores y se añaden funciones en órbita, sin
+      silicio nuevo.
+    puntos:
+      - "Celdas de configuración DICE endurecidas contra radiación en ambas versiones."
+      - "Bitstreams cifrados con AES-GCM y firmados con ML-DSA, una firma post-cuántica."
+      - "El tejido maneja los mismos transceptores que los controladores fijos: hasta ~2 Tbps de Ethernet."
+      - "Cuatro puertos AXI4 de 512 bits por cuadrante hacia la red en chip, uno de ellos coherente con caché."
+      - "Primer paso hecho: una versión pequeña funciona en una FPGA y su layout en 130 nm pasó la revisión previa al tape-out de IHP."
+
+  - id: ia
+    nombre: "IA y control de actitud"
+    corto: "Aceleración"
+    titulo: "Un solo arreglo para IA, redes neuronales y control de actitud"
+    texto: >-
+      Ocho bloques de 1,024 unidades de multiplicación-acumulación, cada uno
+      con 512 KiB de SRAM local, a 1.5 GHz: 8,192 MAC por ciclo, unos 12 TMAC/s
+      de pico. Lo que otros chips reparten en tres motores aquí comparte un
+      solo arreglo, para que cada misión pueda redistribuir el trabajo.
+    puntos:
+      - "Redes convolucionales (CNN) y de impulsos (SNN), transformers, matriz-vector en FP32."
+      - "Control predictivo por modelo para determinación y control de actitud (ADCS)."
+      - "Cada bloque es su propia isla de energía y se puede apagar."
+      - "Bloques ya probados en FPGA: una NPU a 0.333 ms por imagen y un acelerador de control de actitud (MPC). Vea Inteligencia a bordo."
+
+  - id: seg
+    nombre: "Seguridad post-cuántica"
+    corto: "Seguridad"
+    titulo: "Seguridad lista para la era cuántica"
+    texto: >-
+      Un satélite vuela diez años o más; en ese tiempo, una computadora
+      cuántica futura podría romper la criptografía clásica actual. El A1 lleva
+      un motor post-cuántico para los algoritmos recién estandarizados.
+    puntos:
+      - "Intercambio de claves ML-KEM y firmas ML-DSA, además de AES-GCM."
+      - "SHA-3 / SHAKE en hardware, la base de estos estándares: 129 MB/s desde un programa de Linux sin driver, ~140× el software (prototipo FPGA)."
+      - "Las mismas firmas protegen los bitstreams de la FPGA: un enlace de subida interceptado no puede inyectar lógica."
+      - "Borrado seguro de claves en la versión de vuelo."
+
+  - id: axi
+    nombre: "NOC_512 · dos planos"
+    corto: "Interconexión"
+    titulo: "Una red en chip de 512 bits con dos planos"
+    texto: >-
+      NOC_512, la red en chip propia de Hercoss, une los procesadores, el
+      tejido FPGA, el arreglo de IA, la memoria y toda la E/S en una malla de
+      5 × 5. Un plano de paquetes lleva el tráfico AXI4 normal: registros, DMA,
+      memoria. Un plano de circuitos lleva los datos masivos, como Ethernet de
+      1.6 Tb/s, PCIe Gen5 y convertidores rápidos, por carriles de 512 bits de
+      latencia fija que corren en paralelo y llegan alineados.
+    puntos:
+      - "En silicio FPGA: 3.19 billones de transferencias AXI4 en nueve corridas de una hora, cero errores; se repara sola alrededor de un switch muerto en ≈0.6 µs, 405,522 veces en una hora, sin perder una palabra."
+      - "Plan del chip: 7.7 Tb/s en 19 circuitos protegidos; un nodo puede morir a plena carga sin perder una palabra (simulación)."
+      - "AXI4 completo en todas partes; 16 puertos AXI4 de 512 bits hacia el tejido FPGA."
+      - "Aislamiento en hardware: un PMP por núcleo y un IOPMP delante de cada maestro DMA."
+
+  - id: pcie
+    nombre: "3 × PCIe Gen5 x16"
+    corto: "Expansión"
+    titulo: "Tres interfaces PCI Express Gen5 de 16 carriles"
+    texto: >-
+      Tres controladores PCIe Gen5 x16, 48 carriles a 32 GT/s, para
+      almacenamiento, aceleradores o una computadora anfitriona: unos 1.5 Tb/s
+      en cada sentido.
+    puntos:
+      - "Gen5: 32 GT/s por carril."
+      - "Compatible con hardware comercial existente."
+      - "Los bitstreams también se pueden cargar por PCIe."
+
+  - id: enlaces
+    nombre: "1.6TbE · ~2 Tbps de Ethernet"
+    corto: "Enlaces rápidos"
+    titulo: "Hasta ~2 Tbps de Ethernet"
+    texto: >-
+      Un conjunto de 72 transceptores serie: ocho carriles PAM4 de 224 Gb/s
+      para un puerto Ethernet de 1.6 Tb/s y 64 carriles a 32 Gb/s para Ethernet
+      de 400G y PCIe. Todos los puertos Ethernet son sensibles al tiempo (TSN)
+      sobre una sola base de tiempo precisa.
+    puntos:
+      - "1 × 1.6TbE, o 2 × 800G, 4 × 400G, 8 × 200G en los carriles PAM4."
+      - "400G más en carriles NRZ: 1 × 400G, 4 × 100G, 8 × 50G o 16 × 25G / 10G."
+      - "Base de tiempo común PTP / IEEE 802.1AS para todos los puertos."
+      - "El IP Ethernet y SerDes propio de Hercoss ya funciona en FPGA contra tarjetas de red comerciales."
+      - "El núcleo 1.6TbE es propio de Hercoss, del MAC a la corrección de errores: en silicio FPGA, 312 mil millones de tramas en una hora con cero errores; idéntico bit a bit a los vectores del IEEE 802.3."
+
+  - id: espacio
+    nombre: "SpaceWire · 1553 · CAN"
+    corto: "Buses espaciales"
+    titulo: "Los buses que usa la industria espacial"
+    texto: >-
+      Las naves espaciales se construyen alrededor de buses con décadas de
+      vuelo. El A1 los integra, así que se conecta directamente a instrumentos
+      y equipos existentes sin chips adicionales.
+    puntos:
+      - "10 × SpaceWire, el enlace estándar de la ESA para datos de instrumentos."
+      - "5 × buses de mando y control MIL-STD-1553."
+      - "10 × CAN para subsistemas."
+      - "Los tres ya están validados en FPGA como núcleos IP de Hercoss."
+
+  - id: adc
+    nombre: "10 × ADC ΣΔ de 24 bits"
+    corto: "Entradas analógicas"
+    titulo: "Diez convertidores analógico-digitales de 24 bits"
+    texto: >-
+      Diez convertidores sigma-delta, con un canal diferencial cada uno, de
+      hasta 4 MS/s, leen sensores con alta resolución sin chips convertidores
+      externos.
+    puntos:
+      - "Para sensores de actitud, telemetría e instrumentos."
+      - "Sigma-delta: alta resolución con poca circuitería analógica."
+      - "La cadena digital de decimación ya está validada en FPGA: entre unos 16.4 y 18.9 bits efectivos."
+
+variantes:
+  - id: cots
+    nombre: "COTS"
+    titulo: "Versión comercial"
+    texto: >-
+      El mismo chip en un encapsulado flip-chip para IA en el borde, sistemas
+      industriales y constelaciones NewSpace en órbita baja.
+    filas:
+      - ["Mercados", "IA en el borde, industria, NewSpace LEO"]
+      - ["Encapsulado", "Flip-chip"]
+      - ["Temperatura de unión", "−55 °C a +125 °C"]
+      - ["Configuración FPGA", "Celdas DICE endurecidas contra radiación"]
+      - ["Controlador de plataforma", "RV32IM"]
+  - id: rad
+    nombre: "Rad-hard"
+    titulo: "Versión endurecida contra radiación para GEO y espacio profundo"
+    texto: >-
+      La misma máscara en un encapsulado cerámico de columnas, con
+      endurecimiento contra radiación para misiones largas. Las cifras son
+      objetivos de diseño; las pruebas de radiación llegan en la fase F4.
+    filas:
+      - ["Mercados", "GEO, interplanetarias, misiones de larga vida"]
+      - ["Encapsulado", "Matriz cerámica de columnas (CCGA)"]
+      - ["Dosis ionizante total", "Objetivo 300 krad(Si); objetivo de prueba 600 krad (margen 2×)"]
+      - ["Latch-up por evento único", "Inmune a ≥ 75 MeV·cm²/mg (objetivo)"]
+      - ["Temperatura de unión", "−55 °C a +125 °C en operación; −150 °C a +100 °C de supervivencia"]
+      - ["Vida de misión", "10 años, diseñado para 15"]
+      - ["Controlador de plataforma", "RV32IM con redundancia modular triple"]
+
+fases:
+  - id: F1
+    titulo: "Prueba de concepto y primer silicio"
+    estado: curso
+    gate: "Silicio del chip de prueba medido: área del bloque del tejido, timing y configuración en silicio real de 130 nm."
+    items:
+      - estado: hecho
+        titulo: "Tejido eFPGA propio funcionando en una FPGA"
+        texto: "La primera versión del tejido corre dentro de un dispositivo AMD Versal y pasa la autoprueba de reconfiguración en tiempo de ejecución."
+      - estado: hecho
+        titulo: "El chip de prueba del tejido pasa la revisión previa al tape-out de IHP"
+        texto: "Layout en 130 nm (IHP SG13G2, Fráncfort del Óder), flujo de código abierto; LVS, antena y timing limpios. GDS listo."
+      - estado: hecho
+        titulo: "El núcleo RV128IMAC ejecuta Linux en FPGA"
+        texto: "Linux 6.6 SMP, llamadas entre núcleos en 1.35 µs, SHA-3 en hardware a 129 MB/s sin driver, 214 de 214 pruebas en placa superadas."
+      - estado: hecho
+        titulo: "El lockstep que se repara solo corrige fallos en FPGA"
+        texto: "24 de 24 fallos inyectados corregidos, 0 resultados corruptos, medido con los núcleos de 64 bits anteriores del SoC A1."
+      - estado: hecho
+        titulo: "IP espacial y de red validado en FPGA"
+        texto: "SpaceWire, MIL-STD-1553, CAN, UART, I²C, I³C, SPI, SD, PTP, criptografía post-cuántica, Ethernet 25G y 40G contra una tarjeta de red comercial, enlace SerDes de 103 Gb/s."
+      - estado: hecho
+        titulo: "Red en chip NOC_512: se repara sola en FPGA"
+        texto: "Nueve corridas de una hora, 3.19 billones de transferencias AXI4, cero errores; fallos corregidos en vivo; en silicio la red se repara sola alrededor de un switch muerto en ≈0.6 µs, 405,522 veces en una hora, sin perder una palabra. Plan del chip de 5 × 5 verificado en simulación."
+      - estado: hecho
+        titulo: "Capa de enlace 1.6TbE en silicio"
+        texto: "MAC, PCS, FEC Reed-Solomon y alineación de carriles: 312 mil millones de tramas en una hora con cero errores, ráfagas de errores reparadas a velocidad completa, idéntica bit a bit a los vectores de referencia del IEEE."
+      - estado: hecho
+        titulo: "Red en chip que se repara sola, en silicio y verificada formalmente"
+        texto: "Un switch apagado 405,522 veces en una hora, cada reparación en ≈0.6 µs, sin perder datos; nueve reglas de seguridad verificadas formalmente dentro de la profundidad comprobada."
+      - estado: curso
+        titulo: "Anillo para 16 núcleos y controlador de memoria DDRC_72"
+        texto: "Anillo para 64 hilos de hardware sintetizado, 16 estaciones verificadas en simulación; controlador DDR4 que se repara solo, RTL v0.1 verificado en simulación."
+      - estado: curso
+        titulo: "Arquitectura y RTL del A1"
+        texto: "RTL del SoC con el clúster RV128IMAC; regresión en simulación; revisión de cada núcleo IP para el chip."
+      - estado: plan
+        titulo: "Fabricar y medir el chip de prueba del tejido"
+        texto: "Tape-out en IHP y primeras mediciones en silicio real."
+
+  - id: F2
+    titulo: "Emulación del sistema completo y shuttle en nodo avanzado"
+    estado: plan
+    gate: "Frecuencia de CPU, rendimiento SerDes y comportamiento bajo radiación medidos en el nodo objetivo antes del compromiso de producción."
+    items:
+      - estado: plan
+        titulo: "Clúster de 16 núcleos y red de 5 × 5 en una FPGA grande"
+        texto: "El diseño completo ya no cabe en la placa actual; la emulación pasa a una plataforma Versal más grande."
+      - estado: plan
+        titulo: "Chip de prueba en shuttle en una fundición europea"
+        texto: "Núcleos, una porción del tejido y transceptores en el nodo avanzado, para medir frecuencia, área y efectos de evento único."
+      - estado: plan
+        titulo: "IP analógico y de señal mixta seleccionado"
+        texto: "Capas físicas de SerDes, PCIe, DDR y ADC: diseñadas en casa o licenciadas."
+
+  - id: F3
+    titulo: "Chip de producción (COTS)"
+    estado: plan
+    gate: "Muestras COTS funcionando con todas las funciones."
+    items:
+      - estado: plan
+        titulo: "Máscara de producción del HERCOSS Exxo A1"
+        texto: "Chip completo, encapsulado flip-chip, placa de arranque."
+      - estado: plan
+        titulo: "Herramientas de diseño de Hercoss"
+        texto: "Interfaz gráfica y flujo TCL/bash para particionar el chip, generar device trees y construir bitstreams de FPGA."
+
+  - id: F4
+    titulo: "Versión endurecida contra radiación y calificación de vuelo"
+    estado: plan
+    gate: "Calificación espacial: un chip que las misiones europeas pueden volar."
+    items:
+      - estado: plan
+        titulo: "Encapsulado cerámico CCGA y pruebas de radiación"
+        texto: "Pruebas de dosis total, evento único y latch-up hasta los objetivos de 300 / 600 krad."
+      - estado: plan
+        titulo: "Calificación de vuelo"
+        texto: "Calificación con agencias espaciales, incluida la ESA."

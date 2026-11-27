@@ -1,0 +1,166 @@
+# cores (es), generated from data/cores.yaml
+- nombre: RV128IMAC
+  cat: Procesadores
+  estado: validado
+  que: 'Procesador RISC-V de 128 bits: funciona como RV128, RV64 o dos CPUs RV64; Linux 6.6 SMP, 214/214 pruebas en placa; llamadas entre núcleos en 1.35 µs; SHA-3 en hardware a 129 MB/s, ~140× el software, sin driver.'
+  a1: Los 16 procesadores del A1
+- nombre: RV32IM
+  cat: Procesadores
+  estado: validado
+  que: Núcleo RISC-V compacto de 32 bits que ejecuta el firmware de los sistemas de prueba de la familia IP en silicio.
+  a1: Controlador de plataforma siempre encendido
+- nombre: RV64IMAC
+  cat: Procesadores
+  estado: desarrollo
+  que: Procesador RISC-V de 64 bits; sus funciones se están trasladando al RV128IMAC.
+  a1: ''
+- nombre: Anillo de núcleos
+  cat: Interconexión
+  estado: validado
+  que: 'Anillo propio de Hercoss donde núcleos y aceleradores se llaman directamente: en silicio con 2 CPUs y el motor SHA-3; la versión de 64 hilos cumple timing; 16 estaciones a plena carga verificadas en simulación, justo con cada estación.'
+  a1: Une los 16 núcleos y sus aceleradores
+- nombre: NOC_512
+  cat: Interconexión
+  estado: validado
+  que: 'Red en chip de 512 bits que se repara sola, con planos de paquetes y de flujo: 3.19 billones de transferencias AXI4 en silicio FPGA con cero errores; se repara sola alrededor de un switch muerto en ≈0.6 µs en silicio, 405,522 veces en una hora, 0 de más de 160 mil millones de palabras perdidas; lógica de autorreparación verificada formalmente.'
+  a1: Une todos los bloques del chip
+- nombre: DDRC_72
+  cat: Memoria
+  estado: desarrollo
+  que: 'Controlador DDR4 de 72 bits que se repara solo, hasta 128 GiB: sobrevive a un chip de memoria muerto y repara fallos por sí mismo; la variante rad-hard repara su propia lógica tras un latch-up. Verificado en simulación: 0 errores de datos.'
+  a1: Memoria externa del chip
+- nombre: NPU
+  cat: IA y control
+  estado: validado
+  que: 'Inferencia CNN INT8 en un arreglo sistólico de 8 × 8: 0.333 ms por imagen, ~3,000 inferencias/s en silicio FPGA.'
+  a1: Bloque base del AI Engine
+- nombre: Acelerador MPC para AOCS / ADCS
+  cat: IA y control
+  estado: validado
+  que: Resuelve en hardware el problema MPC de control de actitud (70 × 70, flotante de 32 bits); idéntico bit a bit de la simulación al silicio.
+  a1: Aceleración del control de actitud y órbita
+- nombre: Front-end digital de RF
+  cat: RF y señal
+  estado: validado
+  que: 'DDC y DUC de radio definida por software: NCO, mezclador, CIC, FIR de 16 coeficientes, AGC/RSSI, DMA propio a memoria.'
+  a1: Base de la variante A1-RF
+- nombre: DSP
+  cat: RF y señal
+  estado: familia
+  que: Motor de procesamiento digital de señales.
+  a1: Base de los 5 núcleos DSP del A1
+- nombre: Cadena de ADC sigma-delta
+  cat: RF y señal
+  estado: validado
+  que: 'Cadena digital de decimación de un ADC sigma-delta: ~16.4 a ~18.9 bits efectivos, DMA a memoria.'
+  a1: 10 × ADC ΣΔ de 24 bits
+- nombre: ETH_1T6
+  cat: Enlaces
+  estado: validado
+  que: 'Capa de enlace Ethernet completa de 1.6 Tb/s: MAC, PCS, FEC RS(544,514), alineación de carriles. En silicio FPGA (a escala): 312 mil millones de tramas en una hora, cero errores; de 1 a 15 errores de símbolo corregidos; ráfagas reparadas a velocidad completa; ancho completo en simulación.'
+  a1: El puerto 1.6TbE
+- nombre: SERDES_256G v1.0
+  cat: Enlaces
+  estado: validado
+  que: 'Enlace serie multicarril con codificación 64B/66B propia de Hercoss: 103 Gb/s en 4 carriles, prueba de 1 hora con cero errores.'
+  a1: Base del conjunto de 72 transceptores
+- nombre: PCS_40G
+  cat: Enlaces
+  estado: validado
+  que: 'Codificación física 40GBASE-R: enlaza con una tarjeta de red comercial de 40G en los cuatro carriles.'
+  a1: Familia PCS Ethernet
+- nombre: MAC_40G v0.3
+  cat: Enlaces
+  estado: validado
+  que: 'MAC Ethernet de 40G: FCS, PAUSE, filtro de direcciones, generador UDP en hardware; ping y prueba de 1 hora contra una NIC comercial. v0.4 en curso.'
+  a1: Familia MAC Ethernet
+- nombre: PCS_25G + MAC_25G
+  cat: Enlaces
+  estado: validado
+  que: Ethernet 25G con codificador 64B/66B de la cláusula 49.
+  a1: Ethernet hasta 16 × 25G
+- nombre: MAC_10G
+  cat: Enlaces
+  estado: familia
+  que: MAC Ethernet de 10 Gigabit.
+  a1: Puertos Ethernet 10G
+- nombre: Ethernet 25G óctuple
+  cat: Enlaces
+  estado: familia
+  que: Ocho puertos Ethernet 25G en un núcleo, 200 Gb/s en total.
+  a1: Ethernet 25G multipuerto
+- nombre: ETH
+  cat: Enlaces
+  estado: familia
+  que: Controlador Ethernet para redes generales.
+  a1: Ethernet de gestión
+- nombre: Switch TSN
+  cat: Enlaces
+  estado: familia
+  que: 'Switch Time-Sensitive Networking: Ethernet determinista y planificado para tráfico de control.'
+  a1: TSN en cada puerto Ethernet
+- nombre: PTP / IEEE 802.1AS
+  cat: Enlaces
+  estado: validado
+  que: Sincronización de reloj por red con marcas de tiempo en hardware.
+  a1: Base de tiempo común para cada puerto Ethernet
+- nombre: PCIe
+  cat: Enlaces
+  estado: desarrollo
+  que: Controlador PCI Express para expansión de alto ancho de banda.
+  a1: 3 × Gen5 x16
+- nombre: MIPI CSI-2
+  cat: Enlaces
+  estado: desarrollo
+  que: Interfaz para cámaras y sensores de imagen; incluye la capa PHY.
+  a1: 2 ×
+- nombre: SpaceWire
+  cat: Espacio
+  estado: validado
+  que: El enlace estándar de la ESA para datos de instrumentos.
+  a1: 10 ×
+- nombre: MIL-STD-1553
+  cat: Espacio
+  estado: validado
+  que: Bus de mando y control con larga herencia de vuelo.
+  a1: 5 ×
+- nombre: CAN
+  cat: Espacio
+  estado: validado
+  que: Bus robusto para subsistemas de naves espaciales.
+  a1: 10 ×
+- nombre: USART
+  cat: General
+  estado: validado
+  que: Puerto serie para consola, telemetría y mantenimiento.
+  a1: 5 ×
+- nombre: I²C / I³C
+  cat: General
+  estado: validado
+  que: Buses de sensores y housekeeping, incluido el más reciente I³C.
+  a1: 5 × I²C + 5 × I³C
+- nombre: SPI
+  cat: General
+  estado: validado
+  que: Bus serie para memoria flash y periféricos.
+  a1: 5 ×
+- nombre: SD
+  cat: General
+  estado: validado
+  que: Controlador de tarjetas SD para almacenamiento y arranque.
+  a1: 2 ×
+- nombre: Motor SHA-3 / Keccak
+  cat: Seguridad
+  estado: validado
+  que: SHA3-224/256/384/512 y SHAKE, una ronda por ciclo; 129 MB/s desde un programa de Linux sin driver, ~140× el software.
+  a1: Base en hardware para la criptografía post-cuántica
+- nombre: Scrubber ECC
+  cat: Seguridad
+  estado: familia
+  que: 'Scrubber de memoria en segundo plano: encuentra y corrige errores de bit en memoria antes de que se acumulen.'
+  a1: Protección de memoria contra la radiación
+- nombre: ML-KEM / ML-DSA
+  cat: Seguridad
+  estado: validado
+  que: Aceleradores post-cuánticos de intercambio de claves y firma, con borrado de claves para vuelo.
+  a1: Motor post-cuántico; bitstreams de FPGA firmados

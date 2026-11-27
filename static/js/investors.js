@@ -8,6 +8,10 @@
   var DEMO = params.get("demo") === "1";
   var $ = function (id) { return document.getElementById(id); };
   var NS = "http://www.w3.org/2000/svg";
+  var T = {}; try { T = JSON.parse(document.getElementById("i18n-js").textContent); } catch (e) {}
+  function t(k, d) { return Object.prototype.hasOwnProperty.call(T, k) ? T[k] : d; }
+  var LANG = document.documentElement.lang || "en";
+  var LOC = { en: "en-GB", es: "es-MX", de: "de-DE" }[LANG] || "en-GB";
 
   function show(id) {
     ["hub-loading", "hub-login", "hub-dash"].forEach(function (x) { $(x).hidden = x !== id; });
@@ -25,9 +29,9 @@
       });
     });
   }
-  function eur(n) { return new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n); }
+  function eur(n) { return new Intl.NumberFormat(LOC, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n); }
   function money(n, cur) {
-    return new Intl.NumberFormat("en-GB", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(n);
+    return new Intl.NumberFormat(LOC, { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(n);
   }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function svgEl(tag, attrs) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
@@ -49,11 +53,11 @@
         "stroke-dasharray": len + " " + C, "stroke-dashoffset": -off, transform: "rotate(-90 110 110)" }));
       off += C * s.v / total;
     });
-    var t = svgEl("text", { x: cx, y: cy - 4, "text-anchor": "middle", fill: "#e6e9ee", "font-size": 30, "font-weight": 700, "font-family": "ui-monospace, Menlo, monospace" });
-    t.textContent = (100 * mine / total).toFixed(1) + "%";
-    svg.appendChild(t);
+    var t1 = svgEl("text", { x: cx, y: cy - 4, "text-anchor": "middle", fill: "#e6e9ee", "font-size": 30, "font-weight": 700, "font-family": "ui-monospace, Menlo, monospace" });
+    t1.textContent = (100 * mine / total).toLocaleString(LOC, { maximumFractionDigits: 1 }) + "%";
+    svg.appendChild(t1);
     var t2 = svgEl("text", { x: cx, y: cy + 22, "text-anchor": "middle", fill: "#9aa4b2", "font-size": 12, "font-family": "ui-monospace, Menlo, monospace", "letter-spacing": 2 });
-    t2.textContent = "YOUR SHARE";
+    t2.textContent = t("your_share", "YOUR SHARE");
     svg.appendChild(t2);
   }
 
@@ -83,28 +87,28 @@
     var p = d.pool;
     $("pool-mine").textContent = eur(p.my_eur);
     $("pool-total").textContent = eur(p.total_eur);
-    $("pool-pct").textContent = (p.my_percent || 0).toFixed(1) + " %";
-    $("pool-pct").parentNode.lastChild.textContent = d.investor.in_pool === false ? " (not counted: you opted out)" : " of the pool is yours";
+    $("pool-pct").textContent = (p.my_percent || 0).toLocaleString(LOC, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " %";
+    $("pool-pct").parentNode.lastChild.textContent = d.investor.in_pool === false ? t("pct_out", " (not counted: you opted out)") : t("pct_in", " of the pool is yours");
     $("pool-n").textContent = p.participants;
-    $("pool-cur").textContent = money(p.by_currency.EUR.total, "EUR") + " pledged in euros · " + money(p.by_currency.MXN.total, "MXN") + " in pesos";
-    $("pool-rate").textContent = "MXN converted at " + p.rate.mxn_per_eur + " per EUR (" + p.rate.source + (p.rate.date ? ", " + p.rate.date : "") + ")";
+    $("pool-cur").textContent = money(p.by_currency.EUR.total, "EUR") + t("in_eur", " pledged in euros · ") + money(p.by_currency.MXN.total, "MXN") + t("in_mxn", " in pesos");
+    $("pool-rate").textContent = t("rate_a", "MXN converted at ") + p.rate.mxn_per_eur.toLocaleString(LOC) + t("rate_b", " per EUR (") + p.rate.source + (p.rate.date ? ", " + p.rate.date : "") + ")";
     ring($("pool-ring"), p.shares_eur, p.my_eur);
     if (p.goal_eur) {
       $("pool-goal").hidden = false;
       $("goal-fill").style.width = Math.min(100, 100 * p.total_eur / p.goal_eur).toFixed(1) + "%";
-      $("goal-txt").textContent = eur(p.total_eur) + " of the " + eur(p.goal_eur) + " goal";
+      $("goal-txt").textContent = eur(p.total_eur) + t("goal_a", " of the ") + eur(p.goal_eur) + t("goal_b", " goal");
     }
 
     if (d.pledge) {
       $("my-pledge").textContent = money(d.pledge.amount, d.pledge.currency);
       var st = $("my-status");
-      st.textContent = d.pledge.status === "confirmed" ? "Confirmed" : "Pledged · non-binding";
+      st.textContent = d.pledge.status === "confirmed" ? t("confirmed", "Confirmed") : t("pledged", "Pledged · non-binding");
       st.className = "estado " + (d.pledge.status === "confirmed" ? "hecho" : "curso");
-      $("my-updated").textContent = " updated " + d.pledge.updated_at;
+      $("my-updated").textContent = t("updated", " updated ") + d.pledge.updated_at;
       state.cur = d.pledge.currency;
       document.querySelector("#pledge-form [name=amount]").value = d.pledge.amount;
     } else {
-      $("my-pledge").textContent = "No pledge yet";
+      $("my-pledge").textContent = t("no_pledge", "No pledge yet");
     }
     setCur(state.cur);
 
@@ -112,19 +116,19 @@
     var next = $("meet-next"), list = $("meet-list");
     next.textContent = ""; list.textContent = "";
     if (!d.meetings.length) {
-      next.appendChild(el("p", "inv-small", "The next meeting will be announced here and by e-mail."));
+      next.appendChild(el("p", "inv-small", t("no_meeting", "The next meeting will be announced here and by e-mail.")));
     }
     d.meetings.forEach(function (m, i) {
       var when = new Date(m.starts_at);
-      var date = when.toLocaleString(undefined, { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+      var date = when.toLocaleString(LOC, { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
       if (i === 0) {
         next.appendChild(el("p", "hub-big hub-date", date));
         next.appendChild(el("p", null, m.title));
         var days = Math.ceil((when - Date.now()) / 86400000);
-        next.appendChild(el("p", "hub-sub", days > 1 ? "in " + days + " days" : days === 1 ? "tomorrow" : "today"));
+        next.appendChild(el("p", "hub-sub", days > 1 ? t("in_days", "in {n} days").replace("{n}", days) : days === 1 ? t("tomorrow", "tomorrow") : t("today", "today")));
         var row = el("p");
-        if (m.link) { var a = el("a", "button", "Join"); a.href = m.link; a.rel = "noopener"; a.target = "_blank"; row.appendChild(a); }
-        var ics = el("a", "button secundario", "Add to calendar");
+        if (m.link) { var a = el("a", "button", t("join", "Join")); a.href = m.link; a.rel = "noopener"; a.target = "_blank"; row.appendChild(a); }
+        var ics = el("a", "button secundario", t("add_cal", "Add to calendar"));
         ics.href = DEMO ? "#" : API + "/api/meetings/" + m.id + ".ics";
         row.appendChild(ics);
         next.appendChild(row);
@@ -135,36 +139,36 @@
 
     // news
     var news = $("news"); news.textContent = "";
-    if (!d.news.length) news.appendChild(el("p", "inv-small", "No news yet."));
+    if (!d.news.length) news.appendChild(el("p", "inv-small", t("no_news", "No news yet.")));
     d.news.forEach(function (n) {
       var c = el("article", "hub-card hub-n");
       if (n.image_url && /^https:\/\//.test(n.image_url)) {
         var img = el("img"); img.src = n.image_url; img.alt = ""; img.loading = "lazy"; img.referrerPolicy = "no-referrer"; c.appendChild(img);
       }
-      c.appendChild(el("p", "hub-k", new Date(n.published_at).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })));
+      c.appendChild(el("p", "hub-k", new Date(n.published_at).toLocaleDateString(LOC, { day: "numeric", month: "long", year: "numeric" })));
       c.appendChild(el("h3", null, n.title));
       n.body.split(/\n\n+/).forEach(function (para) { c.appendChild(el("p", null, para)); });
-      if (n.link && /^https:\/\//.test(n.link)) { var a = el("a", null, "Read more →"); a.href = n.link; c.appendChild(a); }
+      if (n.link && /^https:\/\//.test(n.link)) { var a = el("a", null, t("read_more", "Read more →")); a.href = n.link; c.appendChild(a); }
       news.appendChild(c);
     });
   }
 
   function renderMarket(m) {
     var box = $("market"); box.textContent = "";
-    if (!m.items.length) box.appendChild(el("p", "inv-small", "Market data is loading on the server; refresh in a minute."));
+    if (!m.items.length) box.appendChild(el("p", "inv-small", t("mkt_loading", "Market data is loading on the server; refresh in a minute.")));
     m.items.forEach(function (x) {
       var c = el("div", "hub-tick");
       var top = el("div", "hub-tick-top");
       top.appendChild(el("span", "hub-sym", x.symbol));
-      top.appendChild(el("span", "hub-chg " + (x.change_1d >= 0 ? "up" : "down"), (x.change_1d >= 0 ? "+" : "") + x.change_1d.toFixed(2) + "%"));
+      top.appendChild(el("span", "hub-chg " + (x.change_1d >= 0 ? "up" : "down"), (x.change_1d >= 0 ? "+" : "") + x.change_1d.toLocaleString(LOC, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%"));
       c.appendChild(top);
       c.appendChild(el("p", "hub-name", x.name));
-      c.appendChild(el("p", "hub-price", x.last.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })));
+      c.appendChild(el("p", "hub-price", x.last.toLocaleString(LOC, { minimumFractionDigits: 2, maximumFractionDigits: 2 })));
       c.appendChild(spark(x.spark, x.change_1y >= 0));
-      c.appendChild(el("p", "hub-1y " + (x.change_1y >= 0 ? "up" : "down"), "1 year " + (x.change_1y >= 0 ? "+" : "") + x.change_1y + "%"));
+      c.appendChild(el("p", "hub-1y " + (x.change_1y >= 0 ? "up" : "down"), t("one_year", "1 year") + " " + (x.change_1y >= 0 ? "+" : "") + x.change_1y.toLocaleString(LOC) + "%"));
       box.appendChild(c);
     });
-    $("market-src").textContent = "Source: " + m.source + ". Not investment advice.";
+    $("market-src").textContent = t("src", "Source: ") + m.source + t("not_advice", ". Not investment advice.");
   }
 
   function setCur(cur) {
@@ -179,7 +183,7 @@
       return call("GET", "/api/market").then(renderMarket).catch(function () {});
     }).catch(function (e) {
       show("hub-login");
-      if (e.status !== 401) { $("login-msg").textContent = "The Investor Hub is not reachable right now. Please try again later."; $("login-msg").className = "inv-msg err"; }
+      if (e.status !== 401) { $("login-msg").textContent = t("unreachable", "The Investor Hub is not reachable right now. Please try again later."); $("login-msg").className = "inv-msg err"; }
     });
   }
 
@@ -188,17 +192,17 @@
   $("pledge-form").addEventListener("submit", function (e) {
     e.preventDefault();
     var a = parseFloat(this.elements.amount.value), msg = $("pledge-msg");
-    if (!(a > 0)) { msg.textContent = "Enter an amount."; msg.className = "inv-msg err"; return; }
-    if (DEMO) { msg.textContent = "Demo: nothing is saved."; msg.className = "inv-msg ok"; return; }
+    if (!(a > 0)) { msg.textContent = t("enter_amount", "Enter an amount."); msg.className = "inv-msg err"; return; }
+    if (DEMO) { msg.textContent = t("demo_nosave", "Demo: nothing is saved."); msg.className = "inv-msg ok"; return; }
     call("PUT", "/api/me/pledge", { amount: a, currency: state.cur }).then(function () {
-      msg.textContent = "Updated."; msg.className = "inv-msg ok"; load();
+      msg.textContent = t("updated_ok", "Updated."); msg.className = "inv-msg ok"; load();
     }).catch(function (err) { msg.textContent = err.message; msg.className = "inv-msg err"; });
   });
   $("login-form").addEventListener("submit", function (e) {
     e.preventDefault();
     var msg = $("login-msg");
-    call("POST", "/api/auth/request", { email: this.elements.email.value.trim() }).then(function (j) {
-      msg.textContent = j.message; msg.className = "inv-msg ok";
+    call("POST", "/api/auth/request", { email: this.elements.email.value.trim(), lang: LANG }).then(function () {
+      msg.textContent = t("link_sent", "If this address is registered, a sign-in link is on its way."); msg.className = "inv-msg ok";
     }).catch(function (err) { msg.textContent = err.message; msg.className = "inv-msg err"; });
   });
   $("logout").addEventListener("click", function () {
@@ -213,7 +217,7 @@
   $("delete-no").addEventListener("click", function () { $("delete-confirm").hidden = true; $("delete-1").hidden = false; });
   $("delete-2").addEventListener("click", function () {
     if (DEMO) { $("delete-no").click(); return; }
-    call("DELETE", "/api/me").then(function () { show("hub-login"); $("login-msg").textContent = "Your data has been deleted."; $("login-msg").className = "inv-msg ok"; });
+    call("DELETE", "/api/me").then(function () { show("hub-login"); $("login-msg").textContent = t("deleted", "Your data has been deleted."); $("login-msg").className = "inv-msg ok"; });
   });
 
   // ---------- start: one-time link in the URL? ----------
@@ -236,14 +240,14 @@
       pledge: { amount: 20000, currency: "MXN", status: "pledged", updated_at: "2026-11-26" },
       pool: { total_eur: 3000, my_eur: 1000, my_percent: 33.33, participants: 2, confirmed: 0,
         by_currency: { EUR: { total: 2000, count: 1 }, MXN: { total: 20000, count: 1 } },
-        shares_eur: [2000, 1000], goal_eur: 250000, rate: { mxn_per_eur: 20, date: "", source: "demo rate" } },
+        shares_eur: [2000, 1000], goal_eur: 250000, rate: { mxn_per_eur: 20, date: "", source: "demo" } },
       news: [
-        { published_at: "2026-11-26T12:00:00Z", title: "NOC_512 heals itself in silicon", body: "Our network on chip repaired itself around a dead switch 405,522 times in one hour on the FPGA board, in about 0.6 µs each time, without losing a single one of more than 160 billion data words.\n\nThe self-healing logic is also formally verified: nine safety rules hold for every possible input within the checked depth.", image_url: null, link: "https://www.hercoss.com/projects/noc-512/" },
-        { published_at: "2026-11-25T12:00:00Z", title: "RV128IMAC: hardware SHA-3 at 129 MB/s", body: "A Linux program on our 128-bit RISC-V core now hashes at 129 MB/s with the SHA-3 engine, with no driver: from 33 MB/s to 129 MB/s in five days, every step measured on silicon.", image_url: null, link: "https://www.hercoss.com/projects/rv128imac/" }
+        { published_at: "2026-11-26T12:00:00Z", title: t("dn1_t", "NOC_512 heals itself in silicon"), body: t("dn1_b", "Our network on chip repaired itself around a dead switch 405,522 times in one hour on the FPGA board, in about 0.6 µs each time, without losing a single one of more than 160 billion data words."), image_url: null, link: null },
+        { published_at: "2026-11-25T12:00:00Z", title: t("dn2_t", "RV128IMAC: hardware SHA-3 at 129 MB/s"), body: t("dn2_b", "A Linux program on our 128-bit RISC-V core now hashes at 129 MB/s with the SHA-3 engine, with no driver: from 33 MB/s to 129 MB/s in five days, every step measured on silicon."), image_url: null, link: null }
       ],
       meetings: [
-        { id: 1, starts_at: d.toISOString(), minutes: 60, title: "Monthly investor meeting · December", link: null },
-        { id: 2, starts_at: d2.toISOString(), minutes: 60, title: "Monthly investor meeting · January", link: null }
+        { id: 1, starts_at: d.toISOString(), minutes: 60, title: t("dm1", "Monthly investor meeting · December"), link: null },
+        { id: 2, starts_at: d2.toISOString(), minutes: 60, title: t("dm2", "Monthly investor meeting · January"), link: null }
       ]
     };
   }
@@ -251,7 +255,7 @@
     function walk(seed, drift) { var v = 100, out = []; for (var i = 0; i < 60; i++) { seed = (seed * 9301 + 49297) % 233280; v *= 1 + drift + (seed / 233280 - 0.5) * 0.06; out.push(+v.toFixed(2)); } return out; }
     var rows = [["SOXX", "iShares Semiconductor ETF", 3, 0.004], ["NVDA", "NVIDIA", 5, 0.006], ["TSM", "TSMC", 7, 0.005], ["ASML", "ASML", 11, 0.001],
       ["AVGO", "Broadcom", 13, 0.005], ["AMD", "AMD", 17, 0.002], ["INTC", "Intel", 19, -0.002], ["IFX", "Infineon", 23, 0.001]];
-    return { source: "DEMO, invented curves", items: rows.map(function (r) {
+    return { source: "DEMO", items: rows.map(function (r) {
       var s = walk(r[2], r[3]), last = s[s.length - 1];
       return { symbol: r[0], name: r[1], last: last, change_1d: +((last / s[s.length - 2] - 1) * 100).toFixed(2), change_1y: +((last / s[0] - 1) * 100).toFixed(1), spark: s };
     }) };

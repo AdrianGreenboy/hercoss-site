@@ -7,6 +7,10 @@
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $desc }}">
 <link rel="canonical" href="{{ .Permalink }}">
+{{- if .IsTranslated }}{{ range .AllTranslations }}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">{{ end }}
+<link rel="alternate" hreflang="x-default" href="{{ with .Translations }}{{ range . }}{{ if eq .Language.Lang "en" }}{{ .Permalink }}{{ end }}{{ end }}{{ end }}{{ if eq .Language.Lang "en" }}{{ .Permalink }}{{ end }}">{{ end }}
+<meta property="og:locale" content="{{ index (dict "en" "en_US" "es" "es_MX" "de" "de_DE") .Language.Lang }}">
 <meta property="og:site_name" content="Hercoss">
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $desc }}">

@@ -1,56 +1,140 @@
 baseURL = "https://www.hercoss.com/"
-locale = "en"
 title = "Hercoss"
 enableRobotsTXT = true
 disableKinds = ["taxonomy", "term"]
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
 
 [params]
-  seotitle = "Hercoss — Radiation-hardened RISC-V chips and FPGA SoCs for space"
   ogimage = "img/og-default.jpg"
   city = "Bremen"
   country = "DE"
-  tagline = "The New Way of Doing Engineering"
-  description = "Hercoss designs chips and IP cores for space and high-performance systems: RISC-V processors, its own FPGA fabric and high-speed links. Its flagship is the HERCOSS Exxo A1, a 128-bit RISC-V FPGA SoC for space, open to investors and partners."
   email = "adrian@hercoss.com"
   github = "https://github.com/AdrianGreenboy"
   api = "https://api.hercoss.com"
 
-[[menu.main]]
-  name = "Exxo A1"
-  pageRef = "/projects/hercoss-exxo-a1"
-  weight = 5
+# ---------------------------------------------------------------- English
+[languages.en]
+  label = "EN"
+  locale = "en"
+  weight = 1
+  [languages.en.params]
+    seotitle = "Hercoss — Radiation-hardened RISC-V chips and FPGA SoCs for space"
+    tagline = "The New Way of Doing Engineering"
+    description = "Hercoss designs chips and IP cores for space and high-performance systems: RISC-V processors, its own FPGA fabric and high-speed links. Its flagship is the HERCOSS Exxo A1, a 128-bit RISC-V FPGA SoC for space, open to investors and partners."
+  [[languages.en.menus.main]]
+    name = "Exxo A1"
+    pageRef = "/projects/hercoss-exxo-a1"
+    weight = 5
+  [[languages.en.menus.main]]
+    name = "Invest"
+    pageRef = "/invest"
+    weight = 6
+  [[languages.en.menus.main]]
+    name = "Projects"
+    pageRef = "/projects"
+    weight = 10
+  [[languages.en.menus.main]]
+    name = "Investor Hub"
+    pageRef = "/investors"
+    weight = 12
+  [[languages.en.menus.main]]
+    name = "GitHub"
+    url = "https://github.com/AdrianGreenboy"
+    weight = 15
+  [[languages.en.menus.main]]
+    name = "Contact"
+    url = "/#contact"
+    weight = 20
+  [[languages.en.menus.footer]]
+    name = "Impressum"
+    url = "/legal/impressum/"
+    weight = 10
+  [[languages.en.menus.footer]]
+    name = "Privacy"
+    url = "/legal/datenschutz/"
+    weight = 20
 
-[[menu.main]]
-  name = "Invest"
-  pageRef = "/invest"
-  weight = 6
+# ---------------------------------------------------------------- Español
+[languages.es]
+  label = "ES"
+  locale = "es"
+  weight = 2
+  [languages.es.params]
+    seotitle = "Hercoss — Chips RISC-V y FPGA SoC resistentes a la radiación para el espacio"
+    tagline = "La nueva forma de hacer ingeniería"
+    description = "Hercoss diseña chips y núcleos IP para el espacio y para sistemas de alto rendimiento: procesadores RISC-V, su propio tejido FPGA y enlaces de alta velocidad. Su buque insignia es el HERCOSS Exxo A1, un FPGA SoC RISC-V de 128 bits para el espacio, abierto a inversionistas y socios."
+  [[languages.es.menus.main]]
+    name = "Exxo A1"
+    pageRef = "/projects/hercoss-exxo-a1"
+    weight = 5
+  [[languages.es.menus.main]]
+    name = "Invertir"
+    pageRef = "/invest"
+    weight = 6
+  [[languages.es.menus.main]]
+    name = "Proyectos"
+    pageRef = "/projects"
+    weight = 10
+  [[languages.es.menus.main]]
+    name = "Investor Hub"
+    pageRef = "/investors"
+    weight = 12
+  [[languages.es.menus.main]]
+    name = "GitHub"
+    url = "https://github.com/AdrianGreenboy"
+    weight = 15
+  [[languages.es.menus.main]]
+    name = "Contacto"
+    url = "/es/#contact"
+    weight = 20
+  [[languages.es.menus.footer]]
+    name = "Impressum"
+    url = "/legal/impressum/"
+    weight = 10
+  [[languages.es.menus.footer]]
+    name = "Privacidad"
+    url = "/legal/datenschutz/"
+    weight = 20
 
-[[menu.main]]
-  name = "Projects"
-  pageRef = "/projects"
-  weight = 10
-
-[[menu.main]]
-  name = "Investor Hub"
-  pageRef = "/investors"
-  weight = 12
-
-[[menu.main]]
-  name = "GitHub"
-  url = "https://github.com/AdrianGreenboy"
-  weight = 15
-
-[[menu.main]]
-  name = "Contact"
-  url = "/#contact"
-  weight = 20
-
-[[menu.footer]]
-  name = "Impressum"
-  pageRef = "/legal/impressum"
-  weight = 10
-
-[[menu.footer]]
-  name = "Privacy"
-  pageRef = "/legal/datenschutz"
-  weight = 20
+# ---------------------------------------------------------------- Deutsch
+[languages.de]
+  label = "DE"
+  locale = "de"
+  weight = 3
+  [languages.de.params]
+    seotitle = "Hercoss — Strahlungsfeste RISC-V-Chips und FPGA-SoCs für die Raumfahrt"
+    tagline = "Ingenieurwesen, neu gedacht"
+    description = "Hercoss entwickelt Chips und IP-Cores für die Raumfahrt und für Hochleistungssysteme: RISC-V-Prozessoren, eine eigene FPGA-Fabric und Hochgeschwindigkeitsverbindungen. Das Flaggschiff ist der HERCOSS Exxo A1, ein 128-Bit-RISC-V-FPGA-SoC für die Raumfahrt, offen für Investoren und Partner."
+  [[languages.de.menus.main]]
+    name = "Exxo A1"
+    pageRef = "/projects/hercoss-exxo-a1"
+    weight = 5
+  [[languages.de.menus.main]]
+    name = "Investieren"
+    pageRef = "/invest"
+    weight = 6
+  [[languages.de.menus.main]]
+    name = "Projekte"
+    pageRef = "/projects"
+    weight = 10
+  [[languages.de.menus.main]]
+    name = "Investor Hub"
+    pageRef = "/investors"
+    weight = 12
+  [[languages.de.menus.main]]
+    name = "GitHub"
+    url = "https://github.com/AdrianGreenboy"
+    weight = 15
+  [[languages.de.menus.main]]
+    name = "Kontakt"
+    url = "/de/#contact"
+    weight = 20
+  [[languages.de.menus.footer]]
+    name = "Impressum"
+    url = "/legal/impressum/"
+    weight = 10
+  [[languages.de.menus.footer]]
+    name = "Datenschutz"
+    url = "/legal/datenschutz/"
+    weight = 20

@@ -1,11 +1,11 @@
-{{ $labels := dict "proven" "Validated" "design" "In design" "pending" "Pending" "target" "Design target" }}
+{{ $labels := dict "proven" (i18n "sp_proven") "design" (i18n "sp_design") "pending" (i18n "sp_pending") "target" (i18n "sp_target") }}
 {{ $classes := dict "proven" "hecho" "design" "curso" "pending" "plan" "target" "objetivo" }}
-<div class="filtro spec-filtro" role="group" aria-label="Filter by status">
-  <button data-specfiltro="*" aria-pressed="true">All</button>
+<div class="filtro spec-filtro" role="group" aria-label="{{ i18n "filter_status" }}">
+  <button data-specfiltro="*" aria-pressed="true">{{ i18n "all" }}</button>
   {{ range $k := slice "proven" "design" "pending" "target" }}<button data-specfiltro="{{ $k }}" aria-pressed="false">{{ index $labels $k }}</button>{{ end }}
 </div>
 <div class="specs">
-  {{ range hugo.Data.a1_specs }}
+  {{ range partial "ldata.html" (dict "p" .Page "n" "a1_specs") }}
   <details class="spec-grupo" open>
     <summary>{{ .grupo }} <span class="spec-n">{{ len .filas }}</span></summary>
     <table>

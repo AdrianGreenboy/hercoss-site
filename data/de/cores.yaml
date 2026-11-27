@@ -1,0 +1,166 @@
+# cores (de), generated from data/cores.yaml
+- nombre: RV128IMAC
+  cat: Prozessoren
+  estado: validado
+  que: '128-Bit-RISC-V-Prozessor: läuft als RV128, RV64 oder zwei RV64-CPUs; Linux 6.6 SMP, 214/214 Board-Tests; Aufrufe zwischen Kernen in 1,35 µs; SHA-3 in Hardware mit 129 MB/s, ~140× Software, ohne Treiber.'
+  a1: Die 16 Prozessoren des A1
+- nombre: RV32IM
+  cat: Prozessoren
+  estado: validado
+  que: Kompakter 32-Bit-RISC-V-Kern, der die Firmware der Testsysteme der IP-Familie auf Silizium ausführt.
+  a1: Ständig aktiver Plattform-Controller
+- nombre: RV64IMAC
+  cat: Prozessoren
+  estado: desarrollo
+  que: 64-Bit-RISC-V-Prozessor; seine Funktionen werden in den RV128IMAC übernommen.
+  a1: ''
+- nombre: Kern-Ring
+  cat: Interconnect
+  estado: validado
+  que: 'Hercoss'' eigener Ring, über den sich Kerne und Beschleuniger direkt aufrufen: auf Silizium mit 2 CPUs und der SHA-3-Engine; der Build mit 64 Threads erfüllt das Timing; 16 Stationen unter Volllast in der Simulation verifiziert, fair zu jeder Station.'
+  a1: Verbindet die 16 Kerne und ihre Beschleuniger
+- nombre: NOC_512
+  cat: Interconnect
+  estado: validado
+  que: 'Selbstreparierendes 512-Bit-Network-on-Chip mit Paket- und Stream-Ebene: 3,19 Billionen AXI4-Transfers auf FPGA-Silizium mit null Fehlern; heilt sich auf Silizium in ≈0,6 µs um einen ausgefallenen Switch herum, 405.522-mal in einer Stunde, 0 von über 160 Mrd. Wörtern verloren; Selbstheilungslogik formal verifiziert.'
+  a1: Verbindet alle Blöcke des Chips
+- nombre: DDRC_72
+  cat: Arbeitsspeicher
+  estado: desarrollo
+  que: 'Selbstheilender 72-Bit-DDR4-Controller, bis zu 128 GiB: übersteht einen ausgefallenen Speicherchip und repariert Fehler selbst; die Rad-hard-Variante heilt nach einem Latch-up ihre eigene Logik. In der Simulation verifiziert: 0 Datenfehler.'
+  a1: Externer Speicher des Chips
+- nombre: NPU
+  cat: KI und Regelung
+  estado: validado
+  que: 'INT8-CNN-Inferenz auf einem systolischen 8 × 8-Array: 0,333 ms pro Bild, ~3.000 Inferenzen/s auf FPGA-Silizium.'
+  a1: Baustein der AI Engine
+- nombre: MPC-Beschleuniger für AOCS / ADCS
+  cat: KI und Regelung
+  estado: validado
+  que: Löst das MPC-Problem der Lageregelung (70 × 70, 32-Bit-Gleitkomma) in Hardware; bitgenau von der Simulation bis zum Silizium.
+  a1: Beschleunigung der Lage- und Bahnregelung
+- nombre: Digitales HF-Frontend
+  cat: HF und Signal
+  estado: validado
+  que: 'DDC und DUC für Software-Defined Radio: NCO, Mischer, CIC, FIR mit 16 Taps, AGC/RSSI, eigenes DMA in den Speicher.'
+  a1: Basis der A1-RF-Variante
+- nombre: DSP
+  cat: HF und Signal
+  estado: familia
+  que: Engine für digitale Signalverarbeitung.
+  a1: Basis der 5 DSP-Kerne des A1
+- nombre: Sigma-Delta-ADC-Kette
+  cat: HF und Signal
+  estado: validado
+  que: 'Digitale Dezimationskette eines Sigma-Delta-ADC: ~16,4 bis ~18,9 effektive Bits, DMA in den Speicher.'
+  a1: 10 × 24-Bit-ΣΔ-ADC
+- nombre: ETH_1T6
+  cat: Verbindungen
+  estado: validado
+  que: 'Vollständiger 1,6-Tbit/s-Ethernet-Link-Layer: MAC, PCS, RS(544,514)-FEC, Lane-Ausrichtung. Auf FPGA-Silizium (skaliert): 312 Milliarden Frames in einer Stunde, null Fehler; 1 bis 15 Symbolfehler korrigiert; Bursts bei voller Geschwindigkeit repariert; volle Breite in der Simulation.'
+  a1: Der 1.6TbE-Port
+- nombre: SERDES_256G v1.0
+  cat: Verbindungen
+  estado: validado
+  que: 'Mehrspurige serielle Verbindung mit Hercoss'' eigener 64B/66B-Codierung: 103 Gbit/s auf 4 Lanes, einstündiger Dauertest mit null Fehlern.'
+  a1: Basis des Transceiver-Pools mit 72 Lanes
+- nombre: PCS_40G
+  cat: Verbindungen
+  estado: validado
+  que: '40GBASE-R-Physical-Coding: Link mit einer kommerziellen 40G-Netzwerkkarte auf allen vier Lanes.'
+  a1: Ethernet-PCS-Familie
+- nombre: MAC_40G v0.3
+  cat: Verbindungen
+  estado: validado
+  que: '40G-Ethernet-MAC: FCS, PAUSE, Adressfilter, UDP-Generator in Hardware; Ping und einstündiger Dauertest gegen eine kommerzielle NIC. v0.4 in Arbeit.'
+  a1: Ethernet-MAC-Familie
+- nombre: PCS_25G + MAC_25G
+  cat: Verbindungen
+  estado: validado
+  que: 25G-Ethernet mit 64B/66B-Encoder nach Clause 49.
+  a1: Ethernet bis 16 × 25G
+- nombre: MAC_10G
+  cat: Verbindungen
+  estado: familia
+  que: 10-Gigabit-Ethernet-MAC.
+  a1: 10G-Ethernet-Ports
+- nombre: Achtfach-25G-Ethernet
+  cat: Verbindungen
+  estado: familia
+  que: Acht 25G-Ethernet-Ports in einem Core, 200 Gbit/s insgesamt.
+  a1: Mehrport-25G-Ethernet
+- nombre: ETH
+  cat: Verbindungen
+  estado: familia
+  que: Ethernet-Controller für allgemeine Netzwerke.
+  a1: Management-Ethernet
+- nombre: TSN-Switch
+  cat: Verbindungen
+  estado: familia
+  que: 'Time-Sensitive-Networking-Switch: deterministisches, geplantes Ethernet für Steuerverkehr.'
+  a1: TSN an jedem Ethernet-Port
+- nombre: PTP / IEEE 802.1AS
+  cat: Verbindungen
+  estado: validado
+  que: Taktsynchronisation über das Netz mit Zeitstempeln in Hardware.
+  a1: Gemeinsame Zeitbasis für alle Ethernet-Ports
+- nombre: PCIe
+  cat: Verbindungen
+  estado: desarrollo
+  que: PCI-Express-Controller für Erweiterungen mit hoher Bandbreite.
+  a1: 3 × Gen5 x16
+- nombre: MIPI CSI-2
+  cat: Verbindungen
+  estado: desarrollo
+  que: Schnittstelle für Kameras und Bildsensoren; PHY-Schicht inbegriffen.
+  a1: 2 ×
+- nombre: SpaceWire
+  cat: Raumfahrt
+  estado: validado
+  que: Die Standardverbindung der ESA für Instrumentendaten.
+  a1: 10 ×
+- nombre: MIL-STD-1553
+  cat: Raumfahrt
+  estado: validado
+  que: Befehls- und Steuerbus mit langer Flugerfahrung.
+  a1: 5 ×
+- nombre: CAN
+  cat: Raumfahrt
+  estado: validado
+  que: Robuster Bus für Subsysteme von Raumfahrzeugen.
+  a1: 10 ×
+- nombre: USART
+  cat: Allgemein
+  estado: validado
+  que: Serielle Schnittstelle für Konsole, Telemetrie und Wartung.
+  a1: 5 ×
+- nombre: I²C / I³C
+  cat: Allgemein
+  estado: validado
+  que: Busse für Sensoren und Housekeeping, einschließlich des neueren I³C.
+  a1: 5 × I²C + 5 × I³C
+- nombre: SPI
+  cat: Allgemein
+  estado: validado
+  que: Serieller Bus für Flash-Speicher und Peripherie.
+  a1: 5 ×
+- nombre: SD
+  cat: Allgemein
+  estado: validado
+  que: SD-Karten-Controller für Speicher und Boot.
+  a1: 2 ×
+- nombre: SHA-3-/Keccak-Engine
+  cat: Sicherheit
+  estado: validado
+  que: SHA3-224/256/384/512 und SHAKE, eine Runde pro Takt; 129 MB/s aus einem Linux-Programm ohne Treiber, ~140× Software.
+  a1: Hardwarebasis für Post-Quanten-Krypto
+- nombre: ECC-Scrubber
+  cat: Sicherheit
+  estado: familia
+  que: 'Speicher-Scrubber im Hintergrund: findet und korrigiert Bitfehler im Speicher, bevor sie sich anhäufen.'
+  a1: Speicherschutz gegen Strahlung
+- nombre: ML-KEM / ML-DSA
+  cat: Sicherheit
+  estado: validado
+  que: Post-Quanten-Beschleuniger für Schlüsselaustausch und Signaturen, mit Schlüssellöschung für den Flug.
+  a1: Post-Quanten-Engine; signierte FPGA-Bitstreams

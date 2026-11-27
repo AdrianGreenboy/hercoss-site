@@ -70,8 +70,8 @@
   cat: "Storage and sensors"
   estado: pending
   detalle: "1 differential channel each, up to 4 MS/s"
-- nombre: "DDR controller"
+- nombre: "DDRC_72 DDR4 controller"
   n: 2
   cat: "Memory"
-  estado: pending
-  detalle: "64-bit + 8-bit ECC, up to 32 GiB"
+  estado: design
+  detalle: "Self-healing, 64-bit + 8-bit ECC, up to 128 GiB each"

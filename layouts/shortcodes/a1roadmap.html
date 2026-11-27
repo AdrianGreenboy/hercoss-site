@@ -1,8 +1,8 @@
-{{ $d := hugo.Data.a1 }}
+{{ $d := partial "ldata.html" (dict "p" .Page "n" "a1") }}
 <p class="leyenda">
-  <span class="estado hecho">Done</span>
-  <span class="estado curso">In progress</span>
-  <span class="estado plan">Planned</span>
+  <span class="estado hecho">{{ i18n "st_done" }}</span>
+  <span class="estado curso">{{ i18n "st_progress" }}</span>
+  <span class="estado plan">{{ i18n "st_planned" }}</span>
 </p>
 <div class="fases">
   {{ range $d.fases }}
@@ -10,14 +10,14 @@
     <header>
       <span class="fase-id">{{ .id }}</span>
       <h3>{{ .titulo }}</h3>
-      <span class="estado {{ .estado }}">{{ if eq .estado "hecho" }}Done{{ else if eq .estado "curso" }}Current phase{{ else }}Planned{{ end }}</span>
+      <span class="estado {{ .estado }}">{{ if eq .estado "hecho" }}{{ i18n "st_done" }}{{ else if eq .estado "curso" }}{{ i18n "st_current" }}{{ else }}{{ i18n "st_planned" }}{{ end }}</span>
     </header>
     <ol class="ruta">
       {{ range .items }}
       <li class="{{ .estado }}"><details><summary>{{ .titulo }}</summary><p>{{ .texto }}</p></details></li>
       {{ end }}
     </ol>
-    <p class="gate"><span>Go / no-go gate</span> {{ .gate }}</p>
+    <p class="gate"><span>{{ i18n "gate" }}</span> {{ .gate }}</p>
   </section>
   {{ end }}
 </div>

@@ -1,0 +1,209 @@
+# a1_specs (de), generated from data/a1_specs.yaml
+- grupo: Prozessoren
+  filas:
+  - - Anwendungskerne
+    - 16 × RV128IMAC, Hercoss' eigener 128-Bit-RISC-V (auf Basis des RV128I-Entwurfs); 4 Cluster × 4
+    - design
+    - Kern auf FPGA mit 2 CPUs bewiesen; 16-Kern-Cluster im Design
+  - - Kernmodi
+    - 128-Bit-CPU, standardkonforme 64-Bit-CPU oder zwei 64-Bit-CPUs pro Kern
+    - proven
+    - ''
+  - - Privilegien und Speicher
+    - M/S/U-Modi, virtueller Speicher Sv39 (64-Bit-Modus)
+    - proven
+    - ''
+  - - Betriebssysteme
+    - Linux (SMP und AMP), FreeRTOS, Zephyr, RTEMS, Bare Metal
+    - proven
+    - Linux 6.6 SMP auf FPGA
+  - - Aufrufe zwischen Kernen
+    - 'Direkte Funktionsaufrufe zwischen Kernen aus Anwenderprogrammen: 1,35 µs hin und zurück'
+    - proven
+    - Mit 2 CPUs auf Silizium gemessen; Ring mit 16 Stationen unter Volllast in der Simulation verifiziert
+  - - Kern-Ring
+    - 'Hercoss-Ring für Aufrufe und Beschleuniger-Anfragen: bis zu 64 Hardware-Threads adressierbar, jede Station kommt auch unter Volllast garantiert an die Reihe'
+    - design
+    - 16 Stationen in der Simulation verifiziert; als Nächstes der Lauf auf Silizium; Patentverfahren läuft
+  - - L1-Caches pro Kern
+    - 64 KiB Instruktionen (16-fach) + 32 KiB Daten (8-fach)
+    - design
+    - Der Prototyp hat 16 + 16 KiB
+  - - L2-Cache
+    - 1 MiB pro Cluster, 4 MiB gesamt
+    - pending
+    - ''
+  - - Fehlertoleranz
+    - 8 selbstheilende Lockstep-Paare; SECDED-Registersatz; Cache-Parität
+    - design
+    - Lockstep auf den früheren 64-Bit-Kernen bewiesen; Portierung auf RV128IMAC ausstehend
+  - - Isolation
+    - PMP pro Kern, IOPMP vor jedem DMA-Master (4-KiB-Granularität)
+    - proven
+    - In der A1-SoC-Emulation
+  - - Plattform-Controller
+    - Ständig aktiver RV32IM; dreifach modulare Redundanz in der RH-Version
+    - design
+    - ''
+- grupo: Network-on-Chip und Speicher
+  filas:
+  - - Network-on-Chip
+    - 'NOC_512: 5 × 5-Gitter (skalierbar bis 8 × 8), 512 Bit, zwei Ebenen; Ziel ~1,5 GHz im Chip; 7,7 Tbit/s auf 19 geschützten Verbindungen im A1-Plan'
+    - proven
+    - 'Auf FPGA-Silizium: 2 × 2-Gitter, neun einstündige Läufe, 3,19 Billionen AXI4-Transfers, null Fehler; 5 × 5-Plan in der Simulation'
+  - - Paketebene
+    - AXI4-Verkehr (Register, DMA, Prozessorverkehr); standardkonforme AXI4-Schnittstelle an jedem Block
+    - proven
+    - ''
+  - - Stream-Ebene
+    - 512-Bit-Verbindungen mit fester Latenz für Massendaten (1.6TbE, PCIe Gen5, Wandler, KI); im laufenden Verkehr umgebaut
+    - proven
+    - Auf FPGA validiert
+  - - Fehlertoleranz des NoC
+    - Fehlerkorrektur, fehlertolerante Steuerung, geschützte Stream-Verbindungen und Puffer, selbstreparierendes Routing, selbstheilende Stream-Ebene
+    - proven
+    - 'Auf FPGA-Silizium: Selbstheilung um einen ausgefallenen Switch in ≈0,6 µs, 405.522 Ausfälle in einer Stunde, 0 Wörter verloren; Selbstheilungslogik formal verifiziert; Chipmaßstab in der Simulation; noch kein Strahltest'
+  - - Prozessor ↔ Fabric
+    - 16 × 512-Bit-AXI4-Ports (4 pro Quadrant, einer ACE-Lite-kohärent)
+    - pending
+    - ''
+  - - Busstandard
+    - Durchgängig vollständiges AXI4, kein AXI4-Lite
+    - design
+    - ''
+  - - On-Chip-Speicher
+    - 2 MiB OCM, 64 KiB Boot-ROM
+    - design
+    - ''
+  - - Externer Speicher
+    - 2 × selbstheilende DDR4-Controller DDRC_72, je 64 Bit + 8 Bit ECC, je bis zu 128 GiB; übersteht einen ausgefallenen Speicherchip
+    - design
+    - 'RTL v0.1 in der Simulation verifiziert: 0 Datenfehler, 0 JEDEC-Timing-Verletzungen'
+- grupo: FPGA-Fabric
+  filas:
+  - - Logik
+    - 500.000 LUT6 in 4 Quadranten, eigene Architektur von Hercoss
+    - design
+    - Kleine Version läuft auf FPGA; GDS des 130-nm-Testchips bereit
+  - - DSP-Blöcke
+    - ~3.000 (27 × 24)
+    - pending
+    - ''
+  - - Block-/Ultra-RAM
+    - ~36 Mb BRAM + ~36 Mb URAM, mit ECC
+    - pending
+    - ''
+  - - Konfigurationszellen
+    - DICE, strahlungsgehärtet, in beiden Versionen; 31,2 µm² in 130 nm
+    - proven
+    - Layout DRC/LVS-sauber; hält in der Simulation einem 1-pC-Treffer stand
+  - - Takterzeugung
+    - 2 PLLs pro Quadrant, 5 externe Takteingänge, interner 100-MHz-Oszillator
+    - pending
+    - ''
+  - - Laden von Bitstreams
+    - JTAG, SD, QSPI/OSPI, von den Prozessoren oder über PCIe
+    - design
+    - ''
+  - - Bitstream-Sicherheit
+    - AES-GCM-Verschlüsselung, ML-DSA-Post-Quanten-Signatur
+    - design
+    - ''
+  - - Benutzer-I/O der Fabric
+    - 240 Pins
+    - pending
+    - ''
+- grupo: Transceiver und Hochgeschwindigkeits-I/O
+  filas:
+  - - SerDes-Pool
+    - '72 Lanes: 8 × 224 Gbit/s PAM4 (2 Quads) + 64 × 32 Gbit/s NRZ (16 Quads); ~3,8 Tbit/s brutto pro Richtung'
+    - pending
+    - Analoge PHYs werden entwickelt oder lizenziert
+  - - Ethernet (TSN)
+    - 'Bis zu ~2 Tbit/s gleichzeitig: 1 × 1.6TbE (oder 2 × 800G, 4 × 400G, 8 × 200G) + 400G auf NRZ (1 × 400G, 4 × 100G, 8 × 50G, 16 × 25G / 10G) + 1 × 1G Management'
+    - design
+    - '25G- und 40G-MAC/PCS gegen eine kommerzielle NIC validiert; 1.6T-Link-Layer (MAC, PCS, FEC, Lane-Ausrichtung) auf FPGA-Silizium: 312 Milliarden Frames in einer Stunde, null Fehler; volle Breite in der Simulation'
+  - - Zeitbasis
+    - Gemeinsames PTP / IEEE 802.1AS für alle Ethernet-Ports
+    - proven
+    - ''
+  - - PCIe
+    - 3 × Gen5 x16 (48 Lanes)
+    - design
+    - Controller in Entwicklung
+  - - Zugriff aus der Fabric
+    - Die FPGA-Fabric kann jede Transceiver-Lane ansteuern
+    - pending
+    - ''
+  - - Digitales HF-Frontend
+    - DDC / DUC für Software-Defined Radio als IP; Basis der A1-RF-Variante
+    - proven
+    - Auf FPGA-Silizium validiert
+- grupo: KI, DSP und Sicherheit
+  filas:
+  - - AI Engine
+    - '8 Kacheln × 1.024 MACs, 512 KiB SRAM pro Kachel, 1,5 GHz: 8.192 MACs/Takt, ~12 TMAC/s Spitze'
+    - pending
+    - 'Bausteine validiert: NPU und AOCS-Beschleuniger'
+  - - NPU
+    - INT8-CNN-Inferenz, systolisches 8 × 8-Array
+    - proven
+    - 0,333 ms pro Bild, ~3.000 Inferenzen/s auf FPGA-Silizium
+  - - AOCS-Beschleuniger
+    - Modellprädiktive Lageregelung in Hardware gelöst, 32-Bit-Gleitkomma
+    - proven
+    - Bitgenau von der Simulation bis zum FPGA-Silizium
+  - - KI-Workloads
+    - CNN, SNN, Transformer, FP32-GEMV, MPC für Lageregelung
+    - pending
+    - ''
+  - - DSP-Kerne
+    - 5 Kerne für Filter, FFTs und Sensorfusion
+    - pending
+    - ''
+  - - Post-Quanten-Krypto
+    - ML-KEM, ML-DSA, AES-GCM; Schlüssellöschung in der Flugversion
+    - proven
+    - IP-Cores auf FPGA validiert
+  - - SHA-3-/SHAKE-Engine
+    - SHA3-224/256/384/512, SHAKE128/256; aus Linux-Programmen ohne Treiber nutzbar
+    - proven
+    - 129 MB/s aus Linux auf FPGA, ~140× Software
+- grupo: Physik, Leistung und Strahlung
+  filas:
+  - - Testchips
+    - IHP SG13G2 130 nm (Phase F1); Shuttle im fortschrittlichen Knoten bei einer europäischen Foundry (Phase F2)
+    - design
+    - ''
+  - - Fertigungsprozess
+    - Fortschrittlicher Knoten bei einer europäischen Foundry
+    - pending
+    - ''
+  - - Chipfläche (Schätzung)
+    - 230–320 mm² in einem Knoten der 5-nm-Klasse; wird für den gewählten Knoten neu geschätzt
+    - target
+    - ''
+  - - Gehäuse
+    - 1.752 Säulen, ≥ 35 % Versorgung und Masse; Flip-Chip (COTS), keramisches CCGA (RH)
+    - pending
+    - ''
+  - - Power-Inseln
+    - 33 unabhängig schaltbare Inseln, eine ständig aktiv
+    - design
+    - ''
+  - - Gesamtionisationsdosis (RH)
+    - 300 krad(Si), Testziel 600 krad
+    - target
+    - ''
+  - - Single-Event-Latch-up (RH)
+    - Immun bis ≥ 75 MeV·cm²/mg
+    - target
+    - ''
+  - - Temperatur
+    - −55 bis +125 °C Sperrschicht im Betrieb; −150 bis +100 °C Überleben (RH)
+    - target
+    - ''
+  - - Missionsdauer (RH)
+    - 10 Jahre, ausgelegt für 15; GEO und interplanetar
+    - target
+    - ''

@@ -1,0 +1,76 @@
+# a1_io (de), generated from data/a1_io.yaml
+- nombre: PCIe Gen5 x16
+  n: 3
+  cat: Hochgeschwindigkeit
+  estado: design
+  detalle: 48 Lanes mit 32 GT/s
+- nombre: Ethernet 1.6T (PAM4)
+  n: 1
+  cat: Hochgeschwindigkeit
+  estado: pending
+  detalle: oder 2 × 800G, 4 × 400G, 8 × 200G
+- nombre: Ethernet 400G (NRZ)
+  n: 1
+  cat: Hochgeschwindigkeit
+  estado: design
+  detalle: oder 4 × 100G, 8 × 50G, 16 × 25G / 10G
+- nombre: 1G-Management-Ethernet
+  n: 1
+  cat: Hochgeschwindigkeit
+  estado: pending
+  detalle: Getrennt vom SerDes-Pool
+- nombre: SpaceWire
+  n: 10
+  cat: Raumfahrt
+  estado: proven
+  detalle: ESA-Standardverbindung
+- nombre: MIL-STD-1553
+  n: 5
+  cat: Raumfahrt
+  estado: proven
+  detalle: Befehls- und Steuerbus
+- nombre: CAN
+  n: 10
+  cat: Raumfahrt
+  estado: proven
+  detalle: Subsystem-Bus
+- nombre: UART
+  n: 5
+  cat: Allgemein
+  estado: proven
+  detalle: Konsole und Telemetrie
+- nombre: I²C
+  n: 5
+  cat: Allgemein
+  estado: proven
+  detalle: Sensoren und Housekeeping
+- nombre: I³C
+  n: 5
+  cat: Allgemein
+  estado: proven
+  detalle: Sensorbus der nächsten Generation
+- nombre: SPI
+  n: 5
+  cat: Allgemein
+  estado: proven
+  detalle: Flash und Peripherie
+- nombre: SD
+  n: 2
+  cat: Speicher und Sensoren
+  estado: proven
+  detalle: Speicher und Boot
+- nombre: MIPI CSI-2
+  n: 2
+  cat: Speicher und Sensoren
+  estado: design
+  detalle: Kameraeingänge
+- nombre: 24-Bit-ΣΔ-ADC
+  n: 10
+  cat: Speicher und Sensoren
+  estado: pending
+  detalle: je 1 differenzieller Kanal, bis zu 4 MS/s
+- nombre: DDR4-Controller DDRC_72
+  n: 2
+  cat: Arbeitsspeicher
+  estado: design
+  detalle: Selbstheilend, 64 Bit + 8 Bit ECC, je bis zu 128 GiB

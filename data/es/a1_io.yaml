@@ -1,0 +1,76 @@
+# a1_io (es), generated from data/a1_io.yaml
+- nombre: PCIe Gen5 x16
+  n: 3
+  cat: Alta velocidad
+  estado: design
+  detalle: 48 carriles a 32 GT/s
+- nombre: Ethernet 1.6T (PAM4)
+  n: 1
+  cat: Alta velocidad
+  estado: pending
+  detalle: o 2 × 800G, 4 × 400G, 8 × 200G
+- nombre: Ethernet 400G (NRZ)
+  n: 1
+  cat: Alta velocidad
+  estado: design
+  detalle: o 4 × 100G, 8 × 50G, 16 × 25G / 10G
+- nombre: Ethernet 1G de gestión
+  n: 1
+  cat: Alta velocidad
+  estado: pending
+  detalle: Separado del conjunto SerDes
+- nombre: SpaceWire
+  n: 10
+  cat: Espacio
+  estado: proven
+  detalle: Enlace estándar de la ESA
+- nombre: MIL-STD-1553
+  n: 5
+  cat: Espacio
+  estado: proven
+  detalle: Bus de mando y control
+- nombre: CAN
+  n: 10
+  cat: Espacio
+  estado: proven
+  detalle: Bus de subsistemas
+- nombre: UART
+  n: 5
+  cat: General
+  estado: proven
+  detalle: Consola y telemetría
+- nombre: I²C
+  n: 5
+  cat: General
+  estado: proven
+  detalle: Sensores y housekeeping
+- nombre: I³C
+  n: 5
+  cat: General
+  estado: proven
+  detalle: Bus de sensores de nueva generación
+- nombre: SPI
+  n: 5
+  cat: General
+  estado: proven
+  detalle: Flash y periféricos
+- nombre: SD
+  n: 2
+  cat: Almacenamiento y sensores
+  estado: proven
+  detalle: Almacenamiento y arranque
+- nombre: MIPI CSI-2
+  n: 2
+  cat: Almacenamiento y sensores
+  estado: design
+  detalle: Entradas de cámara
+- nombre: ADC ΣΔ de 24 bits
+  n: 10
+  cat: Almacenamiento y sensores
+  estado: pending
+  detalle: 1 canal diferencial cada uno, hasta 4 MS/s
+- nombre: Controlador DDR4 DDRC_72
+  n: 2
+  cat: Memoria
+  estado: design
+  detalle: Se repara solo, 64 bits + 8 bits de ECC, hasta 128 GiB cada uno

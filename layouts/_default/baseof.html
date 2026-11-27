@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ site.Language.Locale }}">
+<html lang="{{ site.Language.Lang }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,16 +11,25 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="{{ "/" | relURL }}">HERCOSS</a>
+    <a class="brand" href="{{ "/" | relLangURL }}">HERCOSS</a>
     <nav>
       {{ range site.Menus.main }}<a href="{{ .URL }}">{{ .Name }}</a>{{ end }}
     </nav>
+    <div class="lang" role="navigation" aria-label="{{ i18n "language" }}">
+      {{- $p := . -}}
+      {{- range hugo.Sites -}}
+        {{- $l := .Language -}}{{- $href := "" -}}
+        {{- range $p.AllTranslations }}{{ if eq .Language.Lang $l.Lang }}{{ $href = .RelPermalink }}{{ end }}{{ end -}}
+        {{- if not $href }}{{ $href = cond (eq $l.Lang "en") "/" (printf "/%s/" $l.Lang) }}{{ end -}}
+        <a href="{{ $href }}" hreflang="{{ $l.Lang }}" lang="{{ $l.Lang }}"{{ if eq $l.Lang site.Language.Lang }} aria-current="true"{{ end }}>{{ $l.Label }}</a>
+      {{- end -}}
+    </div>
   </header>
   <main>
     {{ block "main" . }}{{ end }}
   </main>
   <footer class="site-footer">
-    <span>© {{ now.Year }} Hercoss</span>
+    <span>© {{ now.Year }} Hercoss · {{ i18n "footer_made" }}</span>
     <span>
       <a href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a>
       <a href="{{ site.Params.github }}">GitHub</a>

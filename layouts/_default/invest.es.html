@@ -1,0 +1,137 @@
+{{ define "main" }}
+<script type="application/json" id="i18n-js">{"f_name": "Escriba su nombre completo.", "f_email": "Escriba una dirección de correo válida.", "f_phone": "Escriba su número de celular con la clave del país.", "f_min": "El mínimo es", "f_consent": "Acepte los términos de privacidad para continuar.", "f_sending": "Enviando, cifrado…", "f_ok": "Gracias, bienvenido a la familia Hercoss. Revise su correo: un clic en el enlace que le enviamos abre su Investor Hub.", "f_429": "Demasiados intentos. Inténtelo de nuevo en una hora o escriba a adrian@hercoss.com.", "f_check": "Revise los datos del formulario.", "f_err": "Algo salió mal. Inténtelo de nuevo.", "f_net": "No pudimos conectar con el servidor. Inténtelo de nuevo o escriba a adrian@hercoss.com."}</script>
+<section class="inv-hero">
+  <p class="eyebrow">Invertir · Únase a la familia Hercoss</p>
+  <h1>Construya con nosotros el chip espacial de Europa.</h1>
+  <p class="lead">El HERCOSS Exxo A1 pone una computadora completa de nave espacial en un solo chip: dieciséis núcleos RISC-V de 128 bits, su propio tejido FPGA, IA a bordo y hasta ~2 Tbps de Ethernet, diseñado en Europa desde la primera línea de RTL. Los bloques ya funcionan en silicio. Ahora abrimos la empresa a las personas que quieren construirlo con nosotros.</p>
+  <p>
+    <a class="button" href="#register">Registre su interés →</a>
+    <a class="button secundario" href="mailto:{{ site.Params.email }}?subject=Invertir%20en%20Hercoss">Hable con Adrian</a>
+  </p>
+  <div class="io-total stats inv-stats">
+    <div><span class="io-num">129 MB/s</span><span class="io-lbl">SHA-3 en hardware desde Linux, sin driver, en nuestro propio núcleo RISC-V de 128 bits</span></div>
+    <div><span class="io-num">≈0.6 µs</span><span class="io-lbl">para que nuestra red en chip se repare sola, 405,522 veces en una hora</span></div>
+    <div><span class="io-num">312 mil mill.</span><span class="io-lbl">de tramas en una hora por nuestro núcleo Ethernet 1.6T, cero errores</span></div>
+    <div><span class="io-num">33</span><span class="io-lbl">núcleos IP propios, 23 ya validados en silicio FPGA</span></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Por qué Hercoss, por qué ahora</p>
+  <h2 class="grande">Un chip que le falta al mercado, hecho por gente que entrega.</h2>
+  <div class="inv-grid3">
+    <div class="inv-card"><span class="inv-k">01</span><h3>Probado en silicio</h3><p>Procesador, red en chip, Ethernet 1.6T, IA y buses espaciales ya funcionan en hardware FPGA real, y cada resultado se publica con sus límites. <a href="{{ "projects/ip-core-family/" | relLangURL }}">Ver los núcleos IP →</a></p></div>
+    <div class="inv-card"><span class="inv-k">02</span><h3>El espacio necesita un chip, no diez</h3><p>Las naves llevan un procesador, una FPGA, un chip de IA y un montón de chips de interfaz. Un solo SoC tolerante a la radiación reduce masa, consumo, costo y puntos de falla. <a href="{{ "projects/hercoss-exxo-a1/" | relLangURL }}">El Exxo A1 →</a></p></div>
+    <div class="inv-card"><span class="inv-k">03</span><h3>Europeo e independiente</h3><p>Nuestro propio RTL, nuestro propio tejido FPGA, sin licencia de procesador y sin depender de piezas con control de exportación: una opción soberana para los programas espaciales de Europa y de Latinoamérica.</p></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Membresía</p>
+  <h2 class="grande">Lo que recibe como parte de la familia Hercoss</h2>
+  <div class="inv-grid2">
+    <div class="inv-feature">
+      <svg viewBox="0 0 120 120" class="inv-ico" aria-hidden="true"><circle cx="60" cy="60" r="44" fill="none" stroke="#262d38" stroke-width="16"/><circle cx="60" cy="60" r="44" fill="none" stroke="#f2a03d" stroke-width="16" stroke-dasharray="92 400" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="44" fill="none" stroke="#5b9bd5" stroke-width="16" stroke-dasharray="0 96 120 400" transform="rotate(-90 60 60)"/></svg>
+      <div><h3>El pool dashboard</h3><p>Vea crecer el pool de inversión en tiempo real: su parte y el total de todos juntos, en euros y en pesos. Su nombre y su monto nunca se muestran a otros inversionistas.</p></div>
+    </div>
+    <div class="inv-feature">
+      <svg viewBox="0 0 120 120" class="inv-ico" aria-hidden="true"><rect x="18" y="26" width="84" height="76" fill="none" stroke="#f2a03d" stroke-width="6"/><line x1="18" y1="46" x2="102" y2="46" stroke="#f2a03d" stroke-width="6"/><line x1="40" y1="16" x2="40" y2="34" stroke="#e6e9ee" stroke-width="6"/><line x1="80" y1="16" x2="80" y2="34" stroke="#e6e9ee" stroke-width="6"/><rect x="34" y="60" width="16" height="14" fill="#6fcf97"/></svg>
+      <div><h3>Juntas mensuales de inversionistas</h3><p>Una sesión en vivo cada mes con Adrian: avance del chip, números, próximos hitos y sus preguntas. Añada cada junta a su calendario con un clic.</p></div>
+    </div>
+    <div class="inv-feature">
+      <svg viewBox="0 0 120 120" class="inv-ico" aria-hidden="true"><rect x="20" y="20" width="80" height="80" fill="none" stroke="#e6e9ee" stroke-width="6"/><rect x="34" y="34" width="52" height="52" fill="#151a21" stroke="#f2a03d" stroke-width="6"/><g stroke="#9aa4b2" stroke-width="5"><line x1="10" y1="44" x2="20" y2="44"/><line x1="10" y1="76" x2="20" y2="76"/><line x1="100" y1="44" x2="110" y2="44"/><line x1="100" y1="76" x2="110" y2="76"/><line x1="44" y1="10" x2="44" y2="20"/><line x1="76" y1="10" x2="76" y2="20"/><line x1="44" y1="100" x2="44" y2="110"/><line x1="76" y1="100" x2="76" y2="110"/></g></svg>
+      <div><h3>Noticias del chip, primero</h3><p>Resultados en silicio, decisiones de diseño e hitos del Exxo A1, en el Investor Hub antes de llegar a la web pública.</p></div>
+    </div>
+    <div class="inv-feature">
+      <svg viewBox="0 0 120 120" class="inv-ico" aria-hidden="true"><polyline points="12,92 36,70 56,78 80,44 108,30" fill="none" stroke="#6fcf97" stroke-width="7" stroke-linejoin="round"/><line x1="12" y1="104" x2="108" y2="104" stroke="#262d38" stroke-width="5"/><circle cx="108" cy="30" r="7" fill="#f2a03d"/></svg>
+      <div><h3>Indicadores del mercado de semiconductores</h3><p>NVIDIA, TSMC, ASML, Broadcom, AMD, Intel, Infineon y el índice de semiconductores, con gráficas de un año, en el mismo tablero.</p></div>
+    </div>
+  </div>
+  <p><a class="button secundario" href="{{ "investors/?demo=1" | relLangURL }}">Ver el Investor Hub (demo) →</a></p>
+</section>
+
+<section id="register">
+  <p class="eyebrow">Dos formas de participar</p>
+  <h2 class="grande">Elija cómo quiere empezar</h2>
+  <div class="inv-ways">
+    <div class="inv-way">
+      <span class="inv-k">Opción A</span>
+      <h3>Hablemos primero</h3>
+      <p>Escríbale directamente a Adrian. Respondemos cada mensaje personalmente, compartimos el documento para inversionistas y agendamos una llamada.</p>
+      <p><a class="button" href="mailto:{{ site.Params.email }}?subject=Invertir%20en%20Hercoss&amp;body=Hola%20Adrian%2C%0A%0AMe%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20c%C3%B3mo%20invertir%20en%20Hercoss.%0A%0ANombre%3A%0ATel%C3%A9fono%3A%0APa%C3%ADs%3A%0A">Enviar un correo</a></p>
+      <p class="inv-small">{{ site.Params.email }}</p>
+    </div>
+    <form class="inv-way inv-form" id="interest-form" data-api="{{ site.Params.api }}" novalidate>
+      <span class="inv-k">Opción B</span>
+      <h3>Registre su interés y únase al Investor Hub</h3>
+      <div class="inv-row">
+        <label>Nombre completo<input name="name" autocomplete="name" required minlength="2" maxlength="120"></label>
+      </div>
+      <div class="inv-row two">
+        <label>Correo electrónico<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+        <label>Celular<input name="phone" type="tel" autocomplete="tel" required placeholder="+49 … / +52 …" maxlength="24"></label>
+      </div>
+      <div class="inv-row two">
+        <label>País
+          <select name="country" required>
+            <option value="Germany">Alemania</option>
+            <option value="Mexico" selected>México</option>
+            <option value="Other EU">Otro país de la UE</option>
+            <option value="Other">Otro</option>
+          </select>
+        </label>
+        <div class="inv-cur" role="group" aria-label="Moneda">
+          <span class="inv-lbl">Moneda</span>
+          <div class="toggle"><button type="button" data-cur="EUR" aria-selected="true">EUR €</button><button type="button" data-cur="MXN" aria-selected="false">MXN $</button></div>
+        </div>
+      </div>
+      <div class="inv-row">
+        <span class="inv-lbl">Monto que piensa invertir</span>
+        <div class="inv-chips" id="chips"></div>
+        <label class="inv-amount"><span id="cur-sign">€</span><input name="amount" type="number" inputmode="decimal" min="100" step="1" required></label>
+      </div>
+      <input class="inv-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="inv-check"><input type="checkbox" name="join_hub" checked><span>Agregarme al Investor Hub y al pool dashboard de inversión</span></label>
+      <label class="inv-check"><input type="checkbox" name="consent" required><span>Acepto que Hercoss guarde mi nombre, correo, teléfono y monto previsto, cifrados, para contactarme sobre la inversión y operar el Investor Hub, como se describe en la <a href="{{ "legal/datenschutz/" | relURL }}">política de privacidad</a>. Puedo borrar mis datos en cualquier momento.</span></label>
+      <button class="button inv-submit" type="submit">Registrar mi interés</button>
+      <p class="inv-msg" id="form-msg" role="status" aria-live="polite"></p>
+      <p class="inv-small">Sin compromiso. En este sitio no se cobra ningún pago.</p>
+    </form>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Cómo funciona</p>
+  <h2 class="grande">De interesado a inversionista, paso a paso</h2>
+  <ol class="inv-steps">
+    <li><span>1</span><div><h3>Registre su interés</h3><p>Nombre, correo, teléfono y el monto que tiene en mente. Toma un minuto y no lo compromete a nada.</p></div></li>
+    <li><span>2</span><div><h3>Confirme su correo</h3><p>Un clic en el enlace que le enviamos abre su Investor Hub. Sin contraseña que recordar.</p></div></li>
+    <li><span>3</span><div><h3>Siga el chip desde dentro</h3><p>Pool dashboard, noticias, juntas mensuales e indicadores del mercado, desde el primer día.</p></div></li>
+    <li><span>4</span><div><h3>Inversión formal</h3><p>Cuando Hercoss esté constituida y la oferta esté preparada conforme a la ley alemana y mexicana, recibirá los documentos formales y un enlace de pago seguro: tarjeta de crédito, débito o transferencia, procesados por un proveedor de pagos regulado.</p></div></li>
+    <li><span>5</span><div><h3>Su parte, confirmada</h3><p>Cuando llegue su inversión, su lugar en el pool pasa de comprometido a confirmado.</p></div></li>
+  </ol>
+</section>
+
+<section>
+  <p class="eyebrow">Seguridad y privacidad</p>
+  <h2 class="grande">Sus datos, bajo llave, incluso para nosotros</h2>
+  <div class="inv-grid3">
+    <div class="inv-card"><h3>Conexión cifrada</h3><p>Todo viaja por HTTPS con un certificado moderno, de extremo a extremo entre su navegador y nuestro servidor en Alemania.</p></div>
+    <div class="inv-card"><h3>Almacenamiento cifrado</h3><p>Nombre, correo y teléfono se guardan con AES-256-GCM. Un archivo de base de datos robado no revela nada: las claves nunca viven junto a los datos.</p></div>
+    <div class="inv-card"><h3>Sin contraseñas que robar</h3><p>Usted entra con un enlace de un solo uso enviado a su correo. Los datos de tarjeta y de banco nunca tocarán nuestros servidores: los pagos pasan por un proveedor regulado.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Preguntas</h2>
+  <details class="detalle"><summary>¿Por qué no puedo pagar ahora mismo?</summary><div><p>Porque queremos que su inversión esté bien protegida. Hercoss está en proceso de constitución, y ofrecer participaciones de una empresa al público está regulado en Alemania y en México. En cuanto la estructura legal esté lista, todas las personas registradas recibirán primero los documentos formales.</p></div></details>
+  <details class="detalle"><summary>¿Quién puede ver cuánto comprometí?</summary><div><p>Solo usted y Hercoss. Los demás inversionistas ven el total del pool y su propia parte, nunca nombres ni correos.</p></div></details>
+  <details class="detalle"><summary>¿Puedo cambiar o retirar mi compromiso?</summary><div><p>Sí, en cualquier momento en el Investor Hub, y puede borrar todos sus datos con un botón.</p></div></details>
+  <details class="detalle"><summary>¿Euros o pesos?</summary><div><p>Ambos. Usted se compromete en su moneda; el pool muestra el total en euros, convertido con el tipo de cambio de referencia del Banco Central Europeo, y cada moneda por separado.</p></div></details>
+</section>
+
+<section class="inv-legal">
+  <p><strong>Importante.</strong> Esta página solo invita a expresar interés. No es una oferta de venta ni una solicitud de oferta de compra de acciones, valores ni ningún otro producto financiero, y en este sitio no se recauda dinero. Hercoss está en proceso de constitución. Cualquier inversión se hará únicamente con base en documentos escritos separados que cumplan con la ley aplicable en Alemania y en México. Invertir en una empresa tecnológica en etapa temprana conlleva riesgos altos, hasta la pérdida total del dinero invertido.</p>
+</section>
+<script src="{{ "js/invest.js" | relURL }}" defer></script>
+{{ end }}

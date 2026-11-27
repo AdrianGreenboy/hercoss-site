@@ -1,0 +1,5 @@
+{{- /* Localised data file: data/<lang>/<name>.yaml, falling back to data/<name>.yaml (English). */ -}}
+{{- $lang := .p.Language.Lang -}}
+{{- $d := index hugo.Data .n -}}
+{{- with index hugo.Data $lang -}}{{- with index . $.n -}}{{- $d = . -}}{{- end -}}{{- end -}}
+{{- return $d -}}
