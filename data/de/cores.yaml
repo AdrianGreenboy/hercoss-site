@@ -106,8 +106,8 @@
   a1: Gemeinsame Zeitbasis für alle Ethernet-Ports
 - nombre: PCIE_G5
   cat: Verbindungen
-  estado: desarrollo
-  que: 'Eigener PCI-Express-Gen4/Gen5-Controller, 1 bis 16 Lanes, COTS und Rad-hard aus einer Quelle, ausgelegt, um häufige Störungen durch Teilchen an Ort und Stelle zu reparieren, während die Daten weiterfließen. Der Physical Layer besteht 44 / 44 Simulationsläufe; 286 MHz auf FPGA; erster Silizium-Test vorbereitet.' 
+  estado: validado
+  que: 'Eigener PCI-Express-Gen4/Gen5-Controller, 1 bis 16 Lanes, COTS und Rad-hard aus einer Quelle, ausgelegt, um häufige Störungen durch Teilchen an Ort und Stelle zu reparieren, während die Daten weiterfließen. Physical Layer auf Silizium: 4 × 16 Gbit/s, eine Stunde, 389,8 Mrd. Wörter, null Fehler; Störungen im Empfänger in Mikrosekunden repariert, ohne den Datenmodus zu verlassen.' 
   a1: 3 × Gen5 x16
 - nombre: MIPI CSI-2
   cat: Verbindungen

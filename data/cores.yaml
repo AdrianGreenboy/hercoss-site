@@ -108,8 +108,8 @@
   a1: "Common time base for every Ethernet port"
 - nombre: "PCIE_G5"
   cat: "Links"
-  estado: desarrollo
-  que: "Own PCI Express Gen4 / Gen5 controller, 1 to 16 lanes, COTS and rad-hard from one source, designed to repair common particle upsets on the spot while data keeps flowing. Physical layer passes 44 / 44 simulation runs; 286 MHz on FPGA; first silicon test prepared."
+  estado: validado
+  que: "Own PCI Express Gen4 / Gen5 controller, 1 to 16 lanes, COTS and rad-hard from one source, designed to repair common particle upsets on the spot while data keeps flowing. Physical layer on silicon: 4 × 16 Gb/s, one hour, 389.8 billion words, zero errors; receiver upsets repaired in microseconds without leaving data mode."
   a1: "3 × Gen5 x16"
 - nombre: "MIPI CSI-2"
   cat: "Links"

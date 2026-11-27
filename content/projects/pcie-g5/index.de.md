@@ -2,22 +2,23 @@
 title: "PCIE_G5: PCIe Gen5 für die Raumfahrt, eine Verbindung, die sich selbst repariert"
 layout: article
 weight: 8
-estado: "In Entwicklung · Physical Layer in der Simulation, erster Silizium-Test vorbereitet (27. Nov. 2026)"
+estado: "In Entwicklung · Physical Layer läuft auf Silizium mit 4 × 16 Gbit/s, eine Stunde fehlerfrei (27. Nov. 2026)"
 hidecover: true
 seotitle: "PCIE_G5: europäische PCI-Express-Gen4/Gen5-Controller-IP für die Raumfahrt — Hercoss"
-summary: "Hercoss' eigener PCI-Express-Controller für den HERCOSS Exxo A1, von Grund auf in VHDL-2008 geschrieben. Ein Core deckt Gen4 und Gen5 ab, von 1 bis 16 Lanes, in einer kommerziellen und einer strahlungsgehärteten Version aus derselben Quelle, und er ist so ausgelegt, dass die häufigsten Störungen durch Teilchen an Ort und Stelle repariert werden, während die Daten weiterfließen."
+summary: "Hercoss' eigener PCI-Express-Controller für den HERCOSS Exxo A1, von Grund auf in VHDL-2008 geschrieben. Ein Core deckt Gen4 und Gen5 ab, von 1 bis 16 Lanes, in einer kommerziellen und einer strahlungsgehärteten Version aus derselben Quelle, und er ist so ausgelegt, dass die häufigsten Störungen durch Teilchen an Ort und Stelle repariert werden, während die Daten weiterfließen. Am ersten Tag lief er auf echten Transceivern: vier Lanes mit 16 Gbit/s, eine Stunde, null Fehler."
 datos:
   - "Gen4 + Gen5 · 16 / 32 GT/s"
   - "1 bis 16 Lanes"
   - "COTS und Rad-hard aus einer Quelle"
-  - "44 / 44 Simulationsläufe bestanden"
+  - "Silizium: 4 × 16 Gbit/s, 1 Stunde, 0 Fehler"
+  - "45 / 45 Simulationsläufe bestanden"
   - "286 MHz auf FPGA, Gen5 braucht ~246"
 ---
 
 {{< stats >}}
-{{< stat "~504 Gbit/s" "Nutzlast pro Richtung durch einen Gen5-x16-Port" >}}
-{{< stat "3" "Gen5-x16-Ports im HERCOSS Exxo A1 geplant" >}}
-{{< stat "44 / 44" "automatisierte Simulationsläufe bestanden: 1 bis 16 Lanes, drei Leitungsraten, injizierte Fehler" >}}
+{{< stat "0" "Fehler in einer Stunde auf Silizium: 389.812.475.855 Testwörter bei 4 × 16,0 Gbit/s, jedes korrekt empfangen" >}}
+{{< stat "~4 µs" "um eine Störung in einem Empfänger auf Silizium zu reparieren, ohne den Datenmodus zu verlassen; die Standardlösung dauert Millisekunden" >}}
+{{< stat "~504 Gbit/s" "Nutzlast pro Richtung durch einen Gen5-x16-Port; drei davon im Exxo A1 geplant" >}}
 {{< stat "286 MHz" "auf dem FPGA nach einer Redesign-Runde, über den ~246 MHz, die Gen5 braucht" >}}
 {{< /stats >}}
 
@@ -36,10 +37,7 @@ geschrieben. Ein Core deckt **Gen4 (16 GT/s) und Gen5 (32 GT/s) ab, von 1 bis
 kommerziellen (COTS) und einer strahlungsgehärteten für die Raumfahrt. Der Plan
 des Exxo A1 sieht **drei PCIe-Gen5-x16-Ports** vor.
 
-Die Entwicklung begann am 27. November 2026. Am ersten Tag wurden der logische
-Teil des Physical Layer und seine Transceiver-Schnittstelle geschrieben, beide
-bestehen die Simulation, und der erste Test auf echten Transceivern ist
-vorbereitet.
+Die Entwicklung begann am 27. November 2026. **Am selben Tag** wurden der logische Teil des Physical Layer und seine Transceiver-Schnittstelle geschrieben, bestanden die Simulation **und liefen auf echten Transceivern: vier Lanes mit je 16 Gbit/s auf einem AMD-Versal-Board, eine Stunde mit null Fehlern.**
 
 {{< fig "pcie-a1.de.svg" "Wo PCIE_G5 im HERCOSS Exxo A1 sitzt: drei Gen5-x16-Ports zwischen dem 512-Bit-Netz des Chips und der Außenwelt. Plan." >}}
 
@@ -70,34 +68,55 @@ wartet.
 
 **PCIE_G5 ist so ausgelegt, dass die häufigsten dieser Störungen lokal repariert
 werden**, auf der getroffenen Lane, **während die Daten auf den anderen Lanes
-weiterfließen und ohne dass das Gerät am anderen Ende es bemerkt.** Das ist die
-Absicht, und in der Simulation gilt sie bereits für die bisher getesteten
-Fälle.
+weiterfließen und ohne dass das Gerät am anderen Ende es bemerkt.** Das ist die Absicht, und **auf Silizium gilt sie bereits für die bisher getesteten Fehler.**
 
-{{< fig "pcie-upset.de.svg" "Die Absicht im Vergleich. Links: Eine Standardverbindung stoppt auf allen Lanes. Rechts: PCIE_G5 repariert die getroffene Lane lokal, während die anderen weiterlaufen. Konzept, nicht maßstäblich." >}}
+{{< fig "pcie-upset.de.svg" "Die Absicht im Vergleich. Links: Eine Standardverbindung stoppt auf allen Lanes. Rechts: PCIE_G5 repariert die getroffene Lane lokal, während die anderen weiterlaufen, so auf Silizium gemessen. Konzept, nicht maßstäblich." >}}
 
-## Auf die harte Tour getestet
+## Erstes Silizium: eine Stunde, null Fehler
+
+Am 27. November 2026, dem Tag, an dem die Entwicklung begann, lief PCIE_G5 auf
+einem Trenz-TE0950-Board mit einem AMD-Versal-Baustein: **vier Lanes mit je
+16,0000 Gbit/s (gemessen)**, die Transceiver in interner Schleife.
+
+{{< fig "pcie-hour.de.svg" "Der einstündige Lauf auf Silizium: 389.812.475.855 Testwörter gesendet und genauso viele korrekt empfangen, auf allen vier Lanes." >}}
+
+- **389.812.475.855 Testwörter** in einer Stunde gesendet und genauso viele
+  korrekt empfangen. **Null fehlerhaft, null verloren, null Fehler jeder Art
+  auf jeder Lane.**
+- Etwa **200 Terabit geprüfte Nutzlast bei 55,4 Gbit/s** und 2,3 × 10¹⁴ Bit auf
+  der Leitung: eine **Bitfehlerrate unter 1,3 × 10⁻¹⁴** (95 % Konfidenz).
+- Der FPGA-Build erfüllte das Timing mit 1,5 ns Reserve bei 125 MHz.
+
+### Dann haben wir absichtlich zugeschlagen
+
+{{< fig "pcie-inject.de.svg" "Auf Silizium injizierte Fehler, während die Verbindung Daten trug. Bei jeder Injektion meldete nur die betroffene Lane etwas; die anderen drei blieben bei null." >}}
+
+| Auf Silizium injizierter Fehler | Ergebnis |
+|---|---|
+| Ein gekipptes Bit | Erkannt, der richtigen Lane zugeordnet, die Verbindung bleibt bestehen |
+| Störung im Descrambler-Zustand eines Empfängers | **Vom Empfänger selbst repariert**; 438 Wörter betroffen (etwa 4 µs); die Verbindung hat den Datenmodus nie verlassen |
+| Bit-Slip in der Taktrückgewinnung einer Lane | **Vom Empfänger selbst repariert**; 724 Wörter verloren (etwa 7 µs); die Verbindung hat den Datenmodus nie verlassen |
+| Neutraining unter Verkehr | 54 Millionen Wörter, keines fehlerhaft oder verloren |
+
+**Bei jeder Injektion meldete nur die betroffene Lane etwas; die anderen drei
+blieben bei null.** Die Standardlösung für die Descrambler-Störung und den
+Bit-Slip ist eine Link-Recovery, die Millisekunden dauert. PCIE_G5 hat sie in
+Mikrosekunden repariert und die Verbindung im Datenmodus gehalten. Die während
+eines Ausfalls getroffenen Wörter sind der einzige Verlust; der Data Link Layer,
+der noch nicht geschrieben ist, wird sie erneut senden.
+
+## Auch in der Simulation getestet
 
 {{< stats >}}
-{{< stat "44 / 44" "automatisierte Simulationsläufe, alle bestanden" >}}
+{{< stat "45 / 45" "automatisierte Simulationsläufe, alle bestanden, einschließlich des Testdesigns, das auf dem Board läuft" >}}
 {{< stat "1–16" "Lanes abgedeckt: 1, 2, 4, 8 und 16, bei 8, 16 und 32 GT/s" >}}
 {{< stat "±5000 ppm" "Frequenzversatz zwischen zwei unabhängigen Takten" >}}
-{{< stat "3 / 3" "Arten injizierter Fehler bewältigt, während die Verbindung Daten trägt" >}}
+{{< stat "128 / 128" "mögliche Bit-Ausrichtungen einer Lane durchlaufen" >}}
 {{< /stats >}}
 
-Die Verifikation deckt auch Versatz zwischen den Lanes und injizierte Bitfehler
-ab. Dann haben wir die Verbindung absichtlich gestört, in der Simulation,
-während sie Daten trug:
-
-| Injizierter Fehler | Ergebnis in der Simulation |
-|---|---|
-| Ein gekipptes Bit auf einer Lane | Erkannt und dieser Lane zugeordnet |
-| Eine Störung im Zustand des Descramblers im Empfänger | **Vom Empfänger selbst repariert**; keine Seite verlässt den Datenmodus |
-| Ein Bit-Slip in der Taktrückgewinnung einer Lane | **Vom Empfänger selbst repariert**; keine Seite verlässt den Datenmodus |
-
-In den beiden Selbstreparaturfällen sind die während des Ausfalls getroffenen
-Pakete der einzige Verlust: einige hundert Stromwörter beim Standardintervall,
-die der Data Link Layer erneut senden wird.
+Die Simulationsläufe decken auch Versatz zwischen den Lanes und injizierte
+Bitfehler ab, und dieselben drei Fehlerinjektionen bestehen in der Simulation
+wie auf Silizium.
 
 ## Schnell ab dem ersten Redesign
 
@@ -118,7 +137,7 @@ dem FPGA also bereits Raum für Gen5.
 | Physical Layer, logischer Teil (128b/130b-Codierung, 1–16 Lanes, 8 / 16 / 32 GT/s) | Geschrieben, besteht die Simulation |
 | Transceiver-Schnittstelle (Bit-Ausrichtung, Taktdomänenübergang, Lane-Deskew) | Geschrieben, besteht die Simulation |
 | Timing auf dem FPGA (AMD Versal xcve2302-1LP, 4 Lanes, out-of-context) | 286 MHz für den Teil auf Blockebene, 284 MHz mit der Transceiver-Schnittstelle; Ziel waren 250 MHz |
-| Test auf echten Transceivern (TE0950-Board, 4 Lanes, 16 Gbit/s, interne Schleife) | Design, Build-Skripte und Board-Werkzeug geschrieben und simuliert; Build und Board-Lauf ausstehend |
+| Test auf echten Transceivern (TE0950-Board, 4 Lanes × 16,0 Gbit/s, interne Schleife) | **Bestanden**: Selbsttest mit Fehlerinjektion und ein einstündiger Lauf mit null Fehlern |
 | Link-Training-Zustandsautomat (LTSSM), Start mit 2,5 GT/s | Nicht begonnen |
 | Data Link Layer (Replay, Flusssteuerung) | Nicht begonnen |
 | Transaction Layer, Konfigurationsraum, Rollen Root Complex / Endpoint | Nicht begonnen |
@@ -130,10 +149,13 @@ Bisher etwa 2.700 Zeilen VHDL-2008, dazu Testbenches.
 
 - **Es gibt nur den Physical Layer.** Ein vollständiger PCIe-Controller braucht
   die drei übrigen Schichten: Link-Training, Data Link und Transaction.
-- **Noch ist nichts auf Hardware gelaufen.** Der erste Board-Test prüft den Core
-  gegen sich selbst. Das beweist den Datenpfad und die Selbstreparaturfunktionen
-  auf echten Transceivern, aber nicht die Kompatibilität mit Geräten anderer
-  Hersteller.
+- **Der Board-Test prüft den Core gegen sich selbst**, über die interne
+  Schleife der Transceiver: kein Steckverbinder, kein Kabel, kein Gerät eines
+  anderen Herstellers. Er beweist den Datenpfad und die
+  Selbstreparaturfunktionen auf echten Transceivern; die Kompatibilität mit
+  Geräten anderer Hersteller beweist er nicht.
+- **Der Verbindungsaufbau im Board-Test ist ein kleiner Testsequenzer**, nicht
+  der vollständige Link-Training-Zustandsautomat.
 - **Ausgelegt für PCI Express Gen4 / Gen5; Kompatibilitätstests mit
   kommerziellen Geräten sind ein späterer Meilenstein.**
 - **Das heute verfügbare Board** (Trenz TE0950) begrenzt den Silizium-Test auf
@@ -144,8 +166,9 @@ Bisher etwa 2.700 Zeilen VHDL-2008, dazu Testbenches.
 
 ## Roadmap
 
-1. **Erstes Silizium:** 4 Lanes mit 16 Gbit/s auf dem TE0950, Selbsttest und
-   ein einstündiger Dauertest.
+1. **Erledigt am 27. Nov. 2026, erstes Silizium:** 4 Lanes mit 16 Gbit/s auf dem
+   TE0950, Selbsttest und ein einstündiger Lauf mit null Fehlern. Als Nächstes
+   auf dem Board: derselbe Test über ein externes Kabel.
 2. **Link-Training-Zustandsautomat**, einschließlich Aushandlung von
    Geschwindigkeit und Breite.
 3. **Data Link Layer mit strahlungstolerantem Replay.**

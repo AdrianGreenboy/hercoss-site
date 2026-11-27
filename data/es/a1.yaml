@@ -91,7 +91,7 @@ bloques:
       en cada sentido.
     puntos:
       - "Gen5: 32 GT/s por carril."
-      - "Controlador propio de Hercoss, PCIE_G5: Gen4 y Gen5, de 1 a 16 carriles, COTS y rad-hard del mismo código; la capa física pasa simulación, las pruebas de compatibilidad con dispositivos comerciales son un hito posterior."
+      - "Controlador propio de Hercoss, PCIE_G5: Gen4 y Gen5, de 1 a 16 carriles, COTS y rad-hard del mismo código; la capa física funciona en silicio a 4 × 16 Gb/s, una hora con cero errores; las pruebas de compatibilidad con dispositivos comerciales son un hito posterior."
       - "Los bitstreams también se pueden cargar por PCIe."
 
   - id: enlaces

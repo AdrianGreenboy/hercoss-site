@@ -106,8 +106,8 @@
   a1: Base de tiempo común para cada puerto Ethernet
 - nombre: PCIE_G5
   cat: Enlaces
-  estado: desarrollo
-  que: 'Controlador PCI Express Gen4 / Gen5 propio, de 1 a 16 carriles, COTS y rad-hard del mismo código, diseñado para reparar en el lugar las perturbaciones comunes por partículas mientras los datos siguen fluyendo. La capa física pasa 44 / 44 corridas de simulación; 286 MHz en FPGA; primera prueba en silicio preparada.' 
+  estado: validado
+  que: 'Controlador PCI Express Gen4 / Gen5 propio, de 1 a 16 carriles, COTS y rad-hard del mismo código, diseñado para reparar en el lugar las perturbaciones comunes por partículas mientras los datos siguen fluyendo. Capa física en silicio: 4 × 16 Gb/s, una hora, 389.8 mil millones de palabras, cero errores; perturbaciones del receptor reparadas en microsegundos sin salir del modo de datos.' 
   a1: 3 × Gen5 x16
 - nombre: MIPI CSI-2
   cat: Enlaces
