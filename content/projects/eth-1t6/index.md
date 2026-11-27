@@ -171,4 +171,4 @@ the chip can carry at once.
 
 For technical or investment enquiries:
 [adrian@hercoss.com](mailto:adrian@hercoss.com) ·
-[See the investment opportunity →](/projects/hercoss-exxo-a1/#invest)
+[Invest in Hercoss →](/invest/)

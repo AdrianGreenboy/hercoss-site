@@ -102,5 +102,5 @@ mixed-signal design are welcome.
 Radio is the one function every spacecraft has. Putting it on the same
 European chip as the processors and the FPGA fabric means fewer parts, less
 mass and a payload that can change its mission after launch.
-[See the investment opportunity →](/projects/hercoss-exxo-a1/#invest) ·
+[Invest in Hercoss →](/invest/) ·
 [adrian@hercoss.com](mailto:adrian@hercoss.com)

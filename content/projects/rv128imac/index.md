@@ -390,4 +390,4 @@ marked. Patent process in progress.*
 
 Questions, collaboration or investment:
 [adrian@hercoss.com](mailto:adrian@hercoss.com) ·
-[See the investment opportunity →](/projects/hercoss-exxo-a1/#invest)
+[Invest in Hercoss →](/invest/)

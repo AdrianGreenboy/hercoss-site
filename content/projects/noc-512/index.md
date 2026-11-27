@@ -329,4 +329,4 @@ chip.*
 
 Interested in the HERCOSS Exxo A1 or in NOC_512?
 [adrian@hercoss.com](mailto:adrian@hercoss.com) ·
-[See the investment opportunity →](/projects/hercoss-exxo-a1/#invest)
+[Invest in Hercoss →](/invest/)

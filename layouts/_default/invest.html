@@ -1,0 +1,136 @@
+{{ define "main" }}
+<section class="inv-hero">
+  <p class="eyebrow">Invest · Join the Hercoss family</p>
+  <h1>Build Europe's space chip with us.</h1>
+  <p class="lead">The HERCOSS Exxo A1 puts a whole spacecraft computer on one die: sixteen 128-bit RISC-V cores, its own FPGA fabric, onboard AI and up to ~2 Tbps of Ethernet, designed in Europe from the first line of RTL. The building blocks already run on silicon. Now we are opening the company to the people who want to build it with us.</p>
+  <p>
+    <a class="button" href="#register">Register your interest →</a>
+    <a class="button secundario" href="mailto:{{ site.Params.email }}?subject=Investing%20in%20Hercoss">Talk to Adrian</a>
+  </p>
+  <div class="io-total stats inv-stats">
+    <div><span class="io-num">129 MB/s</span><span class="io-lbl">hardware SHA-3 from Linux, no driver, on our own 128-bit RISC-V core</span></div>
+    <div><span class="io-num">≈0.6 µs</span><span class="io-lbl">for our network on chip to heal itself, 405,522 times in one hour</span></div>
+    <div><span class="io-num">312 bn</span><span class="io-lbl">frames in one hour through our 1.6T Ethernet core, zero errors</span></div>
+    <div><span class="io-num">33</span><span class="io-lbl">IP cores of our own, 23 already validated on FPGA silicon</span></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Why Hercoss, why now</p>
+  <h2 class="grande">A chip the market is missing, built by people who ship.</h2>
+  <div class="inv-grid3">
+    <div class="inv-card"><span class="inv-k">01</span><h3>Proven on silicon</h3><p>Processor, network on chip, 1.6T Ethernet, AI and space buses run on real FPGA hardware today, every result published with its limits. <a href="{{ "projects/ip-core-family/" | relURL }}">See the IP cores →</a></p></div>
+    <div class="inv-card"><span class="inv-k">02</span><h3>Space needs one die, not ten</h3><p>Spacecraft fly a processor, an FPGA, an AI chip and a bag of interface chips. One radiation-tolerant SoC cuts mass, power, cost and failure points. <a href="{{ "projects/hercoss-exxo-a1/" | relURL }}">The Exxo A1 →</a></p></div>
+    <div class="inv-card"><span class="inv-k">03</span><h3>European and independent</h3><p>Our own RTL, our own FPGA fabric, no processor licence and no dependency on export-controlled parts: a sovereign option for European and Latin American space programmes.</p></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Membership</p>
+  <h2 class="grande">What you get as part of the Hercoss family</h2>
+  <div class="inv-grid2">
+    <div class="inv-feature">
+      <svg viewBox="0 0 120 120" class="inv-ico" aria-hidden="true"><circle cx="60" cy="60" r="44" fill="none" stroke="#262d38" stroke-width="16"/><circle cx="60" cy="60" r="44" fill="none" stroke="#f2a03d" stroke-width="16" stroke-dasharray="92 400" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="44" fill="none" stroke="#5b9bd5" stroke-width="16" stroke-dasharray="0 96 120 400" transform="rotate(-90 60 60)"/></svg>
+      <div><h3>The pool dashboard</h3><p>See the investment pool grow in real time: your share and the total of everyone together, in euros and pesos. Your name and amount are never shown to other investors.</p></div>
+    </div>
+    <div class="inv-feature">
+      <svg viewBox="0 0 120 120" class="inv-ico" aria-hidden="true"><rect x="18" y="26" width="84" height="76" fill="none" stroke="#f2a03d" stroke-width="6"/><line x1="18" y1="46" x2="102" y2="46" stroke="#f2a03d" stroke-width="6"/><line x1="40" y1="16" x2="40" y2="34" stroke="#e6e9ee" stroke-width="6"/><line x1="80" y1="16" x2="80" y2="34" stroke="#e6e9ee" stroke-width="6"/><rect x="34" y="60" width="16" height="14" fill="#6fcf97"/></svg>
+      <div><h3>Monthly investor meetings</h3><p>A live session every month with Adrian: progress on the chip, the numbers, the next milestones and your questions. Add each meeting to your calendar with one click.</p></div>
+    </div>
+    <div class="inv-feature">
+      <svg viewBox="0 0 120 120" class="inv-ico" aria-hidden="true"><rect x="20" y="20" width="80" height="80" fill="none" stroke="#e6e9ee" stroke-width="6"/><rect x="34" y="34" width="52" height="52" fill="#151a21" stroke="#f2a03d" stroke-width="6"/><g stroke="#9aa4b2" stroke-width="5"><line x1="10" y1="44" x2="20" y2="44"/><line x1="10" y1="76" x2="20" y2="76"/><line x1="100" y1="44" x2="110" y2="44"/><line x1="100" y1="76" x2="110" y2="76"/><line x1="44" y1="10" x2="44" y2="20"/><line x1="76" y1="10" x2="76" y2="20"/><line x1="44" y1="100" x2="44" y2="110"/><line x1="76" y1="100" x2="76" y2="110"/></g></svg>
+      <div><h3>Chip news first</h3><p>Silicon results, design decisions and milestones of the Exxo A1, in the Investor Hub before they reach the public site.</p></div>
+    </div>
+    <div class="inv-feature">
+      <svg viewBox="0 0 120 120" class="inv-ico" aria-hidden="true"><polyline points="12,92 36,70 56,78 80,44 108,30" fill="none" stroke="#6fcf97" stroke-width="7" stroke-linejoin="round"/><line x1="12" y1="104" x2="108" y2="104" stroke="#262d38" stroke-width="5"/><circle cx="108" cy="30" r="7" fill="#f2a03d"/></svg>
+      <div><h3>Semiconductor market indicators</h3><p>NVIDIA, TSMC, ASML, Broadcom, AMD, Intel, Infineon and the semiconductor index, with one-year charts, in the same dashboard.</p></div>
+    </div>
+  </div>
+  <p><a class="button secundario" href="{{ "investors/?demo=1" | relURL }}">Preview the Investor Hub (demo) →</a></p>
+</section>
+
+<section id="register">
+  <p class="eyebrow">Two ways to take part</p>
+  <h2 class="grande">Choose how you want to start</h2>
+  <div class="inv-ways">
+    <div class="inv-way">
+      <span class="inv-k">Option A</span>
+      <h3>Talk to us first</h3>
+      <p>Write to Adrian directly. We answer every message personally, share the investor brief and set up a call.</p>
+      <p><a class="button" href="mailto:{{ site.Params.email }}?subject=Investing%20in%20Hercoss&amp;body=Hello%20Adrian%2C%0A%0AI%20would%20like%20to%20know%20more%20about%20investing%20in%20Hercoss.%0A%0AName%3A%0APhone%3A%0ACountry%3A%0A">Send an e-mail</a></p>
+      <p class="inv-small">{{ site.Params.email }}</p>
+    </div>
+    <form class="inv-way inv-form" id="interest-form" data-api="{{ site.Params.api }}" novalidate>
+      <span class="inv-k">Option B</span>
+      <h3>Register your interest and join the Investor Hub</h3>
+      <div class="inv-row">
+        <label>Full name<input name="name" autocomplete="name" required minlength="2" maxlength="120"></label>
+      </div>
+      <div class="inv-row two">
+        <label>E-mail<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+        <label>Mobile phone<input name="phone" type="tel" autocomplete="tel" required placeholder="+49 … / +52 …" maxlength="24"></label>
+      </div>
+      <div class="inv-row two">
+        <label>Country
+          <select name="country" required>
+            <option value="Germany">Germany</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Other EU">Other EU country</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <div class="inv-cur" role="group" aria-label="Currency">
+          <span class="inv-lbl">Currency</span>
+          <div class="toggle"><button type="button" data-cur="EUR" aria-selected="true">EUR €</button><button type="button" data-cur="MXN" aria-selected="false">MXN $</button></div>
+        </div>
+      </div>
+      <div class="inv-row">
+        <span class="inv-lbl">Amount you intend to invest</span>
+        <div class="inv-chips" id="chips"></div>
+        <label class="inv-amount"><span id="cur-sign">€</span><input name="amount" type="number" inputmode="decimal" min="100" step="1" required></label>
+      </div>
+      <input class="inv-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="inv-check"><input type="checkbox" name="join_hub" checked><span>Add me to the Investor Hub and the investment pool dashboard</span></label>
+      <label class="inv-check"><input type="checkbox" name="consent" required><span>I agree that Hercoss stores my name, e-mail, phone and intended amount, encrypted, to contact me about investing and to run the Investor Hub, as described in the <a href="{{ "legal/datenschutz/" | relURL }}">privacy policy</a>. I can delete my data at any time.</span></label>
+      <button class="button inv-submit" type="submit">Register my interest</button>
+      <p class="inv-msg" id="form-msg" role="status" aria-live="polite"></p>
+      <p class="inv-small">Non-binding. No payment is taken on this site.</p>
+    </form>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">How it works</p>
+  <h2 class="grande">From interest to investor, step by step</h2>
+  <ol class="inv-steps">
+    <li><span>1</span><div><h3>Register your interest</h3><p>Name, e-mail, phone and the amount you have in mind. It takes a minute and commits you to nothing.</p></div></li>
+    <li><span>2</span><div><h3>Confirm your e-mail</h3><p>One click on the link we send you opens your Investor Hub. No password to remember.</p></div></li>
+    <li><span>3</span><div><h3>Follow the chip from inside</h3><p>Pool dashboard, news, monthly meetings and market indicators, from day one.</p></div></li>
+    <li><span>4</span><div><h3>Formal investment</h3><p>Once Hercoss is incorporated and the offer is set up under German and Mexican law, you receive the formal documents and a secure payment link: card, debit or bank transfer, processed by a regulated payment provider.</p></div></li>
+    <li><span>5</span><div><h3>Your share, confirmed</h3><p>When your investment arrives, your place in the pool turns from pledged to confirmed.</p></div></li>
+  </ol>
+</section>
+
+<section>
+  <p class="eyebrow">Security and privacy</p>
+  <h2 class="grande">Your data is locked, even from us</h2>
+  <div class="inv-grid3">
+    <div class="inv-card"><h3>Encrypted connection</h3><p>Everything travels over HTTPS with a modern certificate, end to end between your browser and our server in Germany.</p></div>
+    <div class="inv-card"><h3>Encrypted storage</h3><p>Name, e-mail and phone are stored with AES-256-GCM. A stolen database file reveals nothing: the keys never live next to the data.</p></div>
+    <div class="inv-card"><h3>No passwords to steal</h3><p>You sign in with a one-time link to your e-mail. Card and bank details will never touch our servers: payments go through a regulated provider.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Questions</h2>
+  <details class="detalle"><summary>Why can't I pay right now?</summary><div><p>Because we want your investment to be properly protected. Hercoss is being incorporated, and an offer of company shares to the public is regulated in Germany and in Mexico. As soon as the legal structure is in place, everyone who registered receives the formal documents first.</p></div></details>
+  <details class="detalle"><summary>Who can see how much I pledged?</summary><div><p>Only you and Hercoss. Other investors see the pool total and their own share, never names or e-mail addresses.</p></div></details>
+  <details class="detalle"><summary>Can I change or withdraw my pledge?</summary><div><p>Yes, at any time in the Investor Hub, and you can delete all your data with one button.</p></div></details>
+  <details class="detalle"><summary>Euros or pesos?</summary><div><p>Both. You pledge in your currency; the pool shows the total in euros, converted at the European Central Bank reference rate, and in each currency separately.</p></div></details>
+</section>
+
+<section class="inv-legal">
+  <p><strong>Important.</strong> This page invites expressions of interest only. It is not an offer to sell, or a solicitation of an offer to buy, shares, securities or any other financial product, and no money is collected on this website. Hercoss is in the process of being incorporated. Any investment will be made only on the basis of separate written documents that comply with the applicable law in Germany and in Mexico. Investing in an early-stage technology company carries high risks, up to the total loss of the money invested.</p>
+</section>
+<script src="{{ "js/invest.js" | relURL }}" defer></script>
+{{ end }}

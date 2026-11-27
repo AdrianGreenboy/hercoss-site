@@ -8,7 +8,7 @@
     <h1>{{ site.Params.tagline }}</h1>
     <p class="lead">{{ site.Params.description }}</p>
     <p>
-      <a class="button" href="{{ "projects/hercoss-exxo-a1/" | relURL }}#invest">Investment opportunity →</a>
+      <a class="button" href="{{ "invest/" | relURL }}">Invest in Hercoss →</a>
       <a class="button secundario" href="{{ "projects/" | relURL }}">Projects</a>
     </p>
   </div>
@@ -24,7 +24,7 @@
     <p class="lead">{{ .Params.summary }}</p>
     {{ with .Params.datos }}<ul class="datos">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
     <p>
-      <a class="button" href="{{ .RelPermalink }}#invest">Investment opportunity →</a>
+      <a class="button" href="{{ "invest/" | relURL }}">Invest in Hercoss →</a>
       <a class="button secundario" href="{{ .RelPermalink }}#explore">Explore the chip</a>
     </p>
   </div>

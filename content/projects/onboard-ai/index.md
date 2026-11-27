@@ -119,4 +119,4 @@ Every one of these engines is verified the same way:
 Onboard AI and autonomous control are where the value of a modern spacecraft
 is moving. The HERCOSS Exxo A1 brings them onto the same European chip as
 the processors, the FPGA fabric and the space interfaces.
-[See the investment opportunity →](/projects/hercoss-exxo-a1/#invest)
+[Invest in Hercoss →](/invest/)

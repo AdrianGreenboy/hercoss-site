@@ -319,3 +319,6 @@ to the chip that flies on Europe's next missions:
 
 Write to [adrian@hercoss.com](mailto:adrian@hercoss.com). A detailed technical
 brief is available for investors and partners on request.
+
+**Want to invest?** [Join the Hercoss family →](/invest/): register your
+interest and follow the chip from inside, in the Investor Hub.

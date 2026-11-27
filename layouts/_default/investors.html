@@ -1,0 +1,97 @@
+{{ define "main" }}
+<section class="hub" id="hub" data-api="{{ site.Params.api }}">
+  <div class="hub-demo" id="demo-banner" hidden>DEMO · invented data, for preview only · <a href="{{ "invest/" | relURL }}">Register to see the real pool</a></div>
+
+  <div id="hub-loading" class="hub-state"><p class="eyebrow">Investor Hub</p><p class="lead">Loading…</p></div>
+
+  <div id="hub-login" class="hub-state" hidden>
+    <p class="eyebrow">Investor Hub</p>
+    <h1>Welcome back to the Hercoss family.</h1>
+    <p class="lead">Enter the e-mail you registered with. We send you a one-time sign-in link: no password needed.</p>
+    <form id="login-form" class="hub-login" novalidate>
+      <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
+      <button class="button" type="submit">Send me a sign-in link</button>
+      <p class="inv-msg" id="login-msg" role="status" aria-live="polite"></p>
+    </form>
+    <p class="inv-small">Not registered yet? <a href="{{ "invest/#register" | relURL }}">Register your interest</a> · <a href="{{ "investors/?demo=1" | relURL }}">See a demo</a></p>
+  </div>
+
+  <div id="hub-dash" hidden>
+    <div class="hub-top">
+      <div>
+        <p class="eyebrow">Investor Hub · HERCOSS Exxo A1</p>
+        <h1 class="hub-hello">Welcome, <span id="me-name"></span></h1>
+        <p class="inv-small">Member since <span id="me-since"></span> · <span id="me-email"></span></p>
+      </div>
+      <button class="button secundario" id="logout" type="button">Sign out</button>
+    </div>
+
+    <div class="hub-grid">
+      <div class="hub-card hub-pool">
+        <p class="hub-k">The pool</p>
+        <div class="hub-pool-in">
+          <svg id="pool-ring" viewBox="0 0 220 220" class="hub-ring" role="img" aria-label="Your share of the pool"></svg>
+          <div>
+            <p class="hub-big"><span id="pool-mine"></span><span class="hub-of">of <span id="pool-total"></span> pledged by everyone together</span></p>
+            <p class="hub-pct"><span id="pool-pct"></span> of the pool is yours</p>
+            <ul class="hub-facts">
+              <li><span id="pool-n"></span> investors in the pool</li>
+              <li id="pool-cur"></li>
+              <li class="inv-small" id="pool-rate"></li>
+            </ul>
+          </div>
+        </div>
+        <div id="pool-goal" class="hub-goal" hidden><div class="hub-goal-bar"><span id="goal-fill"></span></div><p class="inv-small" id="goal-txt"></p></div>
+      </div>
+
+      <div class="hub-card">
+        <p class="hub-k">My pledge</p>
+        <p class="hub-big" id="my-pledge"></p>
+        <p><span class="estado" id="my-status"></span><span class="inv-small" id="my-updated"></span></p>
+        <form id="pledge-form" class="hub-pledge" novalidate>
+          <label>Change amount<input name="amount" type="number" min="1" step="1" required></label>
+          <div class="toggle"><button type="button" data-cur="EUR">EUR</button><button type="button" data-cur="MXN">MXN</button></div>
+          <button class="button" type="submit">Update</button>
+        </form>
+        <p class="inv-msg" id="pledge-msg" role="status" aria-live="polite"></p>
+        <p class="inv-small">Non-binding until the formal investment documents are signed.</p>
+      </div>
+
+      <div class="hub-card">
+        <p class="hub-k">Next investor meeting</p>
+        <div id="meet-next"></div>
+        <ul class="hub-list" id="meet-list"></ul>
+      </div>
+    </div>
+
+    <h2 class="hub-h">News from the chip</h2>
+    <div class="hub-news" id="news"></div>
+
+    <h2 class="hub-h">Exxo A1 progress</h2>
+    <div class="hub-progress">
+      {{ range hugo.Data.a1.fases }}
+      {{ $done := 0 }}{{ $n := len .items }}{{ range .items }}{{ if eq .estado "hecho" }}{{ $done = add $done 1 }}{{ end }}{{ end }}
+      <div class="hub-phase">
+        <p class="hub-k">{{ .id }} · {{ .titulo }}</p>
+        <div class="hub-goal-bar"><span style="width: {{ div (mul $done 100) $n }}%"></span></div>
+        <p class="inv-small">{{ $done }} of {{ $n }} milestones done</p>
+      </div>
+      {{ end }}
+    </div>
+
+    <h2 class="hub-h">Semiconductor market</h2>
+    <div class="hub-market" id="market"></div>
+    <p class="inv-small" id="market-src"></p>
+
+    <h2 class="hub-h">My data</h2>
+    <div class="hub-card hub-me">
+      <p>Name: <strong id="d-name"></strong> · E-mail: <span id="d-email"></span> · Phone: <span id="d-phone"></span> · Country: <span id="d-country"></span></p>
+      <label class="inv-check"><input type="checkbox" id="in-pool"><span>Count my pledge in the pool dashboard (anonymously: others see only the total)</span></label>
+      <p class="inv-small">Stored encrypted on our server in Germany. Only you and Hercoss can see it.</p>
+      <button class="button secundario" type="button" id="delete-1">Delete my data</button>
+      <span id="delete-confirm" hidden><button class="button hub-danger" type="button" id="delete-2">Yes, delete everything now</button> <button class="button secundario" type="button" id="delete-no">Cancel</button></span>
+    </div>
+  </div>
+</section>
+<script src="{{ "js/investors.js" | relURL }}" defer></script>
+{{ end }}

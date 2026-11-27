@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {{ partial "seo.html" . }}
+  {{ with .Params.csp }}<meta http-equiv="Content-Security-Policy" content="{{ replace . "{api}" site.Params.api }}">{{ end }}
+  {{ if .Params.private }}<meta name="referrer" content="no-referrer"><meta name="robots" content="noindex, nofollow">{{ end }}
   <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
   <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
 </head>
