@@ -107,7 +107,7 @@
 - nombre: PCIE_G5
   cat: Enlaces
   estado: validado
-  que: 'Controlador PCI Express Gen4 / Gen5 propio, de 1 a 16 carriles, COTS y rad-hard del mismo código, diseñado para reparar en el lugar las perturbaciones comunes por partículas mientras los datos siguen fluyendo. Capa física en silicio: 4 × 16 Gb/s, una hora, 389.8 mil millones de palabras, cero errores; perturbaciones del receptor reparadas en microsegundos sin salir del modo de datos.' 
+  que: 'Controlador PCI Express Gen4 / Gen5 propio, de 1 a 16 carriles, COTS y rad-hard del mismo código, diseñado para reparar en el lugar las perturbaciones comunes por partículas mientras los datos siguen fluyendo. Capa física en silicio: 4 × 16 Gb/s, una hora, 389.8 mil millones de palabras, cero errores; perturbaciones del receptor reparadas en microsegundos sin salir del modo de datos; el enlace se entrena solo en silicio y vuelve en dos carriles cuando se apaga uno.' 
   a1: 3 × Gen5 x16
 - nombre: MIPI CSI-2
   cat: Enlaces

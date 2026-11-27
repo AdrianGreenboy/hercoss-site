@@ -2,16 +2,17 @@
 title: "PCIE_G5: PCIe Gen5 for space, a link that repairs itself"
 layout: article
 weight: 8
-estado: "In development · physical layer running on silicon at 4 × 16 Gb/s, one hour error-free (27 Nov 2026)"
+estado: "In development · physical layer and first part of link training running on silicon, one hour error-free (27 Nov 2026)"
 hidecover: true
 seotitle: "PCIE_G5: European PCI Express Gen4 / Gen5 controller IP for space — Hercoss"
-summary: "Hercoss's own PCI Express controller for the HERCOSS Exxo A1, written from scratch in VHDL-2008. One core covers Gen4 and Gen5, from 1 to 16 lanes, in a commercial and a radiation-hardened version from the same source, and it is designed so that the most common particle upsets are repaired on the spot while data keeps flowing. On its first day it ran on real transceivers: four lanes at 16 Gb/s, one hour, zero errors."
+summary: "Hercoss's own PCI Express controller for the HERCOSS Exxo A1, written from scratch in VHDL-2008. One core covers Gen4 and Gen5, from 1 to 16 lanes, in a commercial and a radiation-hardened version from the same source, and it is designed so that the most common particle upsets are repaired on the spot while data keeps flowing. On its first day it ran on real transceivers: four lanes at 16 Gb/s, one hour, zero errors. The same evening the link trained itself on the board and kept running on two lanes when one was switched off."
 datos:
   - "Gen4 + Gen5 · 16 / 32 GT/s"
   - "1 to 16 lanes"
   - "COTS and rad-hard from one source"
   - "Silicon: 4 × 16 Gb/s, 1 hour, 0 errors"
-  - "45 / 45 simulation runs pass"
+  - "Link trains itself on silicon"
+  - "50 / 50 simulation runs pass"
   - "286 MHz on FPGA, Gen5 needs ~246"
 ---
 
@@ -37,7 +38,7 @@ lanes**, and it is being built in two versions from the same source: a
 commercial (COTS) one and a radiation-hardened one for space. The Exxo A1 plan
 has **three PCIe Gen5 x16 ports.**
 
-Development started on 27 November 2026. **On the same day** the logical part of the physical layer and its transceiver interface were written, passed simulation **and ran on real transceivers: four lanes at 16 Gb/s each on an AMD Versal board, one hour with zero errors.**
+Development started on 27 November 2026. **On the same day** the logical part of the physical layer and its transceiver interface were written, passed simulation **and ran on real transceivers: four lanes at 16 Gb/s each on an AMD Versal board, one hour with zero errors.** The same evening the first part of the link training ran on the same board: **the link trains itself, and when a lane is switched off under traffic it comes back on two lanes.**
 
 {{< fig "pcie-a1.svg" "Where PCIE_G5 sits in the HERCOSS Exxo A1: three Gen5 x16 ports between the chip's 512-bit network and the outside world. Plan." >}}
 
@@ -101,10 +102,38 @@ is a link recovery, which takes milliseconds. PCIE_G5 repaired them in
 microseconds and kept the link in data mode. The words hit during an outage
 are the only loss; the data link layer, not written yet, will resend them.
 
+## Link training on silicon: it trains itself
+
+The same evening, on the same board, the first part of the **link training
+state machine** ran on silicon. Here the port is looped onto itself through the
+transceivers.
+
+{{< stats >}}
+{{< stat "x4" "the link trains itself to four lanes and carries data" >}}
+{{< stat "0" "errors and 0 link recoveries in one hour on the trained link: 389,812,506,472 words" >}}
+{{< stat "25 ms" "to come back on two lanes after a lane is switched off under a running link" >}}
+{{< stat "0" "link recoveries when the two self-repair cases are repeated on the trained link" >}}
+{{< /stats >}}
+
+{{< fig "pcie-train.svg" "A lane switched off under a running link: the link comes back on two lanes after 25 ms with one recovery, then returns to four lanes when the lane is switched on again. Which lane is drawn as switched off is illustrative." >}}
+
+- **The link trains itself to four lanes** and carries data.
+- **One-hour run on the trained link:** 389,812,506,472 test words sent and the
+  same number received correct, **zero errors of any kind and zero link
+  recoveries.** 2.3 × 10¹⁴ bits on the line: bit error rate below 1.3 × 10⁻¹⁴
+  (95 % confidence).
+- **The two self-repair cases**, repeated on the trained link, were both
+  repaired **with zero link recoveries.**
+- **One lane switched off under a running link:** the link came back on two
+  lanes after 25 ms, with one recovery and **without starting link training
+  from the beginning.** Traffic on two lanes: zero errors at 27.7 Gb/s.
+- **Lane switched on again** and link restarted: four lanes, zero errors at
+  55.4 Gb/s.
+
 ## Tested in simulation too
 
 {{< stats >}}
-{{< stat "45 / 45" "automated simulation runs, all passing, including the test design that runs on the board" >}}
+{{< stat "50 / 50" "automated simulation runs, all passing, including the test design that runs on the board" >}}
 {{< stat "1–16" "lanes covered: 1, 2, 4, 8 and 16, at 8, 16 and 32 GT/s" >}}
 {{< stat "±5000 ppm" "frequency offset between two independent clocks" >}}
 {{< stat "128 / 128" "possible bit alignments of a lane swept" >}}
@@ -133,7 +162,8 @@ on the FPGA.
 | Transceiver interface (bit alignment, clock-domain crossing, lane deskew) | Written, passes simulation |
 | Timing on FPGA (AMD Versal xcve2302-1LP, 4 lanes, out-of-context) | 286 MHz for the block-level part, 284 MHz with the transceiver interface; 250 MHz was the target |
 | Test on real transceivers (TE0950 board, 4 lanes × 16.0 Gb/s, internal loopback) | **Passed**: self-test with fault injection, and a one-hour run with zero errors |
-| Link training state machine (LTSSM), 2.5 GT/s start-up | Not started |
+| Link training state machine (LTSSM), first part: link comes up by itself, width negotiation, recovery | **Passed on the board**: self-test and a one-hour run with zero errors and zero recoveries |
+| LTSSM, remaining part: 2.5 GT/s start-up, speed change, equalization | Not started |
 | Data link layer (replay, flow control) | Not started |
 | Transaction layer, configuration space, Root Complex / Endpoint roles | Not started |
 | Test against a commercial PCIe device | Later milestone, needs a different board |
@@ -142,14 +172,16 @@ About 2,700 lines of VHDL-2008 so far, plus testbenches.
 
 ## Honest limits
 
-- **Only the physical layer exists.** A complete PCIe controller needs the
-  three remaining layers: link training, data link and transaction.
+- **The physical layer and the first part of link training exist.** A complete
+  PCIe controller also needs the rest of link training (2.5 GT/s start-up,
+  speed change, equalization), the data link layer and the transaction layer.
 - **The board test checks the core against itself** through the transceivers'
   internal loopback: no connector, no cable, no device from another vendor. It
   proves the datapath and the self-repair functions on real transceivers; it
   does not prove compatibility with other vendors' devices.
-- **The link bring-up in the board test is a small test sequencer**, not the
-  full link training state machine.
+- **The first physical-layer run used a small test sequencer** to bring the
+  link up; the link training state machine now runs on the board for its first
+  part only.
 - **Designed for PCI Express Gen4 / Gen5; compatibility testing against
   commercial devices is a later milestone.**
 - **The board available today** (Trenz TE0950) limits the silicon test to four
@@ -162,7 +194,9 @@ About 2,700 lines of VHDL-2008 so far, plus testbenches.
 1. **Done on 27 Nov 2026, first silicon:** 4 lanes at 16 Gb/s on the TE0950,
    self-test and a one-hour run with zero errors. Next on the board: the same
    test through an external cable.
-2. **Link training state machine**, including speed and width negotiation.
+2. **Link training state machine:** first part done on 27 Nov 2026 (link
+   comes up by itself, width negotiation, recovery, on silicon); next the
+   2.5 GT/s start-up, speed change and equalization.
 3. **Data link layer with radiation-tolerant replay.**
 4. **Transaction layer** on the chip's 512-bit network
    ([NOC_512](/projects/noc-512/)), Root Complex and Endpoint in one core.

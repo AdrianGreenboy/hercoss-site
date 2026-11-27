@@ -2,16 +2,17 @@
 title: "PCIE_G5: PCIe Gen5 para el espacio, un enlace que se repara solo"
 layout: article
 weight: 8
-estado: "En desarrollo · capa física funcionando en silicio a 4 × 16 Gb/s, una hora sin errores (27 nov 2026)"
+estado: "En desarrollo · capa física y primera parte del entrenamiento del enlace funcionando en silicio, una hora sin errores (27 nov 2026)"
 hidecover: true
 seotitle: "PCIE_G5: IP de controlador PCI Express Gen4 / Gen5 europeo para el espacio — Hercoss"
-summary: "El controlador PCI Express propio de Hercoss para el HERCOSS Exxo A1, escrito desde cero en VHDL-2008. Un solo núcleo cubre Gen4 y Gen5, de 1 a 16 carriles, en una versión comercial y otra endurecida contra radiación a partir del mismo código, y está diseñado para que las perturbaciones más comunes por partículas se reparen en el lugar mientras los datos siguen fluyendo. En su primer día corrió en transceptores reales: cuatro carriles a 16 Gb/s, una hora, cero errores."
+summary: "El controlador PCI Express propio de Hercoss para el HERCOSS Exxo A1, escrito desde cero en VHDL-2008. Un solo núcleo cubre Gen4 y Gen5, de 1 a 16 carriles, en una versión comercial y otra endurecida contra radiación a partir del mismo código, y está diseñado para que las perturbaciones más comunes por partículas se reparen en el lugar mientras los datos siguen fluyendo. En su primer día corrió en transceptores reales: cuatro carriles a 16 Gb/s, una hora, cero errores. Esa misma noche el enlace se entrenó solo en la placa y siguió funcionando en dos carriles cuando se apagó uno."
 datos:
   - "Gen4 + Gen5 · 16 / 32 GT/s"
   - "De 1 a 16 carriles"
   - "COTS y rad-hard del mismo código"
   - "Silicio: 4 × 16 Gb/s, 1 hora, 0 errores"
-  - "45 / 45 corridas de simulación pasan"
+  - "El enlace se entrena solo en silicio"
+  - "50 / 50 corridas de simulación pasan"
   - "286 MHz en FPGA; Gen5 necesita ~246"
 ---
 
@@ -37,7 +38,7 @@ carriles**, y se construye en dos versiones a partir del mismo código: una
 comercial (COTS) y otra endurecida contra radiación para el espacio. El plan del
 Exxo A1 tiene **tres puertos PCIe Gen5 x16.**
 
-El desarrollo empezó el 27 de noviembre de 2026. **Ese mismo día** la parte lógica de la capa física y su interfaz con los transceptores quedaron escritas, pasaron la simulación **y corrieron en transceptores reales: cuatro carriles a 16 Gb/s cada uno en una placa AMD Versal, una hora con cero errores.**
+El desarrollo empezó el 27 de noviembre de 2026. **Ese mismo día** la parte lógica de la capa física y su interfaz con los transceptores quedaron escritas, pasaron la simulación **y corrieron en transceptores reales: cuatro carriles a 16 Gb/s cada uno en una placa AMD Versal, una hora con cero errores.** Esa misma noche corrió en la misma placa la primera parte del entrenamiento del enlace: **el enlace se entrena solo, y cuando se apaga un carril con tráfico vuelve en dos carriles.**
 
 {{< fig "pcie-a1.es.svg" "Dónde va PCIE_G5 en el HERCOSS Exxo A1: tres puertos Gen5 x16 entre la red de 512 bits del chip y el mundo exterior. Plan." >}}
 
@@ -107,10 +108,38 @@ milisegundos. PCIE_G5 los reparó en microsegundos y mantuvo el enlace en modo
 de datos. Las palabras afectadas durante una interrupción son la única pérdida;
 la capa de enlace de datos, que todavía no está escrita, las reenviará.
 
+## Entrenamiento del enlace en silicio: se entrena solo
+
+Esa misma noche, en la misma placa, corrió en silicio la primera parte de la
+**máquina de estados de entrenamiento del enlace**. Aquí el puerto está
+conectado consigo mismo a través de los transceptores.
+
+{{< stats >}}
+{{< stat "x4" "el enlace se entrena solo a cuatro carriles y lleva datos" >}}
+{{< stat "0" "errores y 0 recuperaciones del enlace en una hora en el enlace entrenado: 389,812,506,472 palabras" >}}
+{{< stat "25 ms" "para volver en dos carriles tras apagar un carril con el enlace en marcha" >}}
+{{< stat "0" "recuperaciones del enlace al repetir los dos casos de autorreparación en el enlace entrenado" >}}
+{{< /stats >}}
+
+{{< fig "pcie-train.es.svg" "Un carril apagado con el enlace en marcha: el enlace vuelve en dos carriles a los 25 ms con una recuperación, y regresa a cuatro carriles cuando el carril se vuelve a encender. Qué carril aparece apagado es ilustrativo." >}}
+
+- **El enlace se entrena solo a cuatro carriles** y lleva datos.
+- **Corrida de una hora en el enlace entrenado:** 389,812,506,472 palabras de
+  prueba enviadas y el mismo número recibidas correctas, **cero errores de
+  ningún tipo y cero recuperaciones del enlace.** 2.3 × 10¹⁴ bits en la línea:
+  tasa de error de bit menor a 1.3 × 10⁻¹⁴ (95 % de confianza).
+- **Los dos casos de autorreparación**, repetidos en el enlace entrenado, se
+  repararon ambos **con cero recuperaciones del enlace.**
+- **Un carril apagado con el enlace en marcha:** el enlace volvió en dos
+  carriles a los 25 ms, con una recuperación y **sin empezar el entrenamiento
+  desde el principio.** Tráfico en dos carriles: cero errores a 27.7 Gb/s.
+- **Carril encendido de nuevo** y enlace reiniciado: cuatro carriles, cero
+  errores a 55.4 Gb/s.
+
 ## Probado también en simulación
 
 {{< stats >}}
-{{< stat "45 / 45" "corridas de simulación automatizadas, todas pasan, incluido el diseño de prueba que corre en la placa" >}}
+{{< stat "50 / 50" "corridas de simulación automatizadas, todas pasan, incluido el diseño de prueba que corre en la placa" >}}
 {{< stat "1–16" "carriles cubiertos: 1, 2, 4, 8 y 16, a 8, 16 y 32 GT/s" >}}
 {{< stat "±5000 ppm" "de diferencia de frecuencia entre dos relojes independientes" >}}
 {{< stat "128 / 128" "alineaciones de bit posibles de un carril, recorridas" >}}
@@ -140,7 +169,8 @@ espacio para Gen5 en la FPGA.
 | Interfaz con los transceptores (alineación de bits, cruce de dominios de reloj, alineación de carriles) | Escrita, pasa simulación |
 | Timing en FPGA (AMD Versal xcve2302-1LP, 4 carriles, fuera de contexto) | 286 MHz para la parte a nivel de bloque, 284 MHz con la interfaz con los transceptores; el objetivo era 250 MHz |
 | Prueba en transceptores reales (placa TE0950, 4 carriles × 16.0 Gb/s, lazo interno) | **Superada**: autoprueba con inyección de fallos y una corrida de una hora con cero errores |
-| Máquina de estados de entrenamiento del enlace (LTSSM), arranque a 2.5 GT/s | Sin empezar |
+| Máquina de estados de entrenamiento del enlace (LTSSM), primera parte: el enlace sube solo, negociación de ancho, recuperación | **Superada en la placa**: autoprueba y una corrida de una hora con cero errores y cero recuperaciones |
+| LTSSM, parte restante: arranque a 2.5 GT/s, cambio de velocidad, ecualización | Sin empezar |
 | Capa de enlace de datos (reenvío, control de flujo) | Sin empezar |
 | Capa de transacciones, espacio de configuración, roles Root Complex / Endpoint | Sin empezar |
 | Prueba contra un dispositivo PCIe comercial | Hito posterior, necesita otra placa |
@@ -149,16 +179,18 @@ Hasta ahora, unas 2,700 líneas de VHDL-2008, más los testbenches.
 
 ## Límites, con honestidad
 
-- **Solo existe la capa física.** Un controlador PCIe completo necesita las
-  tres capas restantes: entrenamiento del enlace, enlace de datos y
-  transacciones.
+- **Existen la capa física y la primera parte del entrenamiento del enlace.**
+  Un controlador PCIe completo necesita además el resto del entrenamiento
+  (arranque a 2.5 GT/s, cambio de velocidad, ecualización), la capa de enlace
+  de datos y la capa de transacciones.
 - **La prueba en placa revisa el núcleo contra sí mismo** por el lazo interno
   de los transceptores: sin conector, sin cable, sin dispositivos de otro
   fabricante. Demuestra la ruta de datos y las funciones de autorreparación en
   transceptores reales; no demuestra la compatibilidad con dispositivos de
   otros fabricantes.
-- **El arranque del enlace en la prueba en placa es un pequeño secuenciador de
-  prueba**, no la máquina completa de entrenamiento del enlace.
+- **La primera corrida de la capa física usó un pequeño secuenciador de
+  prueba** para levantar el enlace; la máquina de entrenamiento del enlace ya
+  corre en la placa, pero solo su primera parte.
 - **Diseñado para PCI Express Gen4 / Gen5; las pruebas de compatibilidad con
   dispositivos comerciales son un hito posterior.**
 - **La placa disponible hoy** (Trenz TE0950) limita la prueba en silicio a
@@ -172,8 +204,10 @@ Hasta ahora, unas 2,700 líneas de VHDL-2008, más los testbenches.
 1. **Hecho el 27 nov 2026, primer silicio:** 4 carriles a 16 Gb/s en la TE0950,
    autoprueba y una corrida de una hora con cero errores. Lo siguiente en la
    placa: la misma prueba por un cable externo.
-2. **Máquina de estados de entrenamiento del enlace**, incluida la negociación
-   de velocidad y ancho.
+2. **Máquina de estados de entrenamiento del enlace:** primera parte hecha el
+   27 nov 2026 (el enlace sube solo, negociación de ancho, recuperación, en
+   silicio); después el arranque a 2.5 GT/s, el cambio de velocidad y la
+   ecualización.
 3. **Capa de enlace de datos con reenvío tolerante a la radiación.**
 4. **Capa de transacciones** sobre la red de 512 bits del chip
    ([NOC_512](/es/projects/noc-512/)), Root Complex y Endpoint en un solo núcleo.

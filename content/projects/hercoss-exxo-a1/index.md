@@ -237,7 +237,7 @@ is in design, and what is still pending.
 | Network IP | 25G and 40G Ethernet MAC/PCS against a commercial NIC, 1-hour soak with zero errors; 103 Gb/s SerDes link | Validated on FPGA |
 | NPU | INT8 CNN inference: 0.333 ms per image, ~3,000 inferences/s | Validated on FPGA |
 | AOCS accelerator | Model-predictive attitude control in hardware, 70 × 70 float32, bit-identical to simulation | Validated on FPGA |
-| PCIe controller, physical layer (PCIE_G5) | 4 lanes at 16.0 Gb/s: one hour, 389,812,475,855 words, 0 errors; receiver upsets repaired in ~4 and ~7 µs without leaving data mode | Validated on FPGA (4 lanes, Gen4 speed, internal loopback) |
+| PCIe controller, physical layer (PCIE_G5) | 4 lanes at 16.0 Gb/s: one hour, 389,812,475,855 words, 0 errors; receiver upsets repaired in ~4 and ~7 µs without leaving data mode; link trains itself, one hour on the trained link with 0 errors and 0 recoveries | Validated on FPGA (4 lanes, Gen4 speed, internal loopback) |
 | RF digital front-end | DDC and DUC chains, bit-exact in six domains | Validated on FPGA |
 | Post-quantum crypto | ML-KEM and ML-DSA accelerators | Validated on FPGA |
 | Hardware SHA-3 / SHAKE | 129 MB/s from a Linux process without a driver, ~140× software on the same CPU | Validated on FPGA |
@@ -273,7 +273,7 @@ An honest list of what has to happen before the A1 is a chip:
   larger device; connection to real transceivers is next.
 - **AI Engine and DSP cores:** architecture defined, RTL pending; the NPU
   and the AOCS accelerator are already validated as building blocks.
-- **PCIe Gen5 controller ([PCIE_G5](/projects/pcie-g5/)):** started on 27 November 2026; the physical layer's logical part and its transceiver interface pass simulation (45 / 45 runs, 286 MHz on the FPGA) and run on silicon: 4 lanes at 16 Gb/s, one hour with zero errors. Link training, data link and transaction layers still to come.
+- **PCIe Gen5 controller ([PCIE_G5](/projects/pcie-g5/)):** started on 27 November 2026; the physical layer's logical part and its transceiver interface pass simulation (45 / 45 runs, 286 MHz on the FPGA) and run on silicon: 4 lanes at 16 Gb/s, one hour with zero errors. The first part of link training also runs on silicon: the link trains itself and comes back on two lanes when one is switched off. The rest of link training, the data link and transaction layers are still to come.
 - **Remaining peripherals:** MIPI controller in development.
 - **Scale the FPGA fabric** from the 130 nm test-chip tile to 500,000 LUTs.
 - **Chip implementation flow:** memory macros, test logic (DFT), timing and

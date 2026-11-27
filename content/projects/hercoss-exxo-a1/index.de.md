@@ -247,7 +247,7 @@ ist, was im Design ist und was noch aussteht.
 | Netzwerk-IP | 25G- und 40G-Ethernet-MAC/PCS gegen eine kommerzielle NIC, einstündiger Dauertest mit null Fehlern; 103-Gbit/s-SerDes-Verbindung | Auf FPGA validiert |
 | NPU | INT8-CNN-Inferenz: 0,333 ms pro Bild, ~3.000 Inferenzen/s | Auf FPGA validiert |
 | AOCS-Beschleuniger | Modellprädiktive Lageregelung in Hardware, 70 × 70 float32, bitgenau zur Simulation | Auf FPGA validiert |
-| PCIe-Controller, Physical Layer (PCIE_G5) | 4 Lanes mit 16,0 Gbit/s: eine Stunde, 389.812.475.855 Wörter, 0 Fehler; Störungen im Empfänger in ~4 und ~7 µs repariert, ohne den Datenmodus zu verlassen | Auf FPGA validiert (4 Lanes, Gen4-Geschwindigkeit, interne Schleife) |
+| PCIe-Controller, Physical Layer (PCIE_G5) | 4 Lanes mit 16,0 Gbit/s: eine Stunde, 389.812.475.855 Wörter, 0 Fehler; Störungen im Empfänger in ~4 und ~7 µs repariert, ohne den Datenmodus zu verlassen; Verbindung trainiert sich selbst, eine Stunde auf der trainierten Verbindung mit 0 Fehlern und 0 Recoveries | Auf FPGA validiert (4 Lanes, Gen4-Geschwindigkeit, interne Schleife) |
 | Digitales HF-Frontend | DDC- und DUC-Ketten, bitgenau in sechs Domänen | Auf FPGA validiert |
 | Post-Quanten-Krypto | Beschleuniger für ML-KEM und ML-DSA | Auf FPGA validiert |
 | SHA-3 / SHAKE in Hardware | 129 MB/s aus einem Linux-Prozess ohne Treiber, ~140× Software auf derselben CPU | Auf FPGA validiert |
@@ -286,7 +286,7 @@ Eine ehrliche Liste dessen, was geschehen muss, bevor der A1 ein Chip ist:
   Transceiver.
 - **AI Engine und DSP-Kerne:** Architektur festgelegt, RTL ausstehend; die NPU
   und der AOCS-Beschleuniger sind bereits als Bausteine validiert.
-- **PCIe-Gen5-Controller ([PCIE_G5](/de/projects/pcie-g5/)):** begonnen am 27. November 2026; der logische Teil des Physical Layer und seine Transceiver-Schnittstelle bestehen die Simulation (45 / 45 Läufe, 286 MHz auf dem FPGA) und laufen auf Silizium: 4 Lanes mit 16 Gbit/s, eine Stunde mit null Fehlern. Link-Training, Data Link und Transaction Layer folgen noch.
+- **PCIe-Gen5-Controller ([PCIE_G5](/de/projects/pcie-g5/)):** begonnen am 27. November 2026; der logische Teil des Physical Layer und seine Transceiver-Schnittstelle bestehen die Simulation (45 / 45 Läufe, 286 MHz auf dem FPGA) und laufen auf Silizium: 4 Lanes mit 16 Gbit/s, eine Stunde mit null Fehlern. Auch der erste Teil des Link-Trainings läuft auf Silizium: Die Verbindung trainiert sich selbst und kommt auf zwei Lanes zurück, wenn eine abgeschaltet wird. Der Rest des Link-Trainings, Data Link und Transaction Layer folgen noch.
 - **Übrige Peripherie:** MIPI-Controller in Entwicklung.
 - **Die FPGA-Fabric skalieren**, von der Kachel des 130-nm-Testchips auf 500.000
   LUTs.

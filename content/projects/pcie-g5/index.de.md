@@ -2,16 +2,17 @@
 title: "PCIE_G5: PCIe Gen5 für die Raumfahrt, eine Verbindung, die sich selbst repariert"
 layout: article
 weight: 8
-estado: "In Entwicklung · Physical Layer läuft auf Silizium mit 4 × 16 Gbit/s, eine Stunde fehlerfrei (27. Nov. 2026)"
+estado: "In Entwicklung · Physical Layer und erster Teil des Link-Trainings laufen auf Silizium, eine Stunde fehlerfrei (27. Nov. 2026)"
 hidecover: true
 seotitle: "PCIE_G5: europäische PCI-Express-Gen4/Gen5-Controller-IP für die Raumfahrt — Hercoss"
-summary: "Hercoss' eigener PCI-Express-Controller für den HERCOSS Exxo A1, von Grund auf in VHDL-2008 geschrieben. Ein Core deckt Gen4 und Gen5 ab, von 1 bis 16 Lanes, in einer kommerziellen und einer strahlungsgehärteten Version aus derselben Quelle, und er ist so ausgelegt, dass die häufigsten Störungen durch Teilchen an Ort und Stelle repariert werden, während die Daten weiterfließen. Am ersten Tag lief er auf echten Transceivern: vier Lanes mit 16 Gbit/s, eine Stunde, null Fehler."
+summary: "Hercoss' eigener PCI-Express-Controller für den HERCOSS Exxo A1, von Grund auf in VHDL-2008 geschrieben. Ein Core deckt Gen4 und Gen5 ab, von 1 bis 16 Lanes, in einer kommerziellen und einer strahlungsgehärteten Version aus derselben Quelle, und er ist so ausgelegt, dass die häufigsten Störungen durch Teilchen an Ort und Stelle repariert werden, während die Daten weiterfließen. Am ersten Tag lief er auf echten Transceivern: vier Lanes mit 16 Gbit/s, eine Stunde, null Fehler. Am selben Abend trainierte sich die Verbindung auf dem Board selbst und lief auf zwei Lanes weiter, als eine abgeschaltet wurde."
 datos:
   - "Gen4 + Gen5 · 16 / 32 GT/s"
   - "1 bis 16 Lanes"
   - "COTS und Rad-hard aus einer Quelle"
   - "Silizium: 4 × 16 Gbit/s, 1 Stunde, 0 Fehler"
-  - "45 / 45 Simulationsläufe bestanden"
+  - "Verbindung trainiert sich auf Silizium selbst"
+  - "50 / 50 Simulationsläufe bestanden"
   - "286 MHz auf FPGA, Gen5 braucht ~246"
 ---
 
@@ -37,7 +38,7 @@ geschrieben. Ein Core deckt **Gen4 (16 GT/s) und Gen5 (32 GT/s) ab, von 1 bis
 kommerziellen (COTS) und einer strahlungsgehärteten für die Raumfahrt. Der Plan
 des Exxo A1 sieht **drei PCIe-Gen5-x16-Ports** vor.
 
-Die Entwicklung begann am 27. November 2026. **Am selben Tag** wurden der logische Teil des Physical Layer und seine Transceiver-Schnittstelle geschrieben, bestanden die Simulation **und liefen auf echten Transceivern: vier Lanes mit je 16 Gbit/s auf einem AMD-Versal-Board, eine Stunde mit null Fehlern.**
+Die Entwicklung begann am 27. November 2026. **Am selben Tag** wurden der logische Teil des Physical Layer und seine Transceiver-Schnittstelle geschrieben, bestanden die Simulation **und liefen auf echten Transceivern: vier Lanes mit je 16 Gbit/s auf einem AMD-Versal-Board, eine Stunde mit null Fehlern.** Am selben Abend lief auf demselben Board der erste Teil des Link-Trainings: **Die Verbindung trainiert sich selbst, und wird eine Lane unter Verkehr abgeschaltet, kommt sie auf zwei Lanes zurück.**
 
 {{< fig "pcie-a1.de.svg" "Wo PCIE_G5 im HERCOSS Exxo A1 sitzt: drei Gen5-x16-Ports zwischen dem 512-Bit-Netz des Chips und der Außenwelt. Plan." >}}
 
@@ -105,10 +106,38 @@ Mikrosekunden repariert und die Verbindung im Datenmodus gehalten. Die während
 eines Ausfalls getroffenen Wörter sind der einzige Verlust; der Data Link Layer,
 der noch nicht geschrieben ist, wird sie erneut senden.
 
+## Link-Training auf Silizium: Die Verbindung trainiert sich selbst
+
+Am selben Abend lief auf demselben Board der erste Teil des
+**Link-Training-Zustandsautomaten** auf Silizium. Der Port ist dabei über die
+Transceiver mit sich selbst verbunden.
+
+{{< stats >}}
+{{< stat "x4" "die Verbindung trainiert sich selbst auf vier Lanes und trägt Daten" >}}
+{{< stat "0" "Fehler und 0 Link-Recoveries in einer Stunde auf der trainierten Verbindung: 389.812.506.472 Wörter" >}}
+{{< stat "25 ms" "bis zur Rückkehr auf zwei Lanes, nachdem eine Lane unter laufender Verbindung abgeschaltet wurde" >}}
+{{< stat "0" "Link-Recoveries, als die beiden Selbstreparaturfälle auf der trainierten Verbindung wiederholt wurden" >}}
+{{< /stats >}}
+
+{{< fig "pcie-train.de.svg" "Eine Lane unter laufender Verbindung abgeschaltet: Die Verbindung kommt nach 25 ms mit einer Recovery auf zwei Lanes zurück und kehrt auf vier Lanes zurück, wenn die Lane wieder eingeschaltet wird. Welche Lane als abgeschaltet gezeichnet ist, dient nur der Darstellung." >}}
+
+- **Die Verbindung trainiert sich selbst auf vier Lanes** und trägt Daten.
+- **Einstündiger Lauf auf der trainierten Verbindung:** 389.812.506.472
+  Testwörter gesendet und genauso viele korrekt empfangen, **null Fehler jeder
+  Art und null Link-Recoveries.** 2,3 × 10¹⁴ Bit auf der Leitung: Bitfehlerrate
+  unter 1,3 × 10⁻¹⁴ (95 % Konfidenz).
+- **Die beiden Selbstreparaturfälle**, auf der trainierten Verbindung
+  wiederholt, wurden beide **mit null Link-Recoveries** repariert.
+- **Eine Lane unter laufender Verbindung abgeschaltet:** Die Verbindung kam nach
+  25 ms auf zwei Lanes zurück, mit einer Recovery und **ohne das Link-Training
+  von vorne zu beginnen.** Verkehr auf zwei Lanes: null Fehler bei 27,7 Gbit/s.
+- **Lane wieder eingeschaltet** und Verbindung neu gestartet: vier Lanes, null
+  Fehler bei 55,4 Gbit/s.
+
 ## Auch in der Simulation getestet
 
 {{< stats >}}
-{{< stat "45 / 45" "automatisierte Simulationsläufe, alle bestanden, einschließlich des Testdesigns, das auf dem Board läuft" >}}
+{{< stat "50 / 50" "automatisierte Simulationsläufe, alle bestanden, einschließlich des Testdesigns, das auf dem Board läuft" >}}
 {{< stat "1–16" "Lanes abgedeckt: 1, 2, 4, 8 und 16, bei 8, 16 und 32 GT/s" >}}
 {{< stat "±5000 ppm" "Frequenzversatz zwischen zwei unabhängigen Takten" >}}
 {{< stat "128 / 128" "mögliche Bit-Ausrichtungen einer Lane durchlaufen" >}}
@@ -138,7 +167,8 @@ dem FPGA also bereits Raum für Gen5.
 | Transceiver-Schnittstelle (Bit-Ausrichtung, Taktdomänenübergang, Lane-Deskew) | Geschrieben, besteht die Simulation |
 | Timing auf dem FPGA (AMD Versal xcve2302-1LP, 4 Lanes, out-of-context) | 286 MHz für den Teil auf Blockebene, 284 MHz mit der Transceiver-Schnittstelle; Ziel waren 250 MHz |
 | Test auf echten Transceivern (TE0950-Board, 4 Lanes × 16,0 Gbit/s, interne Schleife) | **Bestanden**: Selbsttest mit Fehlerinjektion und ein einstündiger Lauf mit null Fehlern |
-| Link-Training-Zustandsautomat (LTSSM), Start mit 2,5 GT/s | Nicht begonnen |
+| Link-Training-Zustandsautomat (LTSSM), erster Teil: Verbindung baut sich selbst auf, Breitenaushandlung, Recovery | **Auf dem Board bestanden**: Selbsttest und ein einstündiger Lauf mit null Fehlern und null Recoveries |
+| LTSSM, restlicher Teil: Start mit 2,5 GT/s, Geschwindigkeitswechsel, Equalization | Nicht begonnen |
 | Data Link Layer (Replay, Flusssteuerung) | Nicht begonnen |
 | Transaction Layer, Konfigurationsraum, Rollen Root Complex / Endpoint | Nicht begonnen |
 | Test gegen ein kommerzielles PCIe-Gerät | Späterer Meilenstein, braucht ein anderes Board |
@@ -147,15 +177,18 @@ Bisher etwa 2.700 Zeilen VHDL-2008, dazu Testbenches.
 
 ## Ehrliche Grenzen
 
-- **Es gibt nur den Physical Layer.** Ein vollständiger PCIe-Controller braucht
-  die drei übrigen Schichten: Link-Training, Data Link und Transaction.
+- **Es gibt den Physical Layer und den ersten Teil des Link-Trainings.** Ein
+  vollständiger PCIe-Controller braucht außerdem den Rest des Link-Trainings
+  (Start mit 2,5 GT/s, Geschwindigkeitswechsel, Equalization), den Data Link
+  Layer und den Transaction Layer.
 - **Der Board-Test prüft den Core gegen sich selbst**, über die interne
   Schleife der Transceiver: kein Steckverbinder, kein Kabel, kein Gerät eines
   anderen Herstellers. Er beweist den Datenpfad und die
   Selbstreparaturfunktionen auf echten Transceivern; die Kompatibilität mit
   Geräten anderer Hersteller beweist er nicht.
-- **Der Verbindungsaufbau im Board-Test ist ein kleiner Testsequenzer**, nicht
-  der vollständige Link-Training-Zustandsautomat.
+- **Der erste Lauf des Physical Layer nutzte einen kleinen Testsequenzer**,
+  um die Verbindung aufzubauen; der Link-Training-Zustandsautomat läuft jetzt
+  auf dem Board, aber nur sein erster Teil.
 - **Ausgelegt für PCI Express Gen4 / Gen5; Kompatibilitätstests mit
   kommerziellen Geräten sind ein späterer Meilenstein.**
 - **Das heute verfügbare Board** (Trenz TE0950) begrenzt den Silizium-Test auf
@@ -169,8 +202,10 @@ Bisher etwa 2.700 Zeilen VHDL-2008, dazu Testbenches.
 1. **Erledigt am 27. Nov. 2026, erstes Silizium:** 4 Lanes mit 16 Gbit/s auf dem
    TE0950, Selbsttest und ein einstündiger Lauf mit null Fehlern. Als Nächstes
    auf dem Board: derselbe Test über ein externes Kabel.
-2. **Link-Training-Zustandsautomat**, einschließlich Aushandlung von
-   Geschwindigkeit und Breite.
+2. **Link-Training-Zustandsautomat:** erster Teil erledigt am 27. Nov. 2026
+   (Verbindung baut sich selbst auf, Breitenaushandlung, Recovery, auf
+   Silizium); als Nächstes Start mit 2,5 GT/s, Geschwindigkeitswechsel und
+   Equalization.
 3. **Data Link Layer mit strahlungstolerantem Replay.**
 4. **Transaction Layer** auf dem 512-Bit-Netz des Chips
    ([NOC_512](/de/projects/noc-512/)), Root Complex und Endpoint in einem Core.

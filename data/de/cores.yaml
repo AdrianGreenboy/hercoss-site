@@ -107,7 +107,7 @@
 - nombre: PCIE_G5
   cat: Verbindungen
   estado: validado
-  que: 'Eigener PCI-Express-Gen4/Gen5-Controller, 1 bis 16 Lanes, COTS und Rad-hard aus einer Quelle, ausgelegt, um häufige Störungen durch Teilchen an Ort und Stelle zu reparieren, während die Daten weiterfließen. Physical Layer auf Silizium: 4 × 16 Gbit/s, eine Stunde, 389,8 Mrd. Wörter, null Fehler; Störungen im Empfänger in Mikrosekunden repariert, ohne den Datenmodus zu verlassen.' 
+  que: 'Eigener PCI-Express-Gen4/Gen5-Controller, 1 bis 16 Lanes, COTS und Rad-hard aus einer Quelle, ausgelegt, um häufige Störungen durch Teilchen an Ort und Stelle zu reparieren, während die Daten weiterfließen. Physical Layer auf Silizium: 4 × 16 Gbit/s, eine Stunde, 389,8 Mrd. Wörter, null Fehler; Störungen im Empfänger in Mikrosekunden repariert, ohne den Datenmodus zu verlassen; die Verbindung trainiert sich auf Silizium selbst und kommt auf zwei Lanes zurück, wenn eine abgeschaltet wird.' 
   a1: 3 × Gen5 x16
 - nombre: MIPI CSI-2
   cat: Verbindungen

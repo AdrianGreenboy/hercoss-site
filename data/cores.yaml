@@ -109,7 +109,7 @@
 - nombre: "PCIE_G5"
   cat: "Links"
   estado: validado
-  que: "Own PCI Express Gen4 / Gen5 controller, 1 to 16 lanes, COTS and rad-hard from one source, designed to repair common particle upsets on the spot while data keeps flowing. Physical layer on silicon: 4 × 16 Gb/s, one hour, 389.8 billion words, zero errors; receiver upsets repaired in microseconds without leaving data mode."
+  que: "Own PCI Express Gen4 / Gen5 controller, 1 to 16 lanes, COTS and rad-hard from one source, designed to repair common particle upsets on the spot while data keeps flowing. Physical layer on silicon: 4 × 16 Gb/s, one hour, 389.8 billion words, zero errors; receiver upsets repaired in microseconds without leaving data mode; the link trains itself on silicon and comes back on two lanes when one is switched off."
   a1: "3 × Gen5 x16"
 - nombre: "MIPI CSI-2"
   cat: "Links"

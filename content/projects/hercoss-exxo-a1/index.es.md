@@ -245,7 +245,7 @@ diseño y qué sigue pendiente.
 | IP de red | MAC/PCS Ethernet de 25G y 40G contra una NIC comercial, prueba de 1 hora con cero errores; enlace SerDes de 103 Gb/s | Validado en FPGA |
 | NPU | Inferencia CNN INT8: 0.333 ms por imagen, ~3,000 inferencias/s | Validado en FPGA |
 | Acelerador AOCS | Control de actitud predictivo por modelo en hardware, 70 × 70 float32, idéntico bit a bit a la simulación | Validado en FPGA |
-| Controlador PCIe, capa física (PCIE_G5) | 4 carriles a 16.0 Gb/s: una hora, 389,812,475,855 palabras, 0 errores; perturbaciones del receptor reparadas en ~4 y ~7 µs sin salir del modo de datos | Validado en FPGA (4 carriles, velocidad Gen4, lazo interno) |
+| Controlador PCIe, capa física (PCIE_G5) | 4 carriles a 16.0 Gb/s: una hora, 389,812,475,855 palabras, 0 errores; perturbaciones del receptor reparadas en ~4 y ~7 µs sin salir del modo de datos; el enlace se entrena solo, una hora en el enlace entrenado con 0 errores y 0 recuperaciones | Validado en FPGA (4 carriles, velocidad Gen4, lazo interno) |
 | Front-end digital de RF | Cadenas DDC y DUC, idénticas bit a bit en seis dominios | Validado en FPGA |
 | Criptografía post-cuántica | Aceleradores ML-KEM y ML-DSA | Validado en FPGA |
 | SHA-3 / SHAKE en hardware | 129 MB/s desde un proceso de Linux sin driver, ~140× el software en la misma CPU | Validado en FPGA |
@@ -282,7 +282,7 @@ Una lista honesta de lo que tiene que pasar antes de que el A1 sea un chip:
   la conexión a transceptores reales es lo siguiente.
 - **AI Engine y núcleos DSP:** arquitectura definida, RTL pendiente; la NPU y el
   acelerador AOCS ya están validados como bloques base.
-- **Controlador PCIe Gen5 ([PCIE_G5](/es/projects/pcie-g5/)):** empezó el 27 de noviembre de 2026; la parte lógica de la capa física y su interfaz con los transceptores pasan simulación (45 / 45 corridas, 286 MHz en la FPGA) y funcionan en silicio: 4 carriles a 16 Gb/s, una hora con cero errores. Faltan el entrenamiento del enlace y las capas de enlace de datos y de transacciones.
+- **Controlador PCIe Gen5 ([PCIE_G5](/es/projects/pcie-g5/)):** empezó el 27 de noviembre de 2026; la parte lógica de la capa física y su interfaz con los transceptores pasan simulación (45 / 45 corridas, 286 MHz en la FPGA) y funcionan en silicio: 4 carriles a 16 Gb/s, una hora con cero errores. La primera parte del entrenamiento del enlace también funciona en silicio: el enlace se entrena solo y vuelve en dos carriles cuando se apaga uno. Faltan el resto del entrenamiento y las capas de enlace de datos y de transacciones.
 - **Periféricos restantes:** controlador MIPI en desarrollo.
 - **Escalar el tejido FPGA** del bloque del chip de prueba en 130 nm a 500,000
   LUT.
