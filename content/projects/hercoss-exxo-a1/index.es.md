@@ -261,8 +261,7 @@ Una lista honesta de lo que tiene que pasar antes de que el A1 sea un chip:
   solo, el banco de registros con corrección de errores y la paridad de cachés;
   crecer las cachés a los tamaños del A1.
 - **Red en chip:** la red de 25 nodos y la lógica de autorreparación endurecida
-  en una FPGA más grande (ambas pasan en simulación), verificación formal de la
-  red completa (iniciada), recuperación más rápida cuando fallan dos switches a
+  en una FPGA más grande (ambas pasan en simulación), demostraciones no acotadas para la red (la red de 2 × 2 está verificada formalmente dentro de la profundidad comprobada), recuperación más rápida cuando fallan dos switches a
   la vez e integración con los núcleos RV128IMAC y periféricos reales.
 - **Cachés L2:** RTL aún por escribir.
 - **Controlador de memoria DDR4 ([DDRC_72](/es/projects/ddrc-72/)):** RTL v0.1

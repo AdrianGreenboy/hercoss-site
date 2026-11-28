@@ -264,7 +264,7 @@ Eine ehrliche Liste dessen, was geschehen muss, bevor der A1 ein Chip ist:
   auf die A1-Größen bringen.
 - **Network-on-Chip:** das Netz mit 25 Knoten und die gehärtete
   Selbstheilungslogik auf einem größeren FPGA (beide bestehen in der
-  Simulation), formale Verifikation des gesamten Netzes (begonnen), schnellere
+  Simulation), unbegrenzte Beweise für das Netz (das 2 × 2-Netz ist innerhalb der geprüften Tiefe formal verifiziert), schnellere
   Erholung bei zwei gleichzeitig ausgefallenen Switches und Integration mit den
   RV128IMAC-Kernen und echter Peripherie.
 - **L2-Caches:** RTL muss noch geschrieben werden.

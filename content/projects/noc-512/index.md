@@ -2,13 +2,14 @@
 title: "NOC_512 — the self-healing network on chip of the Exxo A1"
 layout: article
 weight: 3
-estado: "Self-healing validated in silicon and formally verified · 5 × 5 chip plan in simulation"
+estado: "Self-healing validated in silicon · whole network formally verified (2 × 2) · 5 × 5 chip plan in simulation"
 hidecover: true
 seotitle: "NOC_512 — self-healing 512-bit network-on-chip for space, validated in silicon — Hercoss"
 summary: "A 512-bit network on chip that carries guaranteed high-bandwidth streams and repairs itself around a failed switch in about 0.6 µs, with no software and no lost data. Validated in silicon: 405,522 switch failures in one hour, more than 160 billion data words, none lost or damaged."
 datos:
   - "Self-heals in ≈0.6 µs, in silicon"
   - "405,522 failures, 0 words lost"
+  - "Whole network formally verified"
   - "9 / 9 safety rules formally verified"
   - "3.19 trillion transfers, 0 errors"
   - "7.7 Tb/s chip plan"
@@ -44,6 +45,28 @@ under full traffic**. Every time, the network restored the affected data lane
 and no central controller, and went back to its original configuration when
 the switch returned. **Not one of more than 160 billion data words was lost
 or damaged.**
+
+## New on 28 November: the whole network, formally verified
+
+Testing shows what happens in the cases you try. **A formal proof covers
+every case.** On 28 November the checker finished the whole network: a 2 × 2
+network of four switches, with **every configuration and every pattern of
+failed switches** left open to it.
+
+{{< stats >}}
+{{< stat "0" "ways for the switches to form a loop, in any configuration and any failure pattern" >}}
+{{< stat "0" "ways to deliver one circuit's data to another circuit's destination" >}}
+{{< stat "20–44" "clock cycles deep, the bounded checks, with a complete return home proven once failures stop" >}}
+{{< stat "27 h" "for the longest of these checks" >}}
+{{< /stats >}}
+
+{{< fig "noc-formal-net.svg" "Formal verification of the whole 2 × 2 network, completed 28 November 2026. Bounded checks of 20 to 44 clock cycles." >}}
+
+The network was proven **never to form a loop**, **never to deliver one
+circuit's data to another circuit's destination**, and, once failures stop,
+**to return completely to its original configuration.** These are bounded
+checks of 20 to 44 clock cycles; proofs for any length of time are the next
+step.
 
 ## What changed on 26 November 2026
 
@@ -162,9 +185,10 @@ safety rules within that depth.
   deep with every waiting time reachable, 24 with the real ones.
 - **The hardened version behaves exactly like the basic one**, with faults
   injected at will, checked 16 clock cycles deep.
-- **Next:** the whole network. That the switches together never form a loop,
-  never deliver a circuit's data to the wrong destination, and always return
-  home. This work has started.
+- **The whole network, done on 28 November:** in a 2 × 2 network, with every
+  configuration and every pattern of failed switches open to the checker, the
+  switches never form a loop, never deliver a circuit's data to the wrong
+  destination, and always return home (bounded checks of 20 to 44 cycles).
 
 {{< detalle "Clock cycles, not microseconds: what does this mean for the chip?" >}}
 The repair takes about 149 clock cycles whatever the clock. At 255 MHz on
@@ -289,7 +313,7 @@ On the 25-node A1 plan, in RTL simulation:
 | Wider data units for the 25-node chip | Silicon at **265 MHz**, one-hour soak, zero errors |
 | 25-node A1 plan | Full circuit plan in simulation, 7.73 Tb/s guaranteed |
 | **Self-healing** | Simulation on the full chip, then **silicon at 255 MHz: 405,522 failures repaired in ≈ 0.6 µs, no data lost** |
-| **Formal verification** | Self-healing logic of one switch: nine safety rules hold for every input sequence within the checked depth; hardened version equivalent under fault injection |
+| **Formal verification** | Self-healing logic of one switch: nine safety rules hold for every input sequence within the checked depth; hardened version equivalent under fault injection; **whole 2 × 2 network: no loops, no wrong delivery, complete return home** |
 
 Every step followed the same rule: **simulate it, put it on silicon, run it
 for an hour, publish the number.** What does not fit our board yet is
@@ -303,14 +327,14 @@ labelled as simulation, not as a result.
 | Self-healing of the stream plane, 2 × 2 network with one possible detour | **Measured in silicon** |
 | Self-healing logic of one switch, basic and hardened | **Formally verified** within the checked depth (32 / 24 cycles; hardened version 16 cycles under arbitrary fault injection) |
 | 25-node A1 network, two simultaneous failures, hardened self-healing logic | Simulation and synthesis |
-| Formal verification of the whole network | Started |
+| Whole network (2 × 2): no loops, no data to the wrong destination, complete return home after failures | **Formally verified** (bounded checks of 20 to 44 clock cycles) |
 | Radiation testing | Not done yet. Fault injection shows tolerance to the faults we inject, nothing more. **No radiation qualification is claimed** |
 | ASIC implementation | Part of the HERCOSS Exxo A1 chip programme |
 
 ## Next steps
 
-1. Formal verification of the whole network: never a loop, never data to the
-   wrong destination, always a return home (started).
+1. Unbounded proofs: for any length of time, not only within the checked
+   depth.
 2. A larger Versal device, to take the full 25-node network and the hardened
    self-healing logic from simulation to hardware.
 3. Faster recovery when two switches fail at once.

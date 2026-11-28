@@ -2,13 +2,14 @@
 title: "NOC_512: das selbstheilende Network-on-Chip des Exxo A1"
 layout: article
 weight: 3
-estado: "Selbstheilung auf Silizium validiert und formal verifiziert · 5 × 5-Chipplan in der Simulation"
+estado: "Selbstheilung auf Silizium validiert · gesamtes Netz formal verifiziert (2 × 2) · 5 × 5-Chipplan in der Simulation"
 hidecover: true
 seotitle: "NOC_512: selbstheilendes 512-Bit-Network-on-Chip für die Raumfahrt, auf Silizium validiert — Hercoss"
 summary: "Ein 512-Bit-Network-on-Chip, das garantierte Datenströme mit hoher Bandbreite trägt und sich in etwa 0,6 µs selbst um einen ausgefallenen Switch herum repariert, ohne Software und ohne Datenverlust. Auf Silizium validiert: 405.522 Switch-Ausfälle in einer Stunde, mehr als 160 Milliarden Datenwörter, keines verloren oder beschädigt."
 datos:
   - "Selbstheilung in ≈0,6 µs, auf Silizium"
   - "405.522 Ausfälle, 0 Wörter verloren"
+  - "Gesamtes Netz formal verifiziert"
   - "9 / 9 Sicherheitsregeln formal verifiziert"
   - "3,19 Billionen Transfers, 0 Fehler"
   - "Chipplan mit 7,7 Tbit/s"
@@ -45,6 +46,28 @@ ab- und wieder eingeschaltet**. Jedes Mal hat das Netz die betroffene Daten-Lane
 ohne Routing-Tabellen und ohne zentralen Controller, und ist zur ursprünglichen
 Konfiguration zurückgekehrt, als der Switch wieder da war. **Nicht eines von mehr
 als 160 Milliarden Datenwörtern ging verloren oder wurde beschädigt.**
+
+## Neu am 28. November: das gesamte Netz, formal verifiziert
+
+Tests zeigen, was in den Fällen passiert, die man ausprobiert. **Ein formaler
+Beweis deckt jeden Fall ab.** Am 28. November hat der Prüfer das gesamte Netz
+abgeschlossen: ein 2 × 2-Netz aus vier Switches, mit **jeder Konfiguration und
+jedem Muster ausgefallener Switches** für ihn offen.
+
+{{< stats >}}
+{{< stat "0" "Wege, auf denen die Switches eine Schleife bilden, in jeder Konfiguration und jedem Ausfallmuster" >}}
+{{< stat "0" "Wege, die Daten einer Verbindung an das Ziel einer anderen zu liefern" >}}
+{{< stat "20–44" "Takte tief, die begrenzten Prüfungen, mit bewiesener vollständiger Rückkehr nach Hause" >}}
+{{< stat "27 h" "dauerte die längste dieser Prüfungen" >}}
+{{< /stats >}}
+
+{{< fig "noc-formal-net.de.svg" "Formale Verifikation des gesamten 2 × 2-Netzes, abgeschlossen am 28. November 2026. Begrenzte Prüfungen von 20 bis 44 Takten." >}}
+
+Bewiesen wurde, dass das Netz **nie eine Schleife bildet**, **die Daten einer
+Verbindung nie an das Ziel einer anderen liefert** und, sobald die Ausfälle
+enden, **vollständig zu seiner ursprünglichen Konfiguration zurückkehrt.** Es
+sind begrenzte Prüfungen von 20 bis 44 Takten; Beweise für beliebig lange
+Zeit sind der nächste Schritt.
 
 ## Was sich am 26. November 2026 geändert hat
 
@@ -169,9 +192,11 @@ Sicherheitsregeln zu verletzen.
   mit jeder erreichbaren Wartezeit, 24 mit den realen.
 - **Die gehärtete Version verhält sich exakt wie die Basisversion**, mit beliebig
   injizierten Fehlern, geprüft bis 16 Takte Tiefe.
-- **Als Nächstes:** das gesamte Netz. Dass die Switches zusammen nie eine Schleife
-  bilden, nie die Daten einer Verbindung ans falsche Ziel liefern und immer nach
-  Hause zurückkehren. Diese Arbeit hat begonnen.
+- **Das gesamte Netz, erledigt am 28. November:** In einem 2 × 2-Netz, mit
+  jeder Konfiguration und jedem Muster ausgefallener Switches für den Prüfer
+  offen, bilden die Switches nie eine Schleife, liefern die Daten einer
+  Verbindung nie ans falsche Ziel und kehren immer nach Hause zurück
+  (begrenzte Prüfungen von 20 bis 44 Takten).
 
 {{< detalle "Takte, nicht Mikrosekunden: Was bedeutet das für den Chip?" >}}
 Die Reparatur dauert unabhängig vom Takt etwa 149 Takte. Bei 255 MHz auf dem FPGA
@@ -298,7 +323,7 @@ Auf dem A1-Plan mit 25 Knoten, in der RTL-Simulation:
 | Breitere Dateneinheiten für den Chip mit 25 Knoten | Silizium bei **265 MHz**, einstündiger Dauertest, null Fehler |
 | A1-Plan mit 25 Knoten | Vollständiger Verbindungsplan in der Simulation, 7,73 Tbit/s garantiert |
 | **Selbstheilung** | Simulation auf dem Gesamtchip, dann **Silizium bei 255 MHz: 405.522 Ausfälle in ≈ 0,6 µs repariert, keine Daten verloren** |
-| **Formale Verifikation** | Selbstheilungslogik eines Switches: neun Sicherheitsregeln gelten für jede Eingabefolge innerhalb der geprüften Tiefe; gehärtete Version unter Fehlerinjektion äquivalent |
+| **Formale Verifikation** | Selbstheilungslogik eines Switches: neun Sicherheitsregeln gelten für jede Eingabefolge innerhalb der geprüften Tiefe; gehärtete Version unter Fehlerinjektion äquivalent; **gesamtes 2 × 2-Netz: keine Schleifen, keine Fehlzustellung, vollständige Rückkehr nach Hause** |
 
 Jeder Schritt folgte derselben Regel: **simulieren, aufs Silizium bringen, eine
 Stunde laufen lassen, die Zahl veröffentlichen.** Was noch nicht auf unser Board
@@ -312,14 +337,14 @@ passt, ist als Simulation gekennzeichnet, nicht als Ergebnis.
 | Selbstheilung der Stream-Ebene, 2 × 2-Netz mit einem möglichen Umweg | **Auf Silizium gemessen** |
 | Selbstheilungslogik eines Switches, Basis- und gehärtete Version | **Formal verifiziert** innerhalb der geprüften Tiefe (32 / 24 Takte; gehärtete Version 16 Takte unter beliebiger Fehlerinjektion) |
 | A1-Netz mit 25 Knoten, zwei gleichzeitige Ausfälle, gehärtete Selbstheilungslogik | Simulation und Synthese |
-| Formale Verifikation des gesamten Netzes | Begonnen |
+| Gesamtes Netz (2 × 2): keine Schleifen, keine Daten ans falsche Ziel, vollständige Rückkehr nach Hause nach Ausfällen | **Formal verifiziert** (begrenzte Prüfungen von 20 bis 44 Takten) |
 | Strahlungstests | Noch nicht durchgeführt. Die Fehlerinjektion zeigt Toleranz gegenüber den Fehlern, die wir injizieren, nicht mehr. **Es wird keine Strahlungsqualifikation behauptet** |
 | ASIC-Implementierung | Teil des Chipprogramms HERCOSS Exxo A1 |
 
 ## Nächste Schritte
 
-1. Formale Verifikation des gesamten Netzes: nie eine Schleife, nie Daten ans
-   falsche Ziel, immer eine Rückkehr nach Hause (begonnen).
+1. Unbegrenzte Beweise: für beliebig lange Zeit, nicht nur innerhalb der
+   geprüften Tiefe.
 2. Ein größerer Versal-Baustein, um das vollständige Netz mit 25 Knoten und die
    gehärtete Selbstheilungslogik von der Simulation auf Hardware zu bringen.
 3. Schnellere Erholung, wenn zwei Switches gleichzeitig ausfallen.

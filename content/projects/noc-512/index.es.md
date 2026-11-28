@@ -2,13 +2,14 @@
 title: "NOC_512: la red en chip del Exxo A1 que se repara sola"
 layout: article
 weight: 3
-estado: "Autorreparación validada en silicio y verificada formalmente · Plan del chip de 5 × 5 en simulación"
+estado: "Autorreparación validada en silicio · red completa verificada formalmente (2 × 2) · Plan del chip de 5 × 5 en simulación"
 hidecover: true
 seotitle: "NOC_512: red en chip de 512 bits para el espacio que se repara sola, validada en silicio — Hercoss"
 summary: "Una red en chip de 512 bits que lleva flujos garantizados de alto ancho de banda y se repara sola alrededor de un switch dañado en unos 0.6 µs, sin software y sin perder datos. Validada en silicio: 405,522 fallas de switch en una hora, más de 160 mil millones de palabras de datos, ninguna perdida ni dañada."
 datos:
   - "Se repara sola en ≈0.6 µs, en silicio"
   - "405,522 fallas, 0 palabras perdidas"
+  - "Red completa verificada formalmente"
   - "9 / 9 reglas de seguridad verificadas formalmente"
   - "3.19 billones de transferencias, 0 errores"
   - "Plan del chip de 7.7 Tb/s"
@@ -18,7 +19,7 @@ datos:
 {{< stat "≈0.6 µs" "para que la red se repare sola alrededor de un switch muerto, medido en silicio" >}}
 {{< stat "405,522" "fallas de switch en una hora a plena carga, todas atendidas" >}}
 {{< stat "0" "de más de 160 mil millones de palabras de datos perdidas o dañadas" >}}
-{{< stat "3.19 billones" "de transferencias AXI4 en silicio en nueve corridas de una hora, sin un solo error" >}}
+{{< stat "3.19 bill." "de transferencias AXI4 (billones) en silicio en nueve corridas de una hora, sin un solo error" >}}
 {{< /stats >}}
 
 {{< aviso "Análisis de patente en curso" >}}
@@ -44,6 +45,28 @@ carga**. Cada vez, la red restableció el carril de datos afectado **por sí sol
 en unos 0.6 microsegundos**, sin software, sin tablas de rutas y sin controlador
 central, y volvió a su configuración original cuando el switch regresó. **Ni una
 de más de 160 mil millones de palabras de datos se perdió ni se dañó.**
+
+## Nuevo, 28 de noviembre: la red completa, verificada formalmente
+
+Las pruebas muestran qué pasa en los casos que uno intenta. **Una demostración
+formal cubre todos los casos.** El 28 de noviembre el verificador terminó la
+red completa: una red de 2 × 2 con cuatro switches, con **cada configuración y
+cada patrón de switches fallidos** abiertos al verificador.
+
+{{< stats >}}
+{{< stat "0" "formas de que los switches formen un lazo, en cualquier configuración y patrón de fallas" >}}
+{{< stat "0" "formas de entregar los datos de un circuito al destino de otro circuito" >}}
+{{< stat "20–44" "ciclos de reloj de profundidad en las verificaciones acotadas, con el regreso completo a casa demostrado" >}}
+{{< stat "27 h" "para la más larga de estas verificaciones" >}}
+{{< /stats >}}
+
+{{< fig "noc-formal-net.es.svg" "Verificación formal de la red completa de 2 × 2, terminada el 28 de noviembre de 2026. Verificaciones acotadas de 20 a 44 ciclos de reloj." >}}
+
+Se demostró que la red **nunca forma un lazo**, **nunca entrega los datos de
+un circuito al destino de otro circuito** y, al terminar las fallas, **vuelve
+por completo a su configuración original.** Son verificaciones acotadas de 20
+a 44 ciclos de reloj; las demostraciones para cualquier duración son el
+siguiente paso.
 
 ## Qué cambió el 26 de noviembre de 2026
 
@@ -167,9 +190,11 @@ nueve reglas de seguridad dentro de esa profundidad.
   los reales.
 - **La versión endurecida se comporta exactamente igual que la básica**, con
   fallos inyectados a voluntad, comprobado a 16 ciclos de reloj de profundidad.
-- **Siguiente:** la red completa. Que los switches juntos nunca formen un lazo,
-  nunca entreguen los datos de un circuito al destino equivocado y siempre
-  vuelvan a casa. Este trabajo ya empezó.
+- **La red completa, hecho el 28 de noviembre:** en una red de 2 × 2, con cada
+  configuración y cada patrón de switches fallidos abiertos al verificador, los
+  switches nunca forman un lazo, nunca entregan los datos de un circuito al
+  destino equivocado y siempre vuelven a casa (verificaciones acotadas de 20 a
+  44 ciclos).
 
 {{< detalle "Ciclos de reloj, no microsegundos: ¿qué significa para el chip?" >}}
 La reparación toma unos 149 ciclos de reloj, sea cual sea el reloj. A 255 MHz en
@@ -296,7 +321,7 @@ En el plan del A1 de 25 nodos, en simulación RTL:
 | Unidades de datos más anchas para el chip de 25 nodos | Silicio a **265 MHz**, prueba de una hora, cero errores |
 | Plan del A1 de 25 nodos | Plan de circuitos completo en simulación, 7.73 Tb/s garantizados |
 | **Autorreparación** | Simulación en el chip completo, después **silicio a 255 MHz: 405,522 fallas reparadas en ≈ 0.6 µs, sin perder datos** |
-| **Verificación formal** | Lógica de autorreparación de un switch: nueve reglas de seguridad se cumplen para cada secuencia de entrada dentro de la profundidad comprobada; versión endurecida equivalente bajo inyección de fallos |
+| **Verificación formal** | Lógica de autorreparación de un switch: nueve reglas de seguridad se cumplen para cada secuencia de entrada dentro de la profundidad comprobada; versión endurecida equivalente bajo inyección de fallos; **red completa de 2 × 2: sin lazos, sin entregas equivocadas, regreso completo a casa** |
 
 Cada paso siguió la misma regla: **simularlo, llevarlo a silicio, correrlo una
 hora y publicar el número.** Lo que todavía no cabe en nuestra placa se etiqueta
@@ -310,14 +335,14 @@ como simulación, no como resultado.
 | Autorreparación del plano de flujo, red de 2 × 2 con un desvío posible | **Medido en silicio** |
 | Lógica de autorreparación de un switch, básica y endurecida | **Verificada formalmente** dentro de la profundidad comprobada (32 / 24 ciclos; versión endurecida, 16 ciclos con inyección arbitraria de fallos) |
 | Red del A1 de 25 nodos, dos fallas simultáneas, lógica de autorreparación endurecida | Simulación y síntesis |
-| Verificación formal de la red completa | Iniciada |
+| Red completa (2 × 2): sin lazos, sin datos al destino equivocado, regreso completo a casa tras las fallas | **Verificada formalmente** (verificaciones acotadas de 20 a 44 ciclos de reloj) |
 | Pruebas de radiación | Aún no realizadas. La inyección de fallos muestra tolerancia a los fallos que inyectamos, nada más. **No se afirma ninguna calificación contra radiación** |
 | Implementación ASIC | Parte del programa del chip HERCOSS Exxo A1 |
 
 ## Próximos pasos
 
-1. Verificación formal de la red completa: nunca un lazo, nunca datos al destino
-   equivocado, siempre un regreso a casa (iniciada).
+1. Demostraciones no acotadas: para cualquier duración, no solo dentro de la
+   profundidad comprobada.
 2. Un dispositivo Versal más grande, para llevar la red completa de 25 nodos y la
    lógica de autorreparación endurecida de la simulación al hardware.
 3. Recuperación más rápida cuando fallan dos switches a la vez.

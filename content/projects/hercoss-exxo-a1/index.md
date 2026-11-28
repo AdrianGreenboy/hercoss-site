@@ -253,8 +253,7 @@ An honest list of what has to happen before the A1 is a chip:
   error-correcting register file and cache parity; grow the caches to the A1
   sizes.
 - **Network-on-chip:** the 25-node network and the hardened self-healing
-  logic on a larger FPGA (both pass in simulation), formal verification of
-  the whole network (started), faster recovery when two switches fail at
+  logic on a larger FPGA (both pass in simulation), unbounded proofs for the network (the 2 × 2 network is formally verified within the checked depth), faster recovery when two switches fail at
   once, and integration with the RV128IMAC cores and real peripherals.
 - **L2 caches:** RTL still to be written.
 - **DDR4 memory controller ([DDRC_72](/projects/ddrc-72/)):** RTL v0.1
